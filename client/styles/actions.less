@@ -1,0 +1,26 @@
+@import "./colors.less";
+
+
+.actions {
+    background-color: @actionsBackgroundColor;
+    margin-left: -30px;
+    margin-right: -30px;
+    padding: 5px;
+
+    .btn-action {
+        color: @actionsColor;
+        background: none;
+        border: none;
+
+        i {
+            color: #D4D4D4;
+            padding: 15px;
+            margin-bottom: 5px;
+        }
+    }
+
+    .btn-action:hover i {
+        background-color: rgba(1, 1, 1, .25);
+        border-radius: 8px;
+    }
+}

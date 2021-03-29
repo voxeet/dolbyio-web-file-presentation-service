@@ -1,0 +1,29 @@
+@import "./colors.less";
+
+.statusBar {
+    min-height: 20px;
+    background-color: #007DCE;
+    color: white;
+    padding-top: 5px;
+    padding-bottom: 5px;
+
+    .col {
+        span {
+            padding: 4px 15px;
+        }
+    }
+
+    .col-left {
+        span {
+            border-right: 2px solid white;
+        }
+    }
+
+    .col-right {
+        text-align: right;
+
+        span {
+            border-left: 2px solid white;
+        }
+    }
+}

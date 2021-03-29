@@ -1,0 +1,43 @@
+@import "./colors.less";
+
+.presentation {
+    background-color: @presentationBackgroundColor;
+    border-bottom: 1px solid @presentationBorderColor;
+    padding: 0.5rem;
+
+    .h-100 {
+        align-items: center;
+        display: flex;
+
+        img {
+            width: 100%;
+            border: 1px solid @thumbnailBorderColor;
+        }
+    }
+
+    .left, .right {
+        padding-left: 100px;
+        padding-right: 100px;
+        background-color: rgba(0, 0, 0, 0);
+        position: absolute;
+        top: 0;
+
+        button {
+            background-color: transparent;
+            border: none;
+            color: gray;
+        }
+    }
+
+    .left:hover, .right:hover {
+        background-color: rgba(0, 0, 0, 0.15);
+    }
+
+    .left {
+        left: 0;
+    }
+
+    .right {
+        right: 0;
+    }
+}
