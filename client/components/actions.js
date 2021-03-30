@@ -26,6 +26,10 @@ class Actions extends Component {
     }
 
     componentDidMount() {
+        this.setState({
+            conferenceJoined: VoxeetSDK.conference.current != null
+        });
+
         VoxeetSDK.conference.on('joined', this.onConferenceJoined);
     }
 

@@ -27,10 +27,10 @@ module.exports = {
 		],
 	},
 	plugins: [
-	  new HtmlWebpackPlugin({
-		inject: true,
-		template: "./client/public/index.html",
-		js: [],
-	  }),
+		new HtmlWebpackPlugin({
+			inject: true,
+			template: "./client/public/index.html",
+			js: [],
+		})
 	],
 };

@@ -23,14 +23,17 @@ export default class Attendees extends Component {
     }
 
     componentDidMount() {
-        // When a video stream is added to the conference
         VoxeetSDK.conference.on('streamAdded', this.onStreamAdded);
-
-        // When a video stream is updated from the conference
         VoxeetSDK.conference.on('streamUpdated', this.onStreamUpdated);
-
-        // When a video stream is removed from the conference
         VoxeetSDK.conference.on('streamRemoved', this.onStreamRemoved);
+
+        // Because the component is loaded after the conference is joined
+        // we need to join the conference with no video
+        // and start the video now
+        VoxeetSDK
+            .conference
+            .startVideo(VoxeetSDK.session.participant)
+            .catch((e) => console.log(e));
     }
 
     componentWillUnmount() {

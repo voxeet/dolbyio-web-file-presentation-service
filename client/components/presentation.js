@@ -62,8 +62,9 @@ class Presentation extends Component {
             .image(filePresentation.position)
             .then(url => {
                 const current = VoxeetSDK.filePresentation.current;
-                const canGoBack = this.props.isPresentationOwner && current.position > 0;
-                const canGoForward = this.props.isPresentationOwner && current.position < current.imageCount - 1;
+                const isPresentationOwner = current.owner.id == VoxeetSDK.session.participant.id;
+                const canGoBack = isPresentationOwner && current.position > 0;
+                const canGoForward = isPresentationOwner && current.position < current.imageCount - 1;
 
                 this.setState({
                     slideUrl: url,
