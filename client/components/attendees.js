@@ -27,13 +27,18 @@ export default class Attendees extends Component {
         VoxeetSDK.conference.on('streamUpdated', this.onStreamUpdated);
         VoxeetSDK.conference.on('streamRemoved', this.onStreamRemoved);
 
-        // Because the component is loaded after the conference is joined
-        // we need to join the conference with no video
-        // and start the video now
-        VoxeetSDK
-            .conference
-            .startVideo(VoxeetSDK.session.participant)
-            .catch((e) => console.log(e));
+        // Load the streams for all active participants after this component is loaded
+        VoxeetSDK.conference.participants.forEach(participant => {
+            if (participant.streams) {
+                for (let index = 0; index < participant.streams.length; index++) {
+                    const stream = participant.streams[index];
+                    if (stream.getVideoTracks().length) {
+                        this.addVideoNode(participant, stream);
+                        break;
+                    }
+                }
+            }
+        });
     }
 
     componentWillUnmount() {

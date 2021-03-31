@@ -185,7 +185,7 @@ const getInvitationAsync = async (conferenceId, externalId) => {
     return await postAsync('api.voxeet.com', `/v2/conferences/${conferenceId}/invite`, headers, body);
 }
 
-const getConferenceIdAsync = async function (conferenceName) {
+const getConferenceIdAsync = async function (alias) {
     const jwt = await getAPIAccessTokenAsync();
 
     const headers = {
@@ -197,7 +197,7 @@ const getConferenceIdAsync = async function (conferenceName) {
     const conferences = jsonResponse.conferences;
     for (let index = 0; index < conferences.length; index++) {
         const conference = conferences[index];
-        if (conference.alias.toLowerCase() == conferenceName.toLowerCase()) {
+        if (conference.alias.toLowerCase() == alias.toLowerCase()) {
             return conference.confId;
         }
     }
@@ -236,11 +236,11 @@ app.post('/conference', function (request, response) {
 app.post('/get-invited', async function (request, response) {
     console.log(`[POST] ${request.url}`, request.body);
 
-    const conferenceName = request.body.conferenceName;
+    const alias = request.body.alias;
     const externalId = request.body.externalId;
 
     try {
-        const conferenceId = await getConferenceIdAsync(conferenceName);
+        const conferenceId = await getConferenceIdAsync(alias);
         if (!conferenceId) {
             response.status(404);
             return;

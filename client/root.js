@@ -52,14 +52,14 @@ export default class Root extends Component {
         return jwt.access_token;
     }
 
-    onSessionOpened(conferenceName, userName, fileConverted) {
-        console.log("Conf Name", conferenceName);
-        console.log("User Name", userName);
+    onSessionOpened(conferenceAlias, userName, fileConverted) {
+        console.log("Conference alias", conferenceAlias);
+        console.log("Username", userName);
 
         if (fileConverted) {
             console.log("Converted file", fileConverted);
 
-            this.createConference(conferenceName)
+            this.createConference(conferenceAlias)
                 .then(conference => {
                     this.joinConference(conference.conferenceId, conference.ownerToken)
                         .then(c => {
@@ -80,7 +80,7 @@ export default class Root extends Component {
                     console.log(e);
                 });
         } else {
-            this.getInvited(conferenceName)
+            this.getInvited(conferenceAlias)
                 .then(invitation => {
                     this.joinConference(invitation.conferenceId, invitation.accessToken)
                         .then(c => {
@@ -103,7 +103,7 @@ export default class Root extends Component {
     }
 
 
-    async getInvited(conferenceName) {
+    async getInvited(conferenceAlias) {
         this.setState({
             isLoading: true,
             loadingMessage: 'Request access to the conference'
@@ -117,17 +117,17 @@ export default class Root extends Component {
                 'Content-Type': 'application/json;charset=utf-8'
             },
             body: JSON.stringify({
-                conferenceName: conferenceName,
+                alias: conferenceAlias,
                 externalId: externalId
             })
         };
 
-        // Request our backend for an invitation
+        // Request the backend for an invitation
         const invitation = await fetch('/get-invited', options)
         return invitation.json();
     }
 
-    async createConference(conferenceName) {
+    async createConference(conferenceAlias) {
         this.setState({
             isLoading: true,
             loadingMessage: 'Creating the conference'
@@ -141,12 +141,12 @@ export default class Root extends Component {
                 'Content-Type': 'application/json;charset=utf-8'
             },
             body: JSON.stringify({
-                alias: conferenceName,
+                alias: conferenceAlias,
                 ownerExternalId: externalId
             })
         };
 
-        // Request our backend to create a conference
+        // Request the backend to create a conference
         const response = await fetch('/conference', options);
         return response.json();
     }
@@ -164,12 +164,12 @@ export default class Root extends Component {
             conferenceAccessToken: conferenceAccessToken,
             constraints: {
                 audio: true,
-                video: false
+                video: true
             },
             maxVideoForwarding: 6
         };
 
-        // 2. Join the conference
+        // Join the conference
         await VoxeetSDK.conference.join(conference, joinOptions);
     }
 
@@ -181,7 +181,7 @@ export default class Root extends Component {
 
         if (!this.state.isLoggedIn) {
             return <Login
-                handleOnSessionOpened={(conferenceName, userName, fileConverted) => this.onSessionOpened(conferenceName, userName, fileConverted)} />;
+                handleOnSessionOpened={(conferenceAlias, userName, fileConverted) => this.onSessionOpened(conferenceAlias, userName, fileConverted)} />;
         }
 
         return <Conference
