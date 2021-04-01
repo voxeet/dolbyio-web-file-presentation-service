@@ -23,6 +23,7 @@ class Actions extends Component {
         this.stopVideo = this.stopVideo.bind(this);
         this.mute = this.mute.bind(this);
         this.unmute = this.unmute.bind(this);
+        this.leave = this.leave.bind(this);
     }
 
     componentDidMount() {
@@ -87,39 +88,43 @@ class Actions extends Component {
         });
     }
 
+    leave() {
+        VoxeetSDK
+            .conference
+            .leave()
+            .catch((e) => console.log(e));
+    }
+
     render() {
         if (!this.state.conferenceJoined) {
             return '';
         }
 
         return (
-            <div className="actions row justify-content-center">
-                <div className="col-10 align-self-center">
-                    {this.state.canStartVideo && (
-                        <button type="button" className="btn-action" onClick={this.startVideo}>
-                            <i className="fas fa-video-slash fa-3x"></i>
-                            <p>Start Video</p>
-                        </button>
-                    )}
-                    {this.state.canStopVideo && (
-                        <button type="button" className="btn-action" onClick={this.stopVideo}>
-                            <i className="fas fa-video fa-3x"></i>
-                            <p>Stop Video</p>
-                        </button>
-                    )}
-                    {this.state.canMute && (
-                        <button type="button" className="btn-action" onClick={this.mute}>
-                            <i className="fas fa-microphone fa-3x"></i>
-                            <p>Mute</p>
-                        </button>
-                    )}
-                    {this.state.canUnmute && (
-                        <button type="button" className="btn-action" onClick={this.unmute}>
-                            <i className="fas fa-microphone-slash fa-3x"></i>
-                            <p>Unmute</p>
-                        </button>
-                    )}
-                </div>
+            <div className="actions row">
+                {this.state.canStartVideo && (
+                    <button type="button" className="btn-action btn-inverted" onClick={this.startVideo}>
+                        <i className="fas fa-video-slash fa-2x"></i>
+                    </button>
+                )}
+                {this.state.canStopVideo && (
+                    <button type="button" className="btn-action" onClick={this.stopVideo}>
+                        <i className="fas fa-video fa-2x"></i>
+                    </button>
+                )}
+                {this.state.canMute && (
+                    <button type="button" className="btn-action" onClick={this.mute}>
+                        <i className="fas fa-microphone fa-2x"></i>
+                    </button>
+                )}
+                {this.state.canUnmute && (
+                    <button type="button" className="btn-action btn-inverted" onClick={this.unmute}>
+                        <i className="fas fa-microphone-slash fa-2x"></i>
+                    </button>
+                )}
+                <button type="button" className="btn-action" onClick={this.leave}>
+                    <i className="fas fa-door-open fa-2x"></i>
+                </button>
             </div>
         );
     }

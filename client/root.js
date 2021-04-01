@@ -19,10 +19,14 @@ export default class Root extends Component {
             fileConverted: null
         };
 
+        this.onConferenceEndedOrLeft = this.onConferenceEndedOrLeft.bind(this);
         this.onSessionOpened = this.onSessionOpened.bind(this);
     }
 
     componentDidMount() {
+        VoxeetSDK.conference.on('ended', this.onConferenceEndedOrLeft);
+        VoxeetSDK.conference.on('left', this.onConferenceEndedOrLeft);
+
         this.getAccessToken()
             .then(accessToken => VoxeetSDK.initializeToken(accessToken, this.getAccessToken) )
             .then(() => {
@@ -42,6 +46,34 @@ export default class Root extends Component {
                 .css({ cursor: 'pointer' })
                 .removeAttr('href');
         });
+    }
+
+    componentWillUnmount() {
+        VoxeetSDK.conference.removeListener('ended', this.onConferenceEndedOrLeft);
+        VoxeetSDK.conference.removeListener('left', this.onConferenceEndedOrLeft);
+    }
+
+    onConferenceEndedOrLeft() {
+        this.setState({
+            isLoading: true,
+            loadingMessage: 'Leaving the conference'
+        });
+
+        VoxeetSDK
+            .session
+            .close()
+            .then(() => {
+                this.setState({
+                    isLoading: false,
+                    isLoggedIn: false,
+                    isHost: false,
+                    fileConverted: null
+                });
+            })
+            .catch((e) => {
+                this.setState({ isLoading: false });
+                console.log(e);
+            });
     }
 
     async getAccessToken() {

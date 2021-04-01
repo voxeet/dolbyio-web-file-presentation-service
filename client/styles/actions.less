@@ -8,19 +8,40 @@
     padding: 5px;
 
     .btn-action {
-        color: @actionsColor;
-        background: none;
-        border: none;
+        border: 1px solid white;
+        border-radius: 50px;
+        height: 80px;
+        width: 80px;
+        margin: 5px;
+
+        background: #1F1F1E;
 
         i {
-            color: #D4D4D4;
-            padding: 15px;
-            margin-bottom: 5px;
+            color: #F7F6F7;
         }
     }
 
-    .btn-action:hover i {
-        background-color: rgba(1, 1, 1, .25);
-        border-radius: 8px;
+    .btn-action:hover {
+        background-color: #353534;
+
+        i {
+            color: #EEEEEE;
+        }
+    }
+
+    .btn-action.btn-inverted {
+        background: #626262;
+
+        i {
+            color: #F7F7F7;
+        }
+    }
+
+    .btn-action.btn-inverted:hover {
+        background: #626262;
+
+        i {
+            color: #F7F7F7;
+        }
     }
 }
