@@ -30,8 +30,8 @@ class Slides extends Component {
                 .then(url => {
                     const key = `thumbnail-${index}`;
                     const cssClassName = VoxeetSDK.filePresentation.current.position == index
-                        ? 'list-group-item list-group-item-action active'
-                        : 'list-group-item list-group-item-action';
+                        ? 'list-group-item active'
+                        : 'list-group-item';
 
                     this.thumbnails.push(
                         <a key={key} id={key} href="#" className={cssClassName} onClick={() => this.changeSlide(index)}>
