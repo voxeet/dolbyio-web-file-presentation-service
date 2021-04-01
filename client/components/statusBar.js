@@ -15,40 +15,61 @@ class StatusBar extends Component {
             nbUsers: 0,
             nbListeners: 0,
             slidePosition: 0,
-            slideCount: 0
+            slideCount: 0,
+            recording: false
         };
 
-        this.onConferenceJoined = this.onConferenceJoined.bind(this);
-        this.onConferenceParticipantEvent = this.onConferenceParticipantEvent.bind(this);
-        this.onFilePresentationEvent = this.onFilePresentationEvent.bind(this);
+        this.refreshStatusBar = this.refreshStatusBar.bind(this);
+        this.onRecordingStarted = this.onRecordingStarted.bind(this);
+        this.onRecordingStopped = this.onRecordingStopped.bind(this);
+        this.onMessage = this.onMessage.bind(this);
     }
 
     componentDidMount() {
-        VoxeetSDK.conference.on('joined', this.onConferenceJoined);
-        VoxeetSDK.conference.on('participantAdded', this.onConferenceParticipantEvent);
-        VoxeetSDK.conference.on('participantUpdated', this.onConferenceParticipantEvent);
-        VoxeetSDK.filePresentation.on('updated', this.onFilePresentationEvent);
-        VoxeetSDK.filePresentation.on('started', this.onFilePresentationEvent);
+        VoxeetSDK.conference.on('joined', this.refreshStatusBar);
+        VoxeetSDK.conference.on('participantAdded', this.refreshStatusBar);
+        VoxeetSDK.conference.on('participantUpdated', this.refreshStatusBar);
+        VoxeetSDK.filePresentation.on('updated', this.refreshStatusBar);
+        VoxeetSDK.filePresentation.on('started', this.refreshStatusBar);
+        VoxeetSDK.command.on("received", this.onMessage);
+
+        document.addEventListener('recordingStarted', this.onRecordingStarted, false);
+        document.addEventListener('recordingStopped', this.onRecordingStopped, false);
+
+        if (VoxeetSDK.recording.current != null) {
+            this.setState({ recording: true });
+        }
     }
 
     componentWillUnmount() {
-        VoxeetSDK.conference.removeListener('joined', this.onConferenceJoined);
-        VoxeetSDK.conference.removeListener('participantAdded', this.onConferenceParticipantEvent);
-        VoxeetSDK.conference.removeListener('participantUpdated', this.onConferenceParticipantEvent);
-        VoxeetSDK.filePresentation.removeListener('updated', this.onFilePresentationEvent);
-        VoxeetSDK.filePresentation.removeListener('started', this.onFilePresentationEvent);
+        VoxeetSDK.conference.removeListener('joined', this.refreshStatusBar);
+        VoxeetSDK.conference.removeListener('participantAdded', this.refreshStatusBar);
+        VoxeetSDK.conference.removeListener('participantUpdated', this.refreshStatusBar);
+        VoxeetSDK.filePresentation.removeListener('updated', this.refreshStatusBar);
+        VoxeetSDK.filePresentation.removeListener('started', this.refreshStatusBar);
+        VoxeetSDK.command.removeListener("received", this.onMessage);
+
+        VoxeetSDK.command.removeListener("recordingStarted", this.onRecordingStarted);
+        VoxeetSDK.command.removeListener("recordingStopped", this.onRecordingStopped);
     }
 
-    onConferenceJoined() {
-        this.refreshStatusBar();
+    onRecordingStarted() {
+        this.setState({
+            recording: true
+        });
     }
 
-    onConferenceParticipantEvent(participant) {
-        this.refreshStatusBar();
+    onRecordingStopped(e) {
+        this.setState({
+            recording: false
+        });
     }
 
-    onFilePresentationEvent(filePresentation) {
-        this.refreshStatusBar();
+    onMessage(_, message) {
+        const data = JSON.parse(message);
+        if (data.action == "RecordingState") {
+            this.setState({ recording: data.value });
+        }
     }
     
     refreshStatusBar() {
@@ -85,6 +106,9 @@ class StatusBar extends Component {
             <div className="col col-left">
                 {this.state.slideCount > 0 && (
                     <span>Slide {this.state.slidePosition + 1} of {this.state.slideCount}</span>
+                )}
+                {this.state.recording > 0 && (
+                    <span className="recording"><i className="fas fa-circle"></i> Recording is on</span>
                 )}
             </div>
             <div className="col col-center">

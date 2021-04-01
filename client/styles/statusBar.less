@@ -2,8 +2,8 @@
 
 .statusBar {
     min-height: 20px;
-    background-color: #007DCE;
-    color: white;
+    background-color: @statusBarBackgroundColor;
+    color: @statusBarColor;
     padding-top: 5px;
     padding-bottom: 5px;
 
@@ -15,7 +15,7 @@
 
     .col-left {
         span {
-            border-right: 2px solid white;
+            border-right: 2px solid @statusBarSeparatorColor;
         }
     }
 
@@ -23,7 +23,11 @@
         text-align: right;
 
         span {
-            border-left: 2px solid white;
+            border-left: 2px solid @statusBarSeparatorColor;
         }
+    }
+
+    .recording i {
+        color: @statusBarRecordingColor;
     }
 }

@@ -13,6 +13,10 @@ app.use(express.static('dist'))
 const CONSUMER_KEY = 'CONSUMER_KEY';
 const CONSUMER_SECRET = 'CONSUMER_SECRET';
 
+// Other settings
+const LIVE_RECORDING = false;
+
+
 /**
  * Sends a POST request
  * @param {string} hostname
@@ -134,7 +138,7 @@ const createConferenceAsync = async (alias, ownerExternalId) => {
         alias: alias,
         parameters: {
             dolbyVoice: true,
-            liveRecording: false
+            liveRecording: LIVE_RECORDING
         },
         ownerExternalId: ownerExternalId
     });

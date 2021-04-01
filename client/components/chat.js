@@ -33,11 +33,16 @@ export default class Chat extends Component {
     }
 
     sendMessage() {
+        const msg = JSON.stringify({
+            action: 'ChatMessage',
+            value: this.state.message
+        });
+
         VoxeetSDK
             .command
-            .send(this.state.message)
+            .send(msg)
             .then(() => {
-                this.onMessage(VoxeetSDK.session.participant, this.state.message);
+                this.onMessage(VoxeetSDK.session.participant, msg);
 
                 this.setState({
                     message: ''
@@ -47,6 +52,9 @@ export default class Chat extends Component {
     }
 
     onMessage(participant, message) {
+        const data = JSON.parse(message);
+        if (data.action != "ChatMessage") return;
+
         const key = `msg-${Math.floor(Math.random() * 1000000)}`;
 
         if (participant.id == VoxeetSDK.session.participant.id) {
@@ -54,7 +62,7 @@ export default class Chat extends Component {
                 <li key={key} className="media text-right">
                     <div className="media-body">
                         <h6 className="mt-0">{participant.info.name}</h6>
-                        <p>{message}</p>
+                        <p>{data.value}</p>
                     </div>
                 
                     <img src={participant.info.avatarUrl}
@@ -71,7 +79,7 @@ export default class Chat extends Component {
     
                     <div className="media-body">
                         <h6 className="mt-0">{participant.info.name}</h6>
-                        <p>{message}</p>
+                        <p>{data.value}</p>
                     </div>
                 </li>
             );
