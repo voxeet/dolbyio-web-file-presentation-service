@@ -16,7 +16,8 @@ export default class Root extends Component {
             loadingMessage: 'Loading...',
             isLoggedIn: false,
             isHost: false,
-            fileConverted: null
+            fileConverted: null,
+            presentation: null
         };
 
         this.onConferenceEndedOrLeft = this.onConferenceEndedOrLeft.bind(this);
@@ -84,7 +85,7 @@ export default class Root extends Component {
         return jwt.access_token;
     }
 
-    onSessionOpened(conferenceAlias, userName, fileConverted) {
+    onSessionOpened(conferenceAlias, userName, fileConverted, presentation) {
         console.log("Conference alias", conferenceAlias);
         console.log("Username", userName);
 
@@ -94,12 +95,13 @@ export default class Root extends Component {
             this.createConference(conferenceAlias)
                 .then(conference => {
                     this.joinConference(conference.conferenceId, conference.ownerToken)
-                        .then(c => {
+                        .then(_ => {
                             this.setState({
                                 isLoading: false,
                                 isLoggedIn: true,
                                 isHost: true,
-                                fileConverted: fileConverted
+                                fileConverted: fileConverted,
+                                presentation: presentation
                             });
                         })
                         .catch((e) => {
@@ -115,7 +117,7 @@ export default class Root extends Component {
             this.getInvited(conferenceAlias)
                 .then(invitation => {
                     this.joinConference(invitation.conferenceId, invitation.accessToken)
-                        .then(c => {
+                        .then(_ => {
                             this.setState({
                                 isLoading: false,
                                 isLoggedIn: true,
@@ -214,11 +216,12 @@ export default class Root extends Component {
 
         if (!this.state.isLoggedIn) {
             return <Login
-                handleOnSessionOpened={(conferenceAlias, userName, fileConverted) => this.onSessionOpened(conferenceAlias, userName, fileConverted)} />;
+                handleOnSessionOpened={(conferenceAlias, userName, fileConverted, presentation) => this.onSessionOpened(conferenceAlias, userName, fileConverted, presentation)} />;
         }
 
         return <Conference
             isHost={this.state.isHost}
-            fileConverted={this.state.fileConverted} />;
+            fileConverted={this.state.fileConverted}
+            presentation={this.state.presentation} />;
     }
 }

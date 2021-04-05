@@ -76,7 +76,7 @@ class Conference extends Component {
                 <div className="row flex-grow-1">
                     <div className="main-panel col-10">
                         <div className="container-fluid d-flex h-100 flex-column">
-                            {this.state.filePresentationStarted && <Presentation /> }
+                            {this.state.filePresentationStarted && <Presentation presentation={this.props.presentation} displayNotes={this.props.displayNotes} /> }
                             {this.state.isPresentationOwner && <Slides /> }
                         </div>
                     </div>
@@ -91,12 +91,16 @@ class Conference extends Component {
 
 Conference.propTypes = {
     isHost: PropTypes.bool,
-    fileConverted: PropTypes.object
+    fileConverted: PropTypes.object,
+    presentation: PropTypes.object,
+    displayNotes: PropTypes.bool
 };
 
 Conference.defaultProps = {
     isHost: false,
-    fileConverted: null
+    fileConverted: null,
+    presentation: null,
+    displayNotes: true
 };
 
 export default Conference;

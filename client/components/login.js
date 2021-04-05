@@ -5,6 +5,8 @@ import VoxeetSDK from "@voxeet/voxeet-web-sdk";
 
 import Loading from "./loading";
 
+import { Presentation } from "../models/presentation";
+
 import "../styles/login.less";
 
 
@@ -54,12 +56,16 @@ class Login extends Component {
             loadingMessage: `Converting the presentation - ${percentage.toFixed(0)}%`
         });
 
-        console.log(fileConversionProgress);
+        //console.log(fileConversionProgress);
     }
 
     onFilePresentationConverted(fileConverted) {
         console.log("fileConverted", fileConverted);
-        this.props.handleOnSessionOpened(this.state.conferenceName, this.state.userName, fileConverted);
+
+        Presentation
+            .getPresentation(this.state.file)
+            .then(presentation => this.props.handleOnSessionOpened(this.state.conferenceName, this.state.userName, fileConverted, presentation))
+            .catch(e => console.log(e));
     }
 
 

@@ -232,7 +232,7 @@ class Actions extends Component {
         return (
             <div className="actions row">
                 <div className="col">
-                    <div class="d-flex justify-content-between">
+                    <div className="d-flex justify-content-between">
                         <div className="col-left">
                             {this.state.canStartRecording && (
                                 <button type="button" className="btn btn-action btn-xl" onClick={this.startRecording} title="Start recording the conference">

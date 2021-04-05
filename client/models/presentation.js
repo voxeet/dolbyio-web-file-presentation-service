@@ -1,0 +1,123 @@
+import JSZip from "jszip";
+
+export class Presentation {
+    
+    constructor(slides) {
+        this.slides = slides;
+    }
+
+    get(slideId) {
+        for (let index = 0; index < this.slides.length; index++) {
+            const slide = this.slides[index];
+            if (slide.id == slideId) {
+                return slide;
+            }
+        }
+        return null;
+    }
+
+    static async _getNotesSlides(zipFile) {
+        const parser = new DOMParser();
+        const notesSlides = [];
+
+        const strContent = await zipFile.file("[Content_Types].xml").async("string");
+        const xmlDocument = parser.parseFromString(strContent, "text/xml");
+        const overrides = xmlDocument.getElementsByTagName("Override");
+
+        // <Override PartName="/ppt/notesSlides/notesSlide1.xml" ContentType="application/vnd.openxmlformats-officedocument.presentationml.notesSlide+xml"/>
+        for (let index = 0; index < overrides.length; index++) {
+            const override = overrides[index];
+            const contentType = override.getAttribute('ContentType');
+            if (contentType == "application/vnd.openxmlformats-officedocument.presentationml.notesSlide+xml") {
+                const partName = override.getAttribute('PartName').substr(1); // Remove the first /
+                notesSlides.push(partName);
+            }
+        }
+
+        return notesSlides;
+    }
+
+    static async getPresentation(file) {
+        const zipFile = await JSZip.loadAsync(file);
+        //console.log(zipFile);
+
+        const notesSlides = await Presentation._getNotesSlides(zipFile);
+
+        const regex = /\d+/g;
+
+        const slides = [];
+
+        for (let index = 0; index < notesSlides.length; index++) {
+            const filename = notesSlides[index];
+
+            const found = filename.match(regex);
+            if (found) {
+                const slideId = parseInt(found[0]) - 1;
+                const slide = await Slide.getSlide(zipFile, filename, slideId);
+                slides.push(slide);
+            }
+        }
+
+        return new Presentation(slides);
+    }
+
+}
+
+export class Slide {
+
+    constructor(id, notes) {
+        this.id = id;
+        this.notes = notes;
+    }
+
+    static async getSlide(zipFile, filename, slideId) {
+        const file = zipFile.file(filename);
+        if (!file) return;
+
+        const P_NAMESPACE = 'http://schemas.openxmlformats.org/presentationml/2006/main';
+        const A_NAMESPACE = 'http://schemas.openxmlformats.org/drawingml/2006/main';
+
+        const xmlContent = await file.async("string");
+        const parser = new DOMParser();
+        const xmlDocument = parser.parseFromString(xmlContent, "text/xml");
+        const spElements = xmlDocument
+            .getElementsByTagNameNS(P_NAMESPACE, 'cSld')[0]
+            .getElementsByTagNameNS(P_NAMESPACE, 'spTree')[0]
+            .getElementsByTagNameNS(P_NAMESPACE, 'sp');
+
+        for (let index = 0; index < spElements.length; index++) {
+            const spElement = spElements[index];
+
+            const name = spElement
+                .getElementsByTagNameNS(P_NAMESPACE, 'nvSpPr')[0]
+                .getElementsByTagNameNS(P_NAMESPACE, 'cNvPr')[0]
+                .getAttribute('name');
+
+            if (name.indexOf('Notes Placeholder') < 0) continue;
+
+            const pElements = spElement
+                .getElementsByTagNameNS(P_NAMESPACE, 'txBody')[0]
+                .getElementsByTagNameNS(A_NAMESPACE, 'p');
+
+            const notes = [];
+
+            for (let j = 0; j < pElements.length; j++) {
+                const pElement = pElements[j];
+                var string = '';
+
+                const rElements = pElement.getElementsByTagNameNS(A_NAMESPACE, 'r');
+                for (let k = 0; k < rElements.length; k++) {
+                    const rElement = rElements[k];
+                    string += rElement.getElementsByTagNameNS(A_NAMESPACE, 't')[0].innerHTML;
+                }
+
+                notes.push(string);
+            }
+
+            return new Slide(slideId, notes);
+        }
+
+        return null;
+    }
+
+}
