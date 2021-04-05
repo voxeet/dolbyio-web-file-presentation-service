@@ -9,7 +9,6 @@ import Slides from "./slides";
 import Actions from "./actions";
 import Attendees from "./attendees";
 import Chat from "./chat";
-import StatusBar from "./statusBar";
 
 import "../styles/conference.less";
 
@@ -72,24 +71,20 @@ class Conference extends Component {
         }
 
         return (
-            <div className="conference container-fluid d-flex flex-column">
-                <div className="row flex-fill">
-                    <div className="main-panel col-md-9">
-                        <div className="container-fluid d-flex flex-column">
+            <main className="conference container-fluid d-flex h-100 flex-column">
+                <Actions />
+                <div className="row flex-grow-1">
+                    <div className="main-panel col-10">
+                        <div className="container-fluid d-flex h-100 flex-column">
                             {this.state.filePresentationStarted && <Presentation /> }
                             {this.state.isPresentationOwner && <Slides /> }
                         </div>
                     </div>
-                    <div className="side-panel col-md-3">
-                        <div className="container-fluid d-flex flex-column">
-                            <Actions />
-                            <Attendees />
-                            <Chat />
-                        </div>
+                    <div className="side-panel col-2">
+                        <Attendees />
                     </div>
                 </div>
-                <StatusBar />
-            </div>
+            </main>
         );
     }
 }

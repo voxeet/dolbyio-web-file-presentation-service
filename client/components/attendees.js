@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 
 import VoxeetSDK from "@voxeet/voxeet-web-sdk";
 
@@ -7,7 +8,7 @@ import AttendeeVideo from "./attendeeVideo";
 import "../styles/attendees.less";
 
 
-export default class Attendees extends Component {
+class Attendees extends Component {
 
     constructor(props) {
         super(props);
@@ -91,7 +92,8 @@ export default class Attendees extends Component {
             key={`video-${participant.id}`}
             participantId={participant.id}
             participantName={participant.info.name}
-            stream={stream} />
+            stream={stream}
+            round={this.props.round} />
 
         this.videoNodes.push(videoNode);
         this.setState({
@@ -117,14 +119,21 @@ export default class Attendees extends Component {
     }
 
     render() {
+        const cssClasses = this.props.round ? "attendees round row" : "attendees rectangular row";
         return (
-            <div className="attendees row">
-                <div className="col">
-                    <div className="videos">
-                        {this.state.videoNodes}
-                    </div>
-                </div>
+            <div className={cssClasses}>
+                {this.state.videoNodes}
             </div>
         );
     }
 }
+
+Attendees.propTypes = {
+    round: PropTypes.bool
+};
+
+Attendees.defaultProps = {
+    round: false
+};
+
+export default Attendees;

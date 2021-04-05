@@ -20,17 +20,33 @@ class AttendeeVideo extends Component {
     }
 
     render() {
-      return (
-        <video
-            ref={ref => (this.video = ref)}
-            height="120px"
-            width="120px"
-            className="rounded-circle"
-            title={this.props.participantName}
-            playsInline
-            autoPlay
-            muted />
-      );
+        if (this.props.round) {
+            return (
+                <div className="attendee col-12 col-720p-6">
+                    <div className="d-flex justify-content-center">
+                        <video
+                            ref={ref => (this.video = ref)}
+                            title={this.props.participantName}
+                            playsInline
+                            autoPlay
+                            muted />
+                    </div>
+                    <p>{this.props.participantName}</p>
+                </div>
+            );
+        }
+
+        return (
+            <div className="attendee col-12 col-720p-6">
+                <video
+                    ref={ref => (this.video = ref)}
+                    title={this.props.participantName}
+                    playsInline
+                    autoPlay
+                    muted />
+                <p>{this.props.participantName}</p>
+            </div>
+        );
     }
 }
 
@@ -38,12 +54,14 @@ AttendeeVideo.propTypes = {
     participantId: PropTypes.string,
     participantName: PropTypes.string,
     stream: PropTypes.object,
+    round: PropTypes.bool
 };
 
 AttendeeVideo.defaultProps = {
     participantId: null,
     participantName: null,
-    stream: null
+    stream: null,
+    round: true
 };
 
 export default AttendeeVideo;

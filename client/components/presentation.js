@@ -13,7 +13,9 @@ class Presentation extends Component {
         this.state = {
             slideUrl: null,
             canGoBack: false,
-            canGoForward: false
+            canGoForward: false,
+            slidePosition: 0,
+            slideCount: 0
         }
 
         this.previousSlide = this.previousSlide.bind(this);
@@ -69,7 +71,9 @@ class Presentation extends Component {
                 this.setState({
                     slideUrl: url,
                     canGoBack: canGoBack,
-                    canGoForward: canGoForward
+                    canGoForward: canGoForward,
+                    slidePosition: current.position + 1, // Index is 0
+                    slideCount: current.imageCount
                 });
             })
             .catch((e) => console.log(e));
@@ -77,21 +81,22 @@ class Presentation extends Component {
 
     render() {
         return (
-            <div className="presentation row flex-fill">
-                <div className="col d-flex flex-column">
-                    <div className="inner-presentation h-100">
-                        <div>
-                            <img src={this.state.slideUrl} />
-                            {this.state.canGoBack && (
-                                <div className="left h-100">
-                                    <button onClick={this.previousSlide}><i className="fas fa-chevron-left fa-3x"></i></button>
-                                </div>
-                            )}
-                            {this.state.canGoForward && (
-                                <div className="right h-100">
-                                    <button onClick={this.nextSlide}><i className="fas fa-chevron-right fa-3x"></i></button>
-                                </div>
-                            )}
+            <div className="presentation row flex-grow-1">
+                <div className="col">
+                    <div className="container-fluid d-flex h-100 flex-column">
+                        <div className="row flex-grow-1">
+                            <div className="image col" style={{ backgroundImage: `url(${this.state.slideUrl})` }} />
+                        </div>
+                        <div className="row">
+                            <div className="presentationActions">
+                                <a href="#" onClick={this.previousSlide} className={this.state.canGoBack ? "" : "disabled"} title="Previous Slide">
+                                    <i className="fas fa-chevron-left"></i>
+                                </a>
+                                {this.state.slidePosition} of {this.state.slideCount}
+                                <a href="#" onClick={this.nextSlide} className={this.state.canGoForward ? "" : "disabled"} title="Next slide">
+                                    <i className="fas fa-chevron-right"></i>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>

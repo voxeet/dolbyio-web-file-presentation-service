@@ -155,24 +155,29 @@ const createConferenceAsync = async (alias, ownerExternalId) => {
 }
 
 // See: https://dolby.io/developers/interactivity-apis/reference/rest-apis/conference#operation/postConferenceInvite
-const getInvitationAsync = async (conferenceId, externalId) => {
+const getInvitationAsync = async (conferenceId, externalId, isParticipant) => {
+    // "INVITE", "JOIN", "SEND_AUDIO", "SEND_VIDEO", "SHARE_SCREEN",
+    // "SHARE_VIDEO", "SHARE_FILE", "SEND_MESSAGE", "RECORD", "STREAM",
+    // "KICK", "UPDATE_PERMISSIONS"
+
     const participants = {};
-    participants[externalId] = {
-        permissions: [
-            //"INVITE",
-            "JOIN",
-            "SEND_AUDIO",
-            "SEND_VIDEO",
-            "SHARE_SCREEN",
-            //"SHARE_VIDEO",
-            //"SHARE_FILE",
-            "SEND_MESSAGE",
-            //"RECORD",
-            //"STREAM",
-            //"KICK",
-            //"UPDATE_PERMISSIONS"
-        ]
-    };
+    if (isParticipant) {
+        participants[externalId] = {
+            permissions: [
+                "JOIN",
+                "SEND_AUDIO",
+                "SEND_VIDEO",
+                "SEND_MESSAGE"
+            ]
+        };
+    } else {
+        participants[externalId] = {
+            permissions: [
+                "JOIN",
+                "SEND_MESSAGE"
+            ]
+        };
+    }
 
     const body = JSON.stringify({
         participants: participants
@@ -242,6 +247,7 @@ app.post('/get-invited', async function (request, response) {
 
     const alias = request.body.alias;
     const externalId = request.body.externalId;
+    const isParticipant = request.body.isParticipant;
 
     try {
         const conferenceId = await getConferenceIdAsync(alias);
@@ -250,7 +256,7 @@ app.post('/get-invited', async function (request, response) {
             return;
         }
 
-        const accessToken = await getInvitationAsync(conferenceId, externalId);
+        const accessToken = await getInvitationAsync(conferenceId, externalId, isParticipant);
         
         response.set('Content-Type', 'application/json');
         response.send(JSON.stringify({

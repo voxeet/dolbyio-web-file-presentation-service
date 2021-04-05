@@ -3,11 +3,63 @@
 
 .actions {
     background-color: @actionsBackgroundColor;
-    margin-left: -30px;
-    margin-right: -30px;
-    padding: 5px;
+    color: @actionsColor;
+    //margin-left: -30px;
+    //margin-right: -30px;
+    padding: 10px;
+    font-size: 1.25rem;
+
+    .separator {
+        border-right: 2px solid @actionsSeparatorColor;
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+
+    .col-left, .col-center , .col-right  {
+        margin-top: auto;
+        margin-bottom: auto;
+    }
+    
+    .btn-xl {
+        padding: .5rem 1rem;
+        font-size: 1.25rem;
+        line-height: 1.5;
+        border-radius: .3rem;
+        margin-left: 5px;
+        margin-right: 5px;
+    }
 
     .btn-action {
+        padding: .5rem 1.5rem;
+        min-width: 80px;
+        font-size: 1.5rem;
+        color: @textColor;
+        background: none;
+    }
+
+    .btn-action:hover {
+        color: @actionsColorHover;
+    }
+
+    .recording i {
+        color: @actionsRecordingColor;
+    }
+
+    /*.col-left {
+        span {
+            border-right: 2px solid @actionsSeparatorColor;
+        }
+    }
+
+    .col-right {
+        text-align: right;
+
+        span {
+            border-left: 2px solid @actionsSeparatorColor;
+        }
+    }*/
+
+    /*.btn-action {
         border: 1px solid white;
         border-radius: 50px;
         height: 80px;
@@ -43,5 +95,5 @@
         i {
             color: #F7F7F7;
         }
-    }
+    }*/
 }

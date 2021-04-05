@@ -16,6 +16,7 @@ class Login extends Component {
         this.state = {
             conferenceName: 'conf-' + Math.round(Math.random() * 10000),
             userName: 'Guest ' + Math.round(Math.random() * 10000),
+            isListener: false,
             file: null,
             canJoinConference: true,
             canStartPresentation: false,
@@ -28,6 +29,7 @@ class Login extends Component {
 
         this.handleChangeConferenceName = this.handleChangeConferenceName.bind(this);
         this.handleChangeUserName = this.handleChangeUserName.bind(this);
+        this.handleChangeAsListener = this.handleChangeAsListener.bind(this);
         this.handleChangePresentationFile = this.handleChangePresentationFile.bind(this);
 
         this.joinPresentation = this.joinPresentation.bind(this);
@@ -90,6 +92,12 @@ class Login extends Component {
         this.setState({
             file: file,
             canStartPresentation: canJoinConference && file != null
+        });
+    }
+
+    handleChangeAsListener(e) {
+        this.setState({
+            isListener: e.target.checked
         });
     }
 
@@ -186,6 +194,16 @@ class Login extends Component {
                                             id="input-user-name"
                                             value={this.state.userName}
                                             onChange={this.handleChangeUserName} />
+                                    </div>
+
+                                    <div className="form-group form-check">
+                                        <input
+                                            type="checkbox"
+                                            className="form-check-input"
+                                            id="input-as-listener"
+                                            checked={this.state.isListener}
+                                            onChange={this.handleChangeAsListener} />
+                                        <label className="form-check-label" htmlFor="input-as-listener">Join as listener</label>
                                     </div>
                                     
                                     <button

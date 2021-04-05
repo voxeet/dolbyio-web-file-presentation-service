@@ -82,10 +82,8 @@ class Slides extends Component {
     render() {
       return (
         <div className="thumbnails row">
-            <div className="col">
-                <div className="list-group list-group-horizontal">
-                    {this.thumbnails}
-                </div>
+            <div className="col list-group list-group-horizontal">
+                {this.thumbnails}
             </div>
         </div>
       );

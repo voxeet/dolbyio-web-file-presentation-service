@@ -135,7 +135,7 @@ export default class Root extends Component {
     }
 
 
-    async getInvited(conferenceAlias) {
+    async getInvited(conferenceAlias, isParticipant) {
         this.setState({
             isLoading: true,
             loadingMessage: 'Request access to the conference'
@@ -150,7 +150,8 @@ export default class Root extends Component {
             },
             body: JSON.stringify({
                 alias: conferenceAlias,
-                externalId: externalId
+                externalId: externalId,
+                isParticipant: isParticipant
             })
         };
 
