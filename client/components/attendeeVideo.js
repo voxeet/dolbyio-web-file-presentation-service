@@ -61,7 +61,7 @@ AttendeeVideo.defaultProps = {
     participantId: null,
     participantName: null,
     stream: null,
-    round: true
+    round: false
 };
 
 export default AttendeeVideo;

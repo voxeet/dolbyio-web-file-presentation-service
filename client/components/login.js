@@ -49,11 +49,9 @@ class Login extends Component {
     }
 
     onFilePresentationConversionProgress(fileConversionProgress) {
-        const percentage = fileConversionProgress.currentStep * 100 / fileConversionProgress.stepCount;
-
         this.setState({
             isLoading: true,
-            loadingMessage: `Converting the presentation - ${percentage.toFixed(0)}%`
+            loadingMessage: `Converting the presentation - ${fileConversionProgress.progress.toFixed(0)}%`
         });
 
         //console.log(fileConversionProgress);
