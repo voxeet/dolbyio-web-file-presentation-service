@@ -3,14 +3,15 @@ import PropTypes from "prop-types";
 
 import VoxeetSDK from "@voxeet/voxeet-web-sdk";
 
+import Sdk from "../actions/sdk";
 import Loading from "./loading";
 import Presentation from "./presentation";
 import Slides from "./slides";
 import Actions from "./actions";
 import Attendees from "./attendees";
-import Chat from "./chat";
 
 import "../styles/conference.less";
+
 
 class Conference extends Component {
 
@@ -36,9 +37,7 @@ class Conference extends Component {
                 loadingMessage: 'Starting the presentation'
             });
             
-            VoxeetSDK
-                .filePresentation
-                .start(this.props.fileConverted)
+            Sdk.startPresentation(this.props.fileConverted)
                 .then(() => {
                     this.setState({ isLoading: false });
                 })

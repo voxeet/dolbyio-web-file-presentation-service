@@ -2,9 +2,13 @@ import React, { Component } from "react";
 
 import VoxeetSDK from "@voxeet/voxeet-web-sdk";
 
+import Backend from "./actions/backend";
+import Sdk from "./actions/sdk";
+
 import Loading from "./components/loading";
 import Login from "./components/login";
 import Conference from "./components/conference";
+
 
 export default class Root extends Component {
 
@@ -28,12 +32,9 @@ export default class Root extends Component {
         VoxeetSDK.conference.on('ended', this.onConferenceEndedOrLeft);
         VoxeetSDK.conference.on('left', this.onConferenceEndedOrLeft);
 
-        this.getAccessToken()
-            .then(accessToken => VoxeetSDK.initializeToken(accessToken, this.getAccessToken) )
-            .then(() => {
-                console.log('SDK Initialized');
-                this.setState({ isLoading: false });
-            });
+        Sdk.initializeSDK()
+            .then(() => this.setState({ isLoading: false }) )
+            .catch((e) => console.log(e));
 
         // Remove the bottom left link from Google Chrome
         // From: https://stackoverflow.com/a/28206011
@@ -60,9 +61,7 @@ export default class Root extends Component {
             loadingMessage: 'Leaving the conference'
         });
 
-        VoxeetSDK
-            .session
-            .close()
+        Sdk.closeSession()
             .then(() => {
                 this.setState({
                     isLoading: false,
@@ -77,135 +76,68 @@ export default class Root extends Component {
             });
     }
 
-    async getAccessToken() {
-        const url = '/access-token';
-        const response = await fetch(url);
-        const jwt = await response.json();
-
-        return jwt.access_token;
-    }
-
-    onSessionOpened(conferenceAlias, userName, fileConverted, presentation) {
+    onSessionOpened(conferenceAlias, username, isListener, fileConverted, presentation) {
         console.log("Conference alias", conferenceAlias);
-        console.log("Username", userName);
+        console.log("Username", username);
+        const externalId = VoxeetSDK.session.participant.info.externalId;
 
         if (fileConverted) {
             console.log("Converted file", fileConverted);
 
-            this.createConference(conferenceAlias)
-                .then(conference => {
-                    this.joinConference(conference.conferenceId, conference.ownerToken)
-                        .then(_ => {
-                            this.setState({
-                                isLoading: false,
-                                isLoggedIn: true,
-                                isHost: true,
-                                fileConverted: fileConverted,
-                                presentation: presentation
-                            });
-                        })
-                        .catch((e) => {
-                            this.setState({ isLoading: false });
-                            console.log(e);
-                        });
+            this.setState({
+                isLoading: true,
+                loadingMessage: 'Creating the conference'
+            });
+
+            Backend.createConference(conferenceAlias, externalId)
+                .then((conference) => {
+                    this.setState({
+                        isLoading: true,
+                        loadingMessage: 'Joining the conference'
+                    });
+
+                    return Sdk.joinConference(conference.conferenceId, conference.ownerToken);
+                })
+                .then(() => {
+                    this.setState({
+                        isLoading: false,
+                        isLoggedIn: true,
+                        isHost: true,
+                        fileConverted: fileConverted,
+                        presentation: presentation
+                    });
                 })
                 .catch((e) => {
                     this.setState({ isLoading: false });
                     console.log(e);
                 });
         } else {
-            this.getInvited(conferenceAlias)
+            this.setState({
+                isLoading: true,
+                loadingMessage: 'Request access to the conference'
+            });
+
+            Backend.getInvited(conferenceAlias, isListener, externalId)
                 .then(invitation => {
-                    this.joinConference(invitation.conferenceId, invitation.accessToken)
-                        .then(_ => {
-                            this.setState({
-                                isLoading: false,
-                                isLoggedIn: true,
-                                isHost: false
-                            });
-                        })
-                        .catch((e) => {
-                            this.setState({ isLoading: false });
-                            console.log(e);
-                        });
+                    this.setState({
+                        isLoading: true,
+                        loadingMessage: 'Joining the conference'
+                    });
+
+                    return Sdk.joinConference(invitation.conferenceId, invitation.accessToken);
+                })
+                .then(() => {
+                    this.setState({
+                        isLoading: false,
+                        isLoggedIn: true,
+                        isHost: false
+                    });
                 })
                 .catch((e) => {
                     this.setState({ isLoading: false });
                     console.log(e);
                 });
         }
-    }
-
-
-    async getInvited(conferenceAlias, isParticipant) {
-        this.setState({
-            isLoading: true,
-            loadingMessage: 'Request access to the conference'
-        });
-
-        const externalId = VoxeetSDK.session.participant.info.externalId;
-
-        const options = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json;charset=utf-8'
-            },
-            body: JSON.stringify({
-                alias: conferenceAlias,
-                externalId: externalId,
-                isParticipant: isParticipant
-            })
-        };
-
-        // Request the backend for an invitation
-        const invitation = await fetch('/get-invited', options)
-        return invitation.json();
-    }
-
-    async createConference(conferenceAlias) {
-        this.setState({
-            isLoading: true,
-            loadingMessage: 'Creating the conference'
-        });
-
-        const externalId = VoxeetSDK.session.participant.info.externalId;
-
-        const options = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json;charset=utf-8'
-            },
-            body: JSON.stringify({
-                alias: conferenceAlias,
-                ownerExternalId: externalId
-            })
-        };
-
-        // Request the backend to create a conference
-        const response = await fetch('/conference', options);
-        return response.json();
-    }
-
-    async joinConference(conferenceId, conferenceAccessToken) {
-        this.setState({
-            isLoading: true,
-            loadingMessage: 'Joining the conference'
-        });
-
-        const conference = await VoxeetSDK.conference.fetch(conferenceId);
-
-        // See: https://dolby.io/developers/interactivity-apis/client-sdk/reference-javascript/model/joinoptions
-        const joinOptions = {
-            conferenceAccessToken: conferenceAccessToken,
-            constraints: {
-                audio: true,
-                video: true
-            },
-            maxVideoForwarding: 6
-        };
-
-        // Join the conference
-        await VoxeetSDK.conference.join(conference, joinOptions);
     }
 
     
@@ -215,8 +147,7 @@ export default class Root extends Component {
         }
 
         if (!this.state.isLoggedIn) {
-            return <Login
-                handleOnSessionOpened={(conferenceAlias, userName, fileConverted, presentation) => this.onSessionOpened(conferenceAlias, userName, fileConverted, presentation)} />;
+            return <Login handleOnSessionOpened={this.onSessionOpened} />;
         }
 
         return <Conference

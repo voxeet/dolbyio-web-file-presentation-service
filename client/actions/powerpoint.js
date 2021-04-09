@@ -1,21 +1,8 @@
 import JSZip from "jszip";
 
-export class Presentation {
+
+export default class PowerPoint {
     
-    constructor(slides) {
-        this.slides = slides;
-    }
-
-    get(slideId) {
-        for (let index = 0; index < this.slides.length; index++) {
-            const slide = this.slides[index];
-            if (slide.id == slideId) {
-                return slide;
-            }
-        }
-        return null;
-    }
-
     static async _getNotesSlides(zipFile) {
         const parser = new DOMParser();
         const notesSlides = [];
@@ -37,42 +24,9 @@ export class Presentation {
         return notesSlides;
     }
 
-    static async getPresentation(file) {
-        const zipFile = await JSZip.loadAsync(file);
-        //console.log(zipFile);
-
-        const notesSlides = await Presentation._getNotesSlides(zipFile);
-
-        const regex = /\d+/g;
-
-        const slides = [];
-
-        for (let index = 0; index < notesSlides.length; index++) {
-            const filename = notesSlides[index];
-
-            const found = filename.match(regex);
-            if (found) {
-                const slideId = parseInt(found[0]) - 1;
-                const slide = await Slide.getSlide(zipFile, filename, slideId);
-                slides.push(slide);
-            }
-        }
-
-        return new Presentation(slides);
-    }
-
-}
-
-export class Slide {
-
-    constructor(id, notes) {
-        this.id = id;
-        this.notes = notes;
-    }
-
-    static async getSlide(zipFile, filename, slideId) {
+    static async _extractNotes(zipFile, filename) {
         const file = zipFile.file(filename);
-        if (!file) return;
+        if (!file) return null;
 
         const P_NAMESPACE = 'http://schemas.openxmlformats.org/presentationml/2006/main';
         const A_NAMESPACE = 'http://schemas.openxmlformats.org/drawingml/2006/main';
@@ -111,13 +65,41 @@ export class Slide {
                     string += rElement.getElementsByTagNameNS(A_NAMESPACE, 't')[0].innerHTML;
                 }
 
-                notes.push(string);
+                if (string.length > 0) {
+                    notes.push(string);
+                }
             }
 
-            return new Slide(slideId, notes);
+            return notes.length > 0 ? notes : null;
         }
 
         return null;
+    }
+
+    static async getPresentation(file) {
+        const zipFile = await JSZip.loadAsync(file);
+        //console.log(zipFile);
+
+        const notesSlides = await PowerPoint._getNotesSlides(zipFile);
+
+        const regex = /\d+/g;
+
+        const slides = {};
+
+        for (let index = 0; index < notesSlides.length; index++) {
+            const filename = notesSlides[index];
+
+            const match = filename.match(regex);
+            if (match) {
+                const slideId = parseInt(match[0]) - 1;
+                const notes = await PowerPoint._extractNotes(zipFile, filename);
+                if (notes != null) {
+                    slides[slideId] = notes;
+                }
+            }
+        }
+
+        return slides;
     }
 
 }

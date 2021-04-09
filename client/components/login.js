@@ -4,8 +4,8 @@ import PropTypes from "prop-types";
 import VoxeetSDK from "@voxeet/voxeet-web-sdk";
 
 import Loading from "./loading";
-
-import { Presentation } from "../models/presentation";
+import PowerPoint from "../actions/powerpoint";
+import Sdk from "../actions/sdk";
 
 import "../styles/login.less";
 
@@ -17,7 +17,7 @@ class Login extends Component {
 
         this.state = {
             conferenceName: 'conf-' + Math.round(Math.random() * 10000),
-            userName: 'Guest ' + Math.round(Math.random() * 10000),
+            username: 'Guest ' + Math.round(Math.random() * 10000),
             isListener: false,
             file: null,
             canJoinConference: true,
@@ -60,15 +60,16 @@ class Login extends Component {
     onFilePresentationConverted(fileConverted) {
         console.log("fileConverted", fileConverted);
 
-        Presentation
+        PowerPoint
             .getPresentation(this.state.file)
-            .then(presentation => this.props.handleOnSessionOpened(this.state.conferenceName, this.state.userName, fileConverted, presentation))
+            .then(presentation => this.props.handleOnSessionOpened(
+                this.state.conferenceName, this.state.username, this.state.isListener, fileConverted, presentation))
             .catch(e => console.log(e));
     }
 
 
     handleChangeConferenceName(e) {
-        const canJoinConference = e.target.value.length > 0 && this.state.userName.length > 0;
+        const canJoinConference = e.target.value.length > 0 && this.state.username.length > 0;
 
         this.setState({
             conferenceName: e.target.value,
@@ -81,7 +82,7 @@ class Login extends Component {
         const canJoinConference = e.target.value.length > 0 && this.state.conferenceName.length > 0;
 
         this.setState({
-            userName: e.target.value,
+            username: e.target.value,
             canJoinConference: canJoinConference,
             canStartPresentation: canJoinConference && this.state.file != null
         });
@@ -106,60 +107,52 @@ class Login extends Component {
     }
 
 
-    openSession() {
+    joinPresentation() {
         this.setState({
             isLoading: true,
             loadingMessage: 'Opening a session'
         });
 
-        return VoxeetSDK
-            .session
-            .open({
-                name: this.state.userName,
-                externalId: this.state.userName,
-                avatarUrl: "https://gravatar.com/avatar/" + Math.floor(Math.random() * 1000000) + "?s=200&d=identicon",
-            });
-    }
-
-    joinPresentation() {
-        this.openSession()
+        Sdk.openSession(this.state.username, this.state.username)
             .then(() => {
-                this.props.handleOnSessionOpened(this.state.conferenceName, this.state.userName);
+                this.props.handleOnSessionOpened(this.state.conferenceName, this.state.username, this.state.isListener);
             })
-            .catch((e) => {
+            .catch(e => {
                 this.setState({ isLoading: false });
                 console.log(e);
             });
     }
 
     startPresentation() {
-        this.openSession()
+        this.setState({
+            isLoading: true,
+            loadingMessage: 'Opening a session'
+        });
+
+        Sdk.openSession(this.state.username, this.state.username)
             .then(() => {
                 this.setState({
                     isLoading: true,
                     loadingMessage: 'Uploading the presentation'
                 });
 
-                VoxeetSDK
-                    .filePresentation
-                    .convert(this.state.file)
-                    .then((result) => {
-                        if (result.status == 200) {
-                            this.setState({
-                                isLoading: true,
-                                loadingMessage: 'Converting the presentation'
-                            });
-                        } else {
-                            this.setState({ isLoading: false });
-                            console.log('There was an error while uploading the file.');
-                        }
+                const fileConverted = {id: "us_823d42b1-fa11-48c5-ade0-f3a1b83edd4a", imageCount: 6, name: "Competitors Pricing.pptx", size: 995693, ownerId: "c70a70cb-c079-32bf-b9b2-8844d6fd60c9"};
+                //const fileConverted = {id: "us_8e1a13dd-0b38-407b-a169-20e398432b5f", imageCount: 19, name: "Presentation1.pptx", size: 2309607, ownerId: "d3156ed8-b5cf-3b5f-b7ab-00e1ffde091b"};
+                this.onFilePresentationConverted(fileConverted);
+
+                /*Sdk.convertFile(this.state.file)
+                    .then(() => {
+                        this.setState({
+                            isLoading: true,
+                            loadingMessage: 'Converting the presentation'
+                        });
                     })
-                    .catch((e) => {
+                    .catch(e => {
                         this.setState({ isLoading: false });
                         console.log(e);
-                    });
+                    });*/
             })
-            .catch((e) => {
+            .catch(e => {
                 this.setState({ isLoading: false });
                 console.log(e);
             });
@@ -196,7 +189,7 @@ class Login extends Component {
                                             type="text"
                                             className="form-control"
                                             id="input-user-name"
-                                            value={this.state.userName}
+                                            value={this.state.username}
                                             onChange={this.handleChangeUserName} />
                                     </div>
 

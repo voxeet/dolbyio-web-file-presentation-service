@@ -3,7 +3,10 @@ import PropTypes from "prop-types";
 
 import VoxeetSDK from "@voxeet/voxeet-web-sdk";
 
+import Sdk from "../actions/sdk";
+
 import "../styles/slides.less";
+
 
 class Slides extends Component {
 
@@ -24,9 +27,7 @@ class Slides extends Component {
         VoxeetSDK.filePresentation.on('started', this.changeHighlight);
 
         for (let index = 0; index < VoxeetSDK.filePresentation.current.imageCount; index++) {
-            VoxeetSDK
-                .filePresentation
-                .thumbnail(index)
+            Sdk.getSlideThumbnailUrl(index)
                 .then(url => {
                     const key = `thumbnail-${index}`;
                     const cssClassName = VoxeetSDK.filePresentation.current.position == index
@@ -54,10 +55,7 @@ class Slides extends Component {
     }
 
     changeSlide(position) {
-        VoxeetSDK
-            .filePresentation
-            .update(position)
-            .catch((e) => console.log(e));
+        Sdk.changeSlidePosition(position);
     }
 
     changeHighlight(filePresentation) {
@@ -80,13 +78,13 @@ class Slides extends Component {
     }
 
     render() {
-      return (
-        <div className="thumbnails row">
-            <div className="col list-group list-group-horizontal">
-                {this.thumbnails}
+        return (
+            <div className="thumbnails row">
+                <div className="col list-group list-group-horizontal">
+                    {this.thumbnails}
+                </div>
             </div>
-        </div>
-      );
+        );
     }
 }
 

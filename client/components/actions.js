@@ -3,7 +3,10 @@ import PropTypes from "prop-types";
 
 import VoxeetSDK from "@voxeet/voxeet-web-sdk";
 
+import Sdk from "../actions/sdk";
+
 import "../styles/actions.less";
+
 
 class Actions extends Component {
 
@@ -105,9 +108,7 @@ class Actions extends Component {
     }
 
     startVideo() {
-        VoxeetSDK
-            .conference
-            .startVideo(VoxeetSDK.session.participant)
+        Sdk.startVideo()
             .then(() => {
                 this.setState({
                     canStartVideo: false,
@@ -118,9 +119,7 @@ class Actions extends Component {
     }
 
     stopVideo() {
-        VoxeetSDK
-            .conference
-            .stopVideo(VoxeetSDK.session.participant)
+        Sdk.stopVideo()
             .then(() => {
                 this.setState({
                     canStartVideo: true,
@@ -131,7 +130,7 @@ class Actions extends Component {
     }
 
     mute() {
-        VoxeetSDK.conference.mute(VoxeetSDK.session.participant, true);
+        Sdk.mute();
 
         this.setState({
             canMute: false,
@@ -140,7 +139,7 @@ class Actions extends Component {
     }
 
     unmute() {
-        VoxeetSDK.conference.mute(VoxeetSDK.session.participant, false);
+        Sdk.mute();
 
         this.setState({
             canMute: true,
@@ -149,65 +148,27 @@ class Actions extends Component {
     }
 
     leave() {
-        VoxeetSDK
-            .conference
-            .leave()
-            .catch(e => console.log(e));
+        Sdk.leaveConference();
     }
 
     startRecording() {
-        console.log('Starting the recording...');
-
-        VoxeetSDK
-            .recording
-            .start()
+        Sdk.startRecording()
             .then(() => {
                 this.setState({
                     canStartRecording: false,
                     canStopRecording: true
                 });
-
-                const msg = JSON.stringify({
-                    action: 'RecordingState',
-                    value: true
-                });
-
-                // Send a message to alert other participants
-                VoxeetSDK
-                    .command
-                    .send(msg)
-                    .catch(e => console.log(e));
-
-                const event = new Event('recordingStarted');
-                document.dispatchEvent(event);
             })
             .catch(e => console.log(e));
     }
 
     stopRecording() {
-        console.log('Stopping the recording...');
-
-        VoxeetSDK
-            .recording
-            .stop()
+        Sdk.stopRecording()
             .then(() => {
                 this.setState({
                     canStartRecording: true,
                     canStopRecording: false
                 });
-
-                const msg = JSON.stringify({
-                    action: 'RecordingState',
-                    value: false
-                });
-
-                VoxeetSDK
-                    .command
-                    .send(msg)
-                    .catch(e => console.log(e));
-
-                const event = new Event('recordingStopped');
-                document.dispatchEvent(event);
             })
             .catch(e => console.log(e));
     }

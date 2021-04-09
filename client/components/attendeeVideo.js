@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 
+
 class AttendeeVideo extends Component {
 
     constructor(props) {
