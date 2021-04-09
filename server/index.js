@@ -39,14 +39,14 @@ const postAsync = (hostname, path, headers, body) => {
             console.log(`[POST] ${res.statusCode} - https://${hostname}${path}`);
 
             let data = '';
-            res.on('data', (chunk) => {
+            res.on('data', chunk => {
                 data = data + chunk.toString();
             });
 
             res.on('end', () => {
                 const json = JSON.parse(data);
                 resolve(json);
-            })
+            });
         });
         
         req.on('error', error => {
@@ -118,19 +118,19 @@ const getAccessTokenAsync = (hostname, path) => {
     };
 
     return postAsync(hostname, path, headers, body);
-}
+};
 
 // See: https://dolby.io/developers/interactivity-apis/reference/rest-apis/authentication#operation/postOAuthToken
 const getClientAccessTokenAsync = () => {
     console.log('Get Client Access Token');
     return getAccessTokenAsync('session.voxeet.com', '/v1/oauth2/token');
-}
+};
 
 // See: https://dolby.io/developers/interactivity-apis/reference/rest-apis/authentication#operation/JWT
 const getAPIAccessTokenAsync = () => {
     console.log('Get API Access Token');
     return getAccessTokenAsync('api.voxeet.com', '/v1/auth/token');
-}
+};
 
 // See: https://dolby.io/developers/interactivity-apis/reference/rest-apis/conference#operation/postConferenceCreate
 const createConferenceAsync = async (alias, ownerExternalId) => {
@@ -152,21 +152,19 @@ const createConferenceAsync = async (alias, ownerExternalId) => {
     };
 
     return await postAsync('api.voxeet.com', '/v2/conferences/create', headers, body);
-}
+};
 
 // See: https://dolby.io/developers/interactivity-apis/reference/rest-apis/conference#operation/postConferenceInvite
-const getInvitationAsync = async (conferenceId, externalId, isParticipant) => {
+const getInvitationAsync = async (conferenceId, externalId, isListener) => {
     // "INVITE", "JOIN", "SEND_AUDIO", "SEND_VIDEO", "SHARE_SCREEN",
     // "SHARE_VIDEO", "SHARE_FILE", "SEND_MESSAGE", "RECORD", "STREAM",
     // "KICK", "UPDATE_PERMISSIONS"
 
     const participants = {};
-    if (isParticipant) {
+    if (isListener) {
         participants[externalId] = {
             permissions: [
                 "JOIN",
-                "SEND_AUDIO",
-                "SEND_VIDEO",
                 "SEND_MESSAGE"
             ]
         };
@@ -174,6 +172,8 @@ const getInvitationAsync = async (conferenceId, externalId, isParticipant) => {
         participants[externalId] = {
             permissions: [
                 "JOIN",
+                "SEND_AUDIO",
+                "SEND_VIDEO",
                 "SEND_MESSAGE"
             ]
         };
@@ -192,7 +192,7 @@ const getInvitationAsync = async (conferenceId, externalId, isParticipant) => {
     };
 
     return await postAsync('api.voxeet.com', `/v2/conferences/${conferenceId}/invite`, headers, body);
-}
+};
 
 const getConferenceIdAsync = async function (alias) {
     const jwt = await getAPIAccessTokenAsync();
@@ -210,7 +210,7 @@ const getConferenceIdAsync = async function (alias) {
             return conference.confId;
         }
     }
-}
+};
 
 
 app.get('/access-token', function (request, response) {
@@ -247,7 +247,7 @@ app.post('/get-invited', async function (request, response) {
 
     const alias = request.body.alias;
     const externalId = request.body.externalId;
-    const isParticipant = request.body.isParticipant;
+    const isListener = request.body.isListener;
 
     try {
         const conferenceId = await getConferenceIdAsync(alias);
@@ -256,7 +256,7 @@ app.post('/get-invited', async function (request, response) {
             return;
         }
 
-        const accessToken = await getInvitationAsync(conferenceId, externalId, isParticipant);
+        const accessToken = await getInvitationAsync(conferenceId, externalId, isListener);
         
         response.set('Content-Type', 'application/json');
         response.send(JSON.stringify({

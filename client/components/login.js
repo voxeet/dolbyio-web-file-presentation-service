@@ -136,11 +136,7 @@ class Login extends Component {
                     loadingMessage: 'Uploading the presentation'
                 });
 
-                const fileConverted = {id: "us_823d42b1-fa11-48c5-ade0-f3a1b83edd4a", imageCount: 6, name: "Competitors Pricing.pptx", size: 995693, ownerId: "c70a70cb-c079-32bf-b9b2-8844d6fd60c9"};
-                //const fileConverted = {id: "us_8e1a13dd-0b38-407b-a169-20e398432b5f", imageCount: 19, name: "Presentation1.pptx", size: 2309607, ownerId: "d3156ed8-b5cf-3b5f-b7ab-00e1ffde091b"};
-                this.onFilePresentationConverted(fileConverted);
-
-                /*Sdk.convertFile(this.state.file)
+                Sdk.convertFile(this.state.file)
                     .then(() => {
                         this.setState({
                             isLoading: true,
@@ -150,7 +146,7 @@ class Login extends Component {
                     .catch(e => {
                         this.setState({ isLoading: false });
                         console.log(e);
-                    });*/
+                    });
             })
             .catch(e => {
                 this.setState({ isLoading: false });
