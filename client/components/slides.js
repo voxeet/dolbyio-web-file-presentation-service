@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 
 import VoxeetSDK from "@voxeet/voxeet-web-sdk";
 
@@ -23,16 +22,16 @@ class Slides extends Component {
     }
 
     componentDidMount() {
-        VoxeetSDK.filePresentation.on('updated', this.changeHighlight);
-        VoxeetSDK.filePresentation.on('started', this.changeHighlight);
+        VoxeetSDK.filePresentation.on("updated", this.changeHighlight);
+        VoxeetSDK.filePresentation.on("started", this.changeHighlight);
 
         for (let index = 0; index < VoxeetSDK.filePresentation.current.imageCount; index++) {
             Sdk.getSlideThumbnailUrl(index)
                 .then(url => {
                     const key = `thumbnail-${index}`;
                     const cssClassName = VoxeetSDK.filePresentation.current.position == index
-                        ? 'list-group-item active'
-                        : 'list-group-item';
+                        ? "list-group-item active"
+                        : "list-group-item";
 
                     this.thumbnails.push(
                         <a key={key} id={key} href="#" className={cssClassName} onClick={() => this.changeSlide(index)}>
@@ -50,8 +49,8 @@ class Slides extends Component {
     }
 
     componentWillUnmount() {
-        VoxeetSDK.filePresentation.removeListener('updated', this.changeHighlight);
-        VoxeetSDK.filePresentation.removeListener('started', this.changeHighlight);
+        VoxeetSDK.filePresentation.removeListener("updated", this.changeHighlight);
+        VoxeetSDK.filePresentation.removeListener("started", this.changeHighlight);
     }
 
     changeSlide(position) {
@@ -60,17 +59,17 @@ class Slides extends Component {
 
     changeHighlight(filePresentation) {
         // Remove the active tag on all slides
-        const elements = document.getElementsByClassName('list-group-item');
+        const elements = document.getElementsByClassName("list-group-item");
         for (let index = 0; index < elements.length; index++) {
-            elements[index].classList.remove('active');
+            elements[index].classList.remove("active");
         }
 
         // Add the active class for the current slide
         const element = document.getElementById(`thumbnail-${filePresentation.position}`);
-        element.classList.add('active');
+        element.classList.add("active");
 
         // smooth scroll of the thumbnail to the center of the list
-        element.scrollIntoView({ behavior: 'smooth', inline: 'center' });
+        element.scrollIntoView({ behavior: "smooth", inline: "center" });
 
         // Log a message in the console
         const slideCount = VoxeetSDK.filePresentation.current?.imageCount ?? 0;
@@ -87,13 +86,5 @@ class Slides extends Component {
         );
     }
 }
-
-Slides.propTypes = {
-    
-};
-
-Slides.defaultProps = {
-    
-};
 
 export default Slides;

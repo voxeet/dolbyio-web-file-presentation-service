@@ -5,7 +5,7 @@ export default class Backend {
      * @return {Promise<string>} The session access token provided by the backend.
      */
     static async getAccessToken() {
-        const url = '/access-token';
+        const url = "/access-token";
         const response = await fetch(url);
         const jwt = await response.json();
 
@@ -21,9 +21,9 @@ export default class Backend {
      */
     static async getInvited(conferenceAlias, isListener, externalId) {
         const options = {
-            method: 'POST',
+            method: "POST",
             headers: {
-                'Content-Type': 'application/json;charset=utf-8'
+                "Content-Type": "application/json;charset=utf-8"
             },
             body: JSON.stringify({
                 alias: conferenceAlias,
@@ -33,7 +33,7 @@ export default class Backend {
         };
 
         // Request the backend for an invitation
-        const invitation = await fetch('/get-invited', options)
+        const invitation = await fetch("/get-invited", options)
         return invitation.json();
     }
 
@@ -45,9 +45,9 @@ export default class Backend {
      */
     static async createConference(conferenceAlias, externalId) {
         const options = {
-            method: 'POST',
+            method: "POST",
             headers: {
-                'Content-Type': 'application/json;charset=utf-8'
+                "Content-Type": "application/json;charset=utf-8"
             },
             body: JSON.stringify({
                 alias: conferenceAlias,
@@ -56,7 +56,7 @@ export default class Backend {
         };
 
         // Request the backend to create a conference
-        const response = await fetch('/conference', options);
+        const response = await fetch("/conference", options);
         return response.json();
     }
 

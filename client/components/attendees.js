@@ -24,9 +24,9 @@ class Attendees extends Component {
     }
 
     componentDidMount() {
-        VoxeetSDK.conference.on('streamAdded', this.onStreamAdded);
-        VoxeetSDK.conference.on('streamUpdated', this.onStreamUpdated);
-        VoxeetSDK.conference.on('streamRemoved', this.onStreamRemoved);
+        VoxeetSDK.conference.on("streamAdded", this.onStreamAdded);
+        VoxeetSDK.conference.on("streamUpdated", this.onStreamUpdated);
+        VoxeetSDK.conference.on("streamRemoved", this.onStreamRemoved);
 
         // Load the streams for all active participants after this component is loaded
         VoxeetSDK.conference.participants.forEach(participant => {
@@ -43,13 +43,13 @@ class Attendees extends Component {
     }
 
     componentWillUnmount() {
-        VoxeetSDK.conference.removeListener('streamAdded', this.onStreamAdded);
-        VoxeetSDK.conference.removeListener('streamUpdated', this.onStreamUpdated);
-        VoxeetSDK.conference.removeListener('streamRemoved', this.onStreamRemoved);
+        VoxeetSDK.conference.removeListener("streamAdded", this.onStreamAdded);
+        VoxeetSDK.conference.removeListener("streamUpdated", this.onStreamUpdated);
+        VoxeetSDK.conference.removeListener("streamRemoved", this.onStreamRemoved);
     }
 
     onStreamAdded(participant, stream) {
-        if (stream.type === 'ScreenShare') return;
+        if (stream.type === "ScreenShare") return;
 
         console.log(`${Date.now()} - streamAdded from ${participant.info.name} (${participant.id})`);
 
@@ -60,7 +60,7 @@ class Attendees extends Component {
     }
 
     onStreamUpdated(participant, stream) {
-        if (stream.type === 'ScreenShare') return;
+        if (stream.type === "ScreenShare") return;
 
         console.log(`${Date.now()} - streamUpdated from ${participant.info.name} (${participant.id})`);
 
@@ -73,7 +73,7 @@ class Attendees extends Component {
     }
 
     onStreamRemoved(participant, stream) {
-        if (stream.type === 'ScreenShare') return;
+        if (stream.type === "ScreenShare") return;
 
         console.log(`${Date.now()} - streamRemoved from ${participant.info.name} (${participant.id})`);
 

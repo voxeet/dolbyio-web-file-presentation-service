@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 
 import VoxeetSDK from "@voxeet/voxeet-web-sdk";
 
@@ -25,18 +24,18 @@ class Recording extends Component {
     }
 
     componentDidMount() {
-        VoxeetSDK.conference.on('participantAdded', this.refreshStatus);
-        VoxeetSDK.conference.on('participantUpdated', this.refreshStatus);
+        VoxeetSDK.conference.on("participantAdded", this.refreshStatus);
+        VoxeetSDK.conference.on("participantUpdated", this.refreshStatus);
 
-        document.addEventListener('recordingStarted', this.onRecordingStarted, false);
-        document.addEventListener('recordingStopped', this.onRecordingStopped, false);
+        document.addEventListener("recordingStarted", this.onRecordingStarted, false);
+        document.addEventListener("recordingStopped", this.onRecordingStopped, false);
 
         this.refreshStatus();
     }
 
     componentWillUnmount() {
-        VoxeetSDK.conference.removeListener('participantAdded', this.refreshStatus);
-        VoxeetSDK.conference.removeListener('participantUpdated', this.refreshStatus);
+        VoxeetSDK.conference.removeListener("participantAdded", this.refreshStatus);
+        VoxeetSDK.conference.removeListener("participantUpdated", this.refreshStatus);
 
         VoxeetSDK.command.removeListener("recordingStarted", this.onRecordingStarted);
         VoxeetSDK.command.removeListener("recordingStopped", this.onRecordingStopped);
@@ -46,7 +45,7 @@ class Recording extends Component {
         var isRecording = VoxeetSDK.recording.current != null;
 
         const canRecord = VoxeetSDK.conference.current != null
-            && VoxeetSDK.conference.current.permissions.has('RECORD');
+            && VoxeetSDK.conference.current.permissions.has("RECORD");
 
         this.setState({
             isRecording: isRecording,
@@ -83,7 +82,7 @@ class Recording extends Component {
         });
     }
 
-    onRecordingStopped(e) {
+    onRecordingStopped() {
         this.setState({
             isRecording: false
         });
@@ -109,13 +108,5 @@ class Recording extends Component {
         );
     }
 }
-
-Recording.propTypes = {
-    
-};
-
-Recording.defaultProps = {
-    
-};
 
 export default Recording;

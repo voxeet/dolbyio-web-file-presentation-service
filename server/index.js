@@ -1,4 +1,4 @@
-var express = require('express');
+var express = require("express");
 const https = require("https");
 
 var app = express();
@@ -7,14 +7,14 @@ var app = express();
 app.use(express.json());
 
 // Serve static files
-app.use(express.static('dist'))
+app.use(express.static("dist"))
 
 // Enter your Consumer Key and Secret from the dolby.io dashboard
-const CONSUMER_KEY = 'CONSUMER_KEY';
-const CONSUMER_SECRET = 'CONSUMER_SECRET';
+const CONSUMER_KEY = "CONSUMER_KEY";
+const CONSUMER_SECRET = "CONSUMER_SECRET";
 
 // Other settings
-const LIVE_RECORDING = false;
+const LIVE_RECORDING = true;
 
 
 /**
@@ -31,26 +31,26 @@ const postAsync = (hostname, path, headers, body) => {
             hostname: hostname,
             port: 443,
             path: path,
-            method: 'POST',
+            method: "POST",
             headers: headers
         };
         
-        const req = https.request(options, res => {
+        const req = https.request(options, (res) => {
             console.log(`[POST] ${res.statusCode} - https://${hostname}${path}`);
 
-            let data = '';
-            res.on('data', chunk => {
+            let data = "";
+            res.on("data", (chunk) => {
                 data = data + chunk.toString();
             });
 
-            res.on('end', () => {
+            res.on("end", () => {
                 const json = JSON.parse(data);
                 resolve(json);
-            });
+            })
         });
         
-        req.on('error', error => {
-            console.error('error', error);
+        req.on("error", (error) => {
+            console.error("error", error);
             reject(error);
         });
         
@@ -66,32 +66,32 @@ const postAsync = (hostname, path, headers, body) => {
  * @param {*} headers 
  * @returns A JSON payload object through a Promise.
  */
- const getAsync = (hostname, path, headers) => {
+const getAsync = (hostname, path, headers) => {
     return new Promise(function(resolve, reject) {
         const options = {
             hostname: hostname,
             port: 443,
             path: path,
-            method: 'GET',
+            method: "GET",
             headers: headers
         };
         
-        const req = https.request(options, res => {
+        const req = https.request(options, (res) => {
             console.log(`[GET] ${res.statusCode} - https://${hostname}${path}`);
 
-            let data = '';
-            res.on('data', (chunk) => {
+            let data = "";
+            res.on("data", (chunk) => {
                 data = data + chunk.toString();
             });
 
-            res.on('end', () => {
+            res.on("end", () => {
                 const json = JSON.parse(data);
                 resolve(json);
             })
         });
         
-        req.on('error', error => {
-            console.error('error', error);
+        req.on("error", (error) => {
+            console.error("error", error);
             reject(error);
         });
         
@@ -108,13 +108,13 @@ const postAsync = (hostname, path, headers, body) => {
 const getAccessTokenAsync = (hostname, path) => {
     const body = "grant_type=client_credentials";
 
-    const authz = Buffer.from(`${CONSUMER_KEY}:${CONSUMER_SECRET}`).toString('base64');
+    const authz = Buffer.from(`${CONSUMER_KEY}:${CONSUMER_SECRET}`).toString("base64");
 
     const headers = {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Cache-Control': 'no-cache',
-        'Authorization': 'Basic ' + authz,
-        'Content-Length': body.length
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Cache-Control": "no-cache",
+        "Authorization": "Basic " + authz,
+        "Content-Length": body.length
     };
 
     return postAsync(hostname, path, headers, body);
@@ -122,14 +122,14 @@ const getAccessTokenAsync = (hostname, path) => {
 
 // See: https://dolby.io/developers/interactivity-apis/reference/rest-apis/authentication#operation/postOAuthToken
 const getClientAccessTokenAsync = () => {
-    console.log('Get Client Access Token');
-    return getAccessTokenAsync('session.voxeet.com', '/v1/oauth2/token');
+    console.log("Get Client Access Token");
+    return getAccessTokenAsync("session.voxeet.com", "/v1/oauth2/token");
 };
 
 // See: https://dolby.io/developers/interactivity-apis/reference/rest-apis/authentication#operation/JWT
 const getAPIAccessTokenAsync = () => {
-    console.log('Get API Access Token');
-    return getAccessTokenAsync('api.voxeet.com', '/v1/auth/token');
+    console.log("Get API Access Token");
+    return getAccessTokenAsync("api.voxeet.com", "/v1/auth/token");
 };
 
 // See: https://dolby.io/developers/interactivity-apis/reference/rest-apis/conference#operation/postConferenceCreate
@@ -146,12 +146,12 @@ const createConferenceAsync = async (alias, ownerExternalId) => {
     const jwt = await getAPIAccessTokenAsync();
 
     const headers = {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + jwt.access_token,
-        'Content-Length': body.length
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + jwt.access_token,
+        "Content-Length": body.length
     };
 
-    return await postAsync('api.voxeet.com', '/v2/conferences/create', headers, body);
+    return await postAsync("api.voxeet.com", "/v2/conferences/create", headers, body);
 };
 
 // See: https://dolby.io/developers/interactivity-apis/reference/rest-apis/conference#operation/postConferenceInvite
@@ -186,22 +186,22 @@ const getInvitationAsync = async (conferenceId, externalId, isListener) => {
     const jwt = await getAPIAccessTokenAsync();
 
     const headers = {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + jwt.access_token,
-        'Content-Length': body.length
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + jwt.access_token,
+        "Content-Length": body.length
     };
 
-    return await postAsync('api.voxeet.com', `/v2/conferences/${conferenceId}/invite`, headers, body);
+    return await postAsync("api.voxeet.com", `/v2/conferences/${conferenceId}/invite`, headers, body);
 };
 
 const getConferenceIdAsync = async function (alias) {
     const jwt = await getAPIAccessTokenAsync();
 
     const headers = {
-        'Authorization': 'Bearer ' + jwt.access_token
+        "Authorization": "Bearer " + jwt.access_token
     };
 
-    const jsonResponse = await getAsync('api.voxeet.com', '/v1/monitor/conferences?active=true&max=1000', headers);
+    const jsonResponse = await getAsync("api.voxeet.com", "/v1/monitor/conferences?active=true&max=1000", headers);
 
     const conferences = jsonResponse.conferences;
     for (let index = 0; index < conferences.length; index++) {
@@ -213,12 +213,12 @@ const getConferenceIdAsync = async function (alias) {
 };
 
 
-app.get('/access-token', function (request, response) {
+app.get("/access-token", function (request, response) {
     console.log(`[GET] ${request.url}`);
 
     getClientAccessTokenAsync()
         .then(accessToken => {
-            response.set('Content-Type', 'application/json');
+            response.set("Content-Type", "application/json");
             response.send(JSON.stringify(accessToken));
         })
         .catch(() => {
@@ -226,7 +226,7 @@ app.get('/access-token', function (request, response) {
         });
 });
 
-app.post('/conference', function (request, response) {
+app.post("/conference", function (request, response) {
     console.log(`[POST] ${request.url}`, request.body);
 
     const alias = request.body.alias;
@@ -234,7 +234,7 @@ app.post('/conference', function (request, response) {
 
     createConferenceAsync(alias, ownerExternalId)
         .then(conference => {
-            response.set('Content-Type', 'application/json');
+            response.set("Content-Type", "application/json");
             response.send(JSON.stringify(conference));
         })
         .catch(() => {
@@ -242,7 +242,7 @@ app.post('/conference', function (request, response) {
         });
 });
 
-app.post('/get-invited', async function (request, response) {
+app.post("/get-invited", async function (request, response) {
     console.log(`[POST] ${request.url}`, request.body);
 
     const alias = request.body.alias;
@@ -258,7 +258,7 @@ app.post('/get-invited', async function (request, response) {
 
         const accessToken = await getInvitationAsync(conferenceId, externalId, isListener);
         
-        response.set('Content-Type', 'application/json');
+        response.set("Content-Type", "application/json");
         response.send(JSON.stringify({
             conferenceId: conferenceId,
             accessToken: accessToken[externalId]
@@ -273,7 +273,7 @@ app.post('/get-invited', async function (request, response) {
 
 // Starts an HTTP server on port 8081
 var server = app.listen(8081, function () {
-   var host = server.address().address
-   var port = server.address().port
-   console.log("Dolby.io app listening at http://%s:%s", host, port)
+    var host = server.address().address
+    var port = server.address().port
+    console.log("Dolby.io app listening at http://%s:%s", host, port)
 });

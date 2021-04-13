@@ -27,7 +27,7 @@ Loading.propTypes = {
 };
 
 Loading.defaultProps = {
-    message: 'Loading...'
+    message: "Loading..."
 };
 
 export default Loading;

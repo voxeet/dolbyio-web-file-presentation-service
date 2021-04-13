@@ -29,7 +29,7 @@ class Mixer extends Component {
     }
 
     componentDidMount() {
-        VoxeetSDK.filePresentation.on('started', this.onFilePresentationStarted);
+        VoxeetSDK.filePresentation.on("started", this.onFilePresentationStarted);
         VoxeetSDK.conference.on("left", this.onConferenceEnded);
         VoxeetSDK.conference.on("ended", this.onConferenceEnded);
 
@@ -39,7 +39,7 @@ class Mixer extends Component {
     }
 
     componentWillUnmount() {
-        VoxeetSDK.filePresentation.removeListener('started', this.onFilePresentationStarted);
+        VoxeetSDK.filePresentation.removeListener("started", this.onFilePresentationStarted);
         VoxeetSDK.conference.removeListener("left", this.onConferenceEnded);
         VoxeetSDK.conference.removeListener("ended", this.onConferenceEnded);
     }
@@ -59,15 +59,15 @@ class Mixer extends Component {
         // Reference: https://dolby.io/developers/interactivity-apis/client-sdk/reference-javascript/voxeetsdk#static-initializetoken
         VoxeetSDK.initializeToken(accessToken, () =>
             fetch(refreshUrl, {
-                method: 'POST',
+                method: "POST",
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + accessToken
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + accessToken
                 },
                 body: { refresh_token: refreshToken }
             })
-            .then(data => data.json())
-            .then(json => json.access_token)
+                .then(data => data.json())
+                .then(json => json.access_token)
         );
     }
 
@@ -176,5 +176,5 @@ class Mixer extends Component {
 
 ReactDOM.render(
     <Mixer />,
-    document.getElementById('root')
+    document.getElementById("root")
 );

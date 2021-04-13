@@ -13,7 +13,7 @@ export default class Sdk {
         return Backend.getAccessToken()
             .then((accessToken) => {
                 VoxeetSDK.initializeToken(accessToken, Backend.getAccessToken);
-                console.log('VoxeetSDK Initialized');
+                console.log("VoxeetSDK Initialized");
             });
     }
 
@@ -46,7 +46,7 @@ export default class Sdk {
     static async convertFile(file) {
         const result = await VoxeetSDK.filePresentation.convert(file)
         if (result.status != 200) {
-            throw Error('There was an error while uploading the file.');
+            throw Error("There was an error while uploading the file.");
         }
     }
 
@@ -124,12 +124,12 @@ export default class Sdk {
      * @return {Promise<void>} A Promise for the completion of the function.
      */
     static startRecording() {
-        console.log('Starting the recording...');
+        console.log("Starting the recording...");
 
         return VoxeetSDK.recording.start()
             .then(() => {
                 const msg = JSON.stringify({
-                    action: 'RecordingState',
+                    action: "RecordingState",
                     value: true
                 });
         
@@ -138,7 +138,7 @@ export default class Sdk {
                     .send(msg)
                     .catch(e => console.log(e));
         
-                const event = new Event('recordingStarted');
+                const event = new Event("recordingStarted");
                 document.dispatchEvent(event);
             });
     }
@@ -148,12 +148,12 @@ export default class Sdk {
      * @return {Promise<void>} A Promise for the completion of the function.
      */
     static stopRecording() {
-        console.log('Stopping the recording...');
+        console.log("Stopping the recording...");
 
         return VoxeetSDK.recording.stop()
             .then(() => {
                 const msg = JSON.stringify({
-                    action: 'RecordingState',
+                    action: "RecordingState",
                     value: false
                 });
         
@@ -162,7 +162,7 @@ export default class Sdk {
                     .send(msg)
                     .catch(e => console.log(e));
         
-                const event = new Event('recordingStopped');
+                const event = new Event("recordingStopped");
                 document.dispatchEvent(event);
             });
     }

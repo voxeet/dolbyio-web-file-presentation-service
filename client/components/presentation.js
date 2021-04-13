@@ -31,14 +31,14 @@ class Presentation extends Component {
     }
 
     componentDidMount() {
-        VoxeetSDK.filePresentation.on('updated', this.updateSlide);
+        VoxeetSDK.filePresentation.on("updated", this.updateSlide);
 
         // Load the current slide
         this.updateSlide(VoxeetSDK.filePresentation.current);
     }
 
     componentWillUnmount() {
-        VoxeetSDK.filePresentation.removeListener('updated', this.updateSlide);
+        VoxeetSDK.filePresentation.removeListener("updated", this.updateSlide);
     }
 
     previousSlide() {
@@ -65,7 +65,7 @@ class Presentation extends Component {
 
                 const notes = [];
                 if (isPresentationOwner && this.state.presentationHasNotes) {
-                    if (this.props.presentation.hasOwnProperty(current.position)) {
+                    if (Object.prototype.hasOwnProperty.call(this.props.presentation, current.position)) {
                         const slideNotes = this.props.presentation[current.position];
                         for (let index = 0; index < slideNotes.length; index++) {
                             const note = slideNotes[index];

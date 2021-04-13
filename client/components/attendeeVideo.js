@@ -3,9 +3,9 @@ import PropTypes from "prop-types";
 
 
 export const Layouts= {
-    VERTICAL: 'vertical',
-    HORIZONTAL: 'horizontal',
-    ROUND: 'round'
+    VERTICAL: "vertical",
+    HORIZONTAL: "horizontal",
+    ROUND: "round"
 }
 
 export class AttendeeVideo extends Component {
@@ -35,30 +35,30 @@ export class AttendeeVideo extends Component {
             muted />;
 
         switch (this.props.layout) {
-            case Layouts.ROUND:
-                return (
-                    <div className="attendee col-12 col-720p-6">
-                        <div className="d-flex justify-content-center">
-                            {videoElement}
-                        </div>
-                        <p>{this.props.participantName}</p>
-                    </div>
-                );
-            case Layouts.HORIZONTAL:
-                return (
-                    <div className="attendee col-12">
+        case Layouts.ROUND:
+            return (
+                <div className="attendee col-12 col-720p-6">
+                    <div className="d-flex justify-content-center">
                         {videoElement}
-                        <p>{this.props.participantName}</p>
                     </div>
-                );
-            case Layouts.VERTICAL:
-            default:
-                return (
-                    <div className="attendee col-12 col-720p-6">
-                        {videoElement}
-                        <p>{this.props.participantName}</p>
-                    </div>
-                );
+                    <p>{this.props.participantName}</p>
+                </div>
+            );
+        case Layouts.HORIZONTAL:
+            return (
+                <div className="attendee col-12">
+                    {videoElement}
+                    <p>{this.props.participantName}</p>
+                </div>
+            );
+        case Layouts.VERTICAL:
+        default:
+            return (
+                <div className="attendee col-12 col-720p-6">
+                    {videoElement}
+                    <p>{this.props.participantName}</p>
+                </div>
+            );
         }
     }
 }

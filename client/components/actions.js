@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 
 import VoxeetSDK from "@voxeet/voxeet-web-sdk";
 
@@ -15,7 +14,7 @@ class Actions extends Component {
         super(props);
 
         this.state = {
-            conferenceName: '',
+            conferenceName: "",
             conferenceJoined: false,
             nbUsers: 0,
             nbListeners: 0,
@@ -35,17 +34,17 @@ class Actions extends Component {
     }
 
     componentDidMount() {
-        VoxeetSDK.conference.on('joined', this.onConferenceJoined);
-        VoxeetSDK.conference.on('participantAdded', this.refreshStatus);
-        VoxeetSDK.conference.on('participantUpdated', this.refreshStatus);
+        VoxeetSDK.conference.on("joined", this.onConferenceJoined);
+        VoxeetSDK.conference.on("participantAdded", this.refreshStatus);
+        VoxeetSDK.conference.on("participantUpdated", this.refreshStatus);
 
         this.refreshStatus();
     }
 
     componentWillUnmount() {
-        VoxeetSDK.conference.removeListener('joined', this.onConferenceJoined);
-        VoxeetSDK.conference.removeListener('participantAdded', this.refreshStatus);
-        VoxeetSDK.conference.removeListener('participantUpdated', this.refreshStatus);
+        VoxeetSDK.conference.removeListener("joined", this.onConferenceJoined);
+        VoxeetSDK.conference.removeListener("participantAdded", this.refreshStatus);
+        VoxeetSDK.conference.removeListener("participantUpdated", this.refreshStatus);
     }
 
     onConferenceJoined() {
@@ -78,17 +77,17 @@ class Actions extends Component {
 
         const canStartVideo = this.state.canStartVideo
             && conferenceJoined
-            && VoxeetSDK.conference.current.permissions.has('SEND_VIDEO');
+            && VoxeetSDK.conference.current.permissions.has("SEND_VIDEO");
         const canStopVideo = this.state.canStopVideo
             && conferenceJoined
-            && VoxeetSDK.conference.current.permissions.has('SEND_VIDEO');
+            && VoxeetSDK.conference.current.permissions.has("SEND_VIDEO");
 
         const canMute = this.state.canMute
             && conferenceJoined
-            && VoxeetSDK.conference.current.permissions.has('SEND_AUDIO');
+            && VoxeetSDK.conference.current.permissions.has("SEND_AUDIO");
         const canUnmute = this.state.canUnmute
             && conferenceJoined
-            && VoxeetSDK.conference.current.permissions.has('SEND_AUDIO');
+            && VoxeetSDK.conference.current.permissions.has("SEND_AUDIO");
 
         this.setState({
             conferenceName: conferenceName,
@@ -148,7 +147,7 @@ class Actions extends Component {
 
     render() {
         if (!this.state.conferenceJoined) {
-            return '';
+            return "";
         }
 
         return (
@@ -196,13 +195,5 @@ class Actions extends Component {
         );
     }
 }
-
-Actions.propTypes = {
-    
-};
-
-Actions.defaultProps = {
-    
-};
 
 export default Actions;

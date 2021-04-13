@@ -11,7 +11,7 @@ export default class Chat extends Component {
 
         this.messages = [];
         this.state = {
-            message: '',
+            message: "",
             messages: this.messages
         };
 
@@ -34,7 +34,7 @@ export default class Chat extends Component {
 
     sendMessage() {
         const msg = JSON.stringify({
-            action: 'ChatMessage',
+            action: "ChatMessage",
             value: this.state.message
         });
 
@@ -45,7 +45,7 @@ export default class Chat extends Component {
                 this.onMessage(VoxeetSDK.session.participant, msg);
 
                 this.setState({
-                    message: ''
+                    message: ""
                 });
             })
             .catch(e => console.log(e));
@@ -90,8 +90,8 @@ export default class Chat extends Component {
         });
 
         // smooth scroll to the end of the list
-        const element = document.getElementById('chat-messages');
-        element.scrollIntoView({ behavior: 'smooth', inline: 'end' });
+        const element = document.getElementById("chat-messages");
+        element.scrollIntoView({ behavior: "smooth", inline: "end" });
     }
 
     render() {

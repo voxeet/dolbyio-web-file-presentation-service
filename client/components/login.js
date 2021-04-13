@@ -16,14 +16,14 @@ class Login extends Component {
         super(props);
 
         this.state = {
-            conferenceName: 'conf-' + Math.round(Math.random() * 10000),
-            username: 'Guest ' + Math.round(Math.random() * 10000),
+            conferenceName: "conf-" + Math.round(Math.random() * 10000),
+            username: "Guest " + Math.round(Math.random() * 10000),
             isListener: false,
             file: null,
             canJoinConference: true,
             canStartPresentation: false,
             isLoading: false,
-            loadingMessage: ''
+            loadingMessage: ""
         };
 
         this.onFilePresentationConversionProgress = this.onFilePresentationConversionProgress.bind(this);
@@ -90,7 +90,7 @@ class Login extends Component {
 
     handleChangePresentationFile(e) {
         const file = e.target.files[0];
-        console.log('Selected PowerPoint file', file);
+        console.log("Selected PowerPoint file", file);
 
         const canJoinConference = e.target.value.length > 0 && this.state.conferenceName.length > 0;
 
@@ -110,7 +110,7 @@ class Login extends Component {
     joinPresentation() {
         this.setState({
             isLoading: true,
-            loadingMessage: 'Opening a session'
+            loadingMessage: "Opening a session"
         });
 
         Sdk.openSession(this.state.username, this.state.username)
@@ -126,21 +126,21 @@ class Login extends Component {
     startPresentation() {
         this.setState({
             isLoading: true,
-            loadingMessage: 'Opening a session'
+            loadingMessage: "Opening a session"
         });
 
         Sdk.openSession(this.state.username, this.state.username)
             .then(() => {
                 this.setState({
                     isLoading: true,
-                    loadingMessage: 'Uploading the presentation'
+                    loadingMessage: "Uploading the presentation"
                 });
 
                 Sdk.convertFile(this.state.file)
                     .then(() => {
                         this.setState({
                             isLoading: true,
-                            loadingMessage: 'Converting the presentation'
+                            loadingMessage: "Converting the presentation"
                         });
                     })
                     .catch(e => {

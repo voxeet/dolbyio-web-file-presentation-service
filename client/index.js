@@ -20,7 +20,7 @@ class Index extends Component {
 
         this.state = {
             isLoading: true,
-            loadingMessage: 'Loading...',
+            loadingMessage: "Loading...",
             isLoggedIn: false,
             isHost: false,
             fileConverted: null,
@@ -32,8 +32,8 @@ class Index extends Component {
     }
 
     componentDidMount() {
-        VoxeetSDK.conference.on('ended', this.onConferenceEndedOrLeft);
-        VoxeetSDK.conference.on('left', this.onConferenceEndedOrLeft);
+        VoxeetSDK.conference.on("ended", this.onConferenceEndedOrLeft);
+        VoxeetSDK.conference.on("left", this.onConferenceEndedOrLeft);
 
         Sdk.initializeSDK()
             .then(() => this.setState({ isLoading: false }) )
@@ -41,27 +41,27 @@ class Index extends Component {
 
         // Remove the bottom left link from Google Chrome
         // From: https://stackoverflow.com/a/28206011
-        $("body").on('mouseover', 'a', function (e) {
+        $("body").on("mouseover", "a", function () {
             var $link = $(this),
-                href = $link.attr('href') || $link.data("href");
+                href = $link.attr("href") || $link.data("href");
         
-            $link.off('click.chrome');
-            $link.on('click.chrome', () => window.location.href = href)
-                .attr('data-href', href)
-                .css({ cursor: 'pointer' })
-                .removeAttr('href');
+            $link.off("click.chrome");
+            $link.on("click.chrome", () => window.location.href = href)
+                .attr("data-href", href)
+                .css({ cursor: "pointer" })
+                .removeAttr("href");
         });
     }
 
     componentWillUnmount() {
-        VoxeetSDK.conference.removeListener('ended', this.onConferenceEndedOrLeft);
-        VoxeetSDK.conference.removeListener('left', this.onConferenceEndedOrLeft);
+        VoxeetSDK.conference.removeListener("ended", this.onConferenceEndedOrLeft);
+        VoxeetSDK.conference.removeListener("left", this.onConferenceEndedOrLeft);
     }
 
     onConferenceEndedOrLeft() {
         this.setState({
             isLoading: true,
-            loadingMessage: 'Leaving the conference'
+            loadingMessage: "Leaving the conference"
         });
 
         Sdk.closeSession()
@@ -89,14 +89,14 @@ class Index extends Component {
 
             this.setState({
                 isLoading: true,
-                loadingMessage: 'Creating the conference'
+                loadingMessage: "Creating the conference"
             });
 
             Backend.createConference(conferenceAlias, externalId)
                 .then((conference) => {
                     this.setState({
                         isLoading: true,
-                        loadingMessage: 'Joining the conference'
+                        loadingMessage: "Joining the conference"
                     });
 
                     return Sdk.joinConference(conference.conferenceId, conference.ownerToken);
@@ -117,14 +117,14 @@ class Index extends Component {
         } else {
             this.setState({
                 isLoading: true,
-                loadingMessage: 'Request access to the conference'
+                loadingMessage: "Request access to the conference"
             });
 
             Backend.getInvited(conferenceAlias, isListener, externalId)
                 .then(invitation => {
                     this.setState({
                         isLoading: true,
-                        loadingMessage: 'Joining the conference'
+                        loadingMessage: "Joining the conference"
                     });
 
                     return Sdk.joinConference(invitation.conferenceId, invitation.accessToken);
@@ -162,5 +162,5 @@ class Index extends Component {
 
 ReactDOM.render(
     <Index />,
-    document.getElementById('root')
+    document.getElementById("root")
 );

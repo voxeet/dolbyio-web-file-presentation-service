@@ -22,19 +22,19 @@ class Conference extends Component {
             filePresentationStarted: false,
             isPresentationOwner: false,
             isLoading: this.props.isHost, // Will start the presentation
-            loadingMessage: 'Loading...'
+            loadingMessage: "Loading..."
         };
 
         this.onFilePresentationStarted = this.onFilePresentationStarted.bind(this);
     }
 
     componentDidMount() {
-        VoxeetSDK.filePresentation.on('started', this.onFilePresentationStarted);
+        VoxeetSDK.filePresentation.on("started", this.onFilePresentationStarted);
 
         if (this.props.isHost) {
             this.setState({
                 isLoading: true,
-                loadingMessage: 'Starting the presentation'
+                loadingMessage: "Starting the presentation"
             });
             
             Sdk.startPresentation(this.props.fileConverted)
@@ -51,7 +51,7 @@ class Conference extends Component {
     }
 
     componentWillUnmount() {
-        VoxeetSDK.filePresentation.removeListener('started', this.onFilePresentationStarted);
+        VoxeetSDK.filePresentation.removeListener("started", this.onFilePresentationStarted);
     }
 
     onFilePresentationStarted(filePresentation) {
