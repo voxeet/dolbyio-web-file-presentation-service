@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 import VoxeetSDK from "@voxeet/voxeet-web-sdk";
 
-import AttendeeVideo from "./attendeeVideo";
+import { AttendeeVideo, Layouts } from "./attendeeVideo";
 
 import "../styles/attendees.less";
 
@@ -93,7 +93,7 @@ class Attendees extends Component {
             participantId={participant.id}
             participantName={participant.info.name}
             stream={stream}
-            round={this.props.round} />
+            layout={this.props.videoLayout} />
 
         this.videoNodes.push(videoNode);
         this.setState({
@@ -119,7 +119,7 @@ class Attendees extends Component {
     }
 
     render() {
-        const cssClasses = this.props.round ? "attendees round row" : "attendees rectangular row";
+        const cssClasses = `attendees ${this.props.videoLayout} row`;
         return (
             <div className={cssClasses}>
                 {this.state.videoNodes}
@@ -129,11 +129,11 @@ class Attendees extends Component {
 }
 
 Attendees.propTypes = {
-    round: PropTypes.bool
+    videoLayout: PropTypes.string
 };
 
 Attendees.defaultProps = {
-    round: false
+    videoLayout: Layouts.VERTICAL
 };
 
 export default Attendees;

@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import VoxeetSDK from "@voxeet/voxeet-web-sdk";
 
 import Sdk from "../actions/sdk";
+import Recording from "./recording";
 
 import "../styles/actions.less";
 
@@ -21,10 +22,7 @@ class Actions extends Component {
             canStartVideo: false,
             canStopVideo: true,
             canMute: true,
-            canUnmute: false,
-            canStartRecording: false,
-            canStopRecording: false,
-            recording: false
+            canUnmute: false
         };
 
         this.onConferenceJoined = this.onConferenceJoined.bind(this);
@@ -34,19 +32,12 @@ class Actions extends Component {
         this.mute = this.mute.bind(this);
         this.unmute = this.unmute.bind(this);
         this.leave = this.leave.bind(this);
-        this.startRecording = this.startRecording.bind(this);
-        this.stopRecording = this.stopRecording.bind(this);
-        this.onRecordingStarted = this.onRecordingStarted.bind(this);
-        this.onRecordingStopped = this.onRecordingStopped.bind(this);
     }
 
     componentDidMount() {
         VoxeetSDK.conference.on('joined', this.onConferenceJoined);
         VoxeetSDK.conference.on('participantAdded', this.refreshStatus);
         VoxeetSDK.conference.on('participantUpdated', this.refreshStatus);
-
-        document.addEventListener('recordingStarted', this.onRecordingStarted, false);
-        document.addEventListener('recordingStopped', this.onRecordingStopped, false);
 
         this.refreshStatus();
     }
@@ -55,9 +46,6 @@ class Actions extends Component {
         VoxeetSDK.conference.removeListener('joined', this.onConferenceJoined);
         VoxeetSDK.conference.removeListener('participantAdded', this.refreshStatus);
         VoxeetSDK.conference.removeListener('participantUpdated', this.refreshStatus);
-
-        VoxeetSDK.command.removeListener("recordingStarted", this.onRecordingStarted);
-        VoxeetSDK.command.removeListener("recordingStopped", this.onRecordingStopped);
     }
 
     onConferenceJoined() {
@@ -71,6 +59,10 @@ class Actions extends Component {
         var listeners = 0;
 
         VoxeetSDK.conference.participants.forEach(participant => {
+            console.log("id", participant.id, "status", participant.status, "type", participant.type);
+            console.log("name", participant.info.name, "externalId", participant.info.externalId);
+            console.table(participant.metadata);
+
             if (participant.status === "Connected" || participant.status === "Inactive") {
                 if (participant.type === "user" || participant.type === "speaker") {
                     users++;
@@ -82,16 +74,21 @@ class Actions extends Component {
 
         const conferenceName = VoxeetSDK.conference.current.alias;
 
-        const permissions = VoxeetSDK.conference.current.permissions;
-
         const conferenceJoined = VoxeetSDK.conference.current != null;
-        const canRecord = conferenceJoined && permissions.has('RECORD');
 
-        const canStartVideo = this.state.canStartVideo && permissions.has('SEND_VIDEO');
-        const canStopVideo = this.state.canStopVideo && permissions.has('SEND_VIDEO');
+        const canStartVideo = this.state.canStartVideo
+            && conferenceJoined
+            && VoxeetSDK.conference.current.permissions.has('SEND_VIDEO');
+        const canStopVideo = this.state.canStopVideo
+            && conferenceJoined
+            && VoxeetSDK.conference.current.permissions.has('SEND_VIDEO');
 
-        const canMute = this.state.canMute && permissions.has('SEND_AUDIO');
-        const canUnmute = this.state.canUnmute && permissions.has('SEND_AUDIO');
+        const canMute = this.state.canMute
+            && conferenceJoined
+            && VoxeetSDK.conference.current.permissions.has('SEND_AUDIO');
+        const canUnmute = this.state.canUnmute
+            && conferenceJoined
+            && VoxeetSDK.conference.current.permissions.has('SEND_AUDIO');
 
         this.setState({
             conferenceName: conferenceName,
@@ -101,9 +98,7 @@ class Actions extends Component {
             canStopVideo: canStopVideo,
             canMute: canMute,
             canUnmute: canUnmute,
-            conferenceJoined: conferenceJoined,
-            canStartRecording: canRecord && VoxeetSDK.recording.current == null,
-            canStopRecording: canRecord && VoxeetSDK.recording.current
+            conferenceJoined: conferenceJoined
         });
     }
 
@@ -151,40 +146,6 @@ class Actions extends Component {
         Sdk.leaveConference();
     }
 
-    startRecording() {
-        Sdk.startRecording()
-            .then(() => {
-                this.setState({
-                    canStartRecording: false,
-                    canStopRecording: true
-                });
-            })
-            .catch(e => console.log(e));
-    }
-
-    stopRecording() {
-        Sdk.stopRecording()
-            .then(() => {
-                this.setState({
-                    canStartRecording: true,
-                    canStopRecording: false
-                });
-            })
-            .catch(e => console.log(e));
-    }
-
-    onRecordingStarted() {
-        this.setState({
-            recording: true
-        });
-    }
-
-    onRecordingStopped(e) {
-        this.setState({
-            recording: false
-        });
-    }
-
     render() {
         if (!this.state.conferenceJoined) {
             return '';
@@ -195,21 +156,9 @@ class Actions extends Component {
                 <div className="col">
                     <div className="d-flex justify-content-between">
                         <div className="col-left">
-                            {this.state.canStartRecording && (
-                                <button type="button" className="btn btn-action btn-xl" onClick={this.startRecording} title="Start recording the conference">
-                                    <i className="fas fa-circle"></i>
-                                </button>
-                            )}
-                            {this.state.canStopRecording && (
-                                <button type="button" className="btn btn-action btn-xl" onClick={this.stopRecording} title="Stop the recording">
-                                    <i className="fas fa-square"></i>
-                                </button>
-                            )}
-                            {this.state.recording > 0 && (
-                                <span className="recording"><i className="fas fa-circle"></i> Recording is on</span>
-                            )}
-
+                            <Recording />
                             <span className="separator" />
+
                             <span>{this.state.nbUsers} user{this.state.nbUsers > 1 ? "s" : ""} / {this.state.nbListeners} listener{this.state.nbListeners > 1 ? "s" : ""}</span>
                         </div>
                         <div className="col-center">

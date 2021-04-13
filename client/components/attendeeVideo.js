@@ -2,7 +2,13 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 
 
-class AttendeeVideo extends Component {
+export const Layouts= {
+    VERTICAL: 'vertical',
+    HORIZONTAL: 'horizontal',
+    ROUND: 'round'
+}
+
+export class AttendeeVideo extends Component {
 
     constructor(props) {
         super(props);
@@ -21,33 +27,39 @@ class AttendeeVideo extends Component {
     }
 
     render() {
-        if (this.props.round) {
-            return (
-                <div className="attendee col-12 col-720p-6">
-                    <div className="d-flex justify-content-center">
-                        <video
-                            ref={ref => (this.video = ref)}
-                            title={this.props.participantName}
-                            playsInline
-                            autoPlay
-                            muted />
-                    </div>
-                    <p>{this.props.participantName}</p>
-                </div>
-            );
-        }
+        const videoElement = <video
+            ref={ref => (this.video = ref)}
+            title={this.props.participantName}
+            playsInline
+            autoPlay
+            muted />;
 
-        return (
-            <div className="attendee col-12 col-720p-6">
-                <video
-                    ref={ref => (this.video = ref)}
-                    title={this.props.participantName}
-                    playsInline
-                    autoPlay
-                    muted />
-                <p>{this.props.participantName}</p>
-            </div>
-        );
+        switch (this.props.layout) {
+            case Layouts.ROUND:
+                return (
+                    <div className="attendee col-12 col-720p-6">
+                        <div className="d-flex justify-content-center">
+                            {videoElement}
+                        </div>
+                        <p>{this.props.participantName}</p>
+                    </div>
+                );
+            case Layouts.HORIZONTAL:
+                return (
+                    <div className="attendee col-12">
+                        {videoElement}
+                        <p>{this.props.participantName}</p>
+                    </div>
+                );
+            case Layouts.VERTICAL:
+            default:
+                return (
+                    <div className="attendee col-12 col-720p-6">
+                        {videoElement}
+                        <p>{this.props.participantName}</p>
+                    </div>
+                );
+        }
     }
 }
 
@@ -55,14 +67,12 @@ AttendeeVideo.propTypes = {
     participantId: PropTypes.string,
     participantName: PropTypes.string,
     stream: PropTypes.object,
-    round: PropTypes.bool
+    layout: PropTypes.string
 };
 
 AttendeeVideo.defaultProps = {
     participantId: null,
     participantName: null,
     stream: null,
-    round: false
+    layout: Layouts.VERTICAL
 };
-
-export default AttendeeVideo;

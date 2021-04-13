@@ -64,18 +64,20 @@ npm run start
 
 Here is the list of what you can do in this application:
 - Upload a PowerPoint presentation
-- Join as participant or listener
+- Join as participant, guest or listener
 - Navigate through the slides
 - Extract the notes from the slides
 - Display or not the notes dynamically
+- 3 different video layouts (Round, Vertical, Horizontal)
 - Record the conference
 - Use [Enhanced Conference Access Control](https://dolby.io/developers/interactivity-apis/guides/enhanced-conference-access-control) with the permissions set on the server side
+- Mixer layout
 
 ## Open Source Projects
 
 This sample application is using the following Open Source projects:
-- [Google Fonts](https://fonts.google.com)
-- [Bootstrap](https://getbootstrap.com)
-- [JQuery](https://jquery.com)
 - [FontAwesome](https://fontawesome.com)
+- [Bootstrap](https://getbootstrap.com)
+- [Google Fonts](https://fonts.google.com)
+- [JQuery](https://jquery.com)
 - [JSZip](https://stuk.github.io/jszip/)

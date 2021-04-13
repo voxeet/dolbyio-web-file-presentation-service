@@ -42,12 +42,9 @@
     }
 }
 
-.attendees.rectangular {
-
+.attendees.vertical,
+.attendees.horizontal {
     .attendee {
-        padding-left: 3px;
-        padding-right: 3px;
-
         video {
             object-fit: cover;
             width: 100%;
@@ -64,5 +61,19 @@
             border-radius: 5px;
             background-color: @videoNameRectangularBackgroundColor;
         }
+    }
+}
+
+.attendees.vertical {
+    .attendee {
+        padding-left: 3px;
+        padding-right: 3px;
+    }
+}
+
+.attendees.horizontal {
+    .attendee {
+        padding-left: 0;
+        padding-right: 0;
     }
 }
