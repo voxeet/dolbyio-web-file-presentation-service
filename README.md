@@ -60,6 +60,14 @@ Start the Node.JS server with this command:
 npm run start
 ```
 
+## Mixer Layout Application
+
+This project automatically builds a custom Mixer Layout Application that you can use in your own projects. After you build the application, in the folder `dist_mixer`, you will find the two files you need to host for the mixer layout application. You can also directly use the one from this version of the repo by pointing the _Recording Mixer Layout URL_ setting from the Dolby.io dashboard to this URL:
+
+```
+https://dolbyio-samples.github.io/dolbyio-web-file-presentation-service/index.html
+```
+
 ## Features
 
 Here is the list of what you can do in this application:
