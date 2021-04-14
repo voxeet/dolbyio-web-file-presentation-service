@@ -22,8 +22,8 @@
     "type": "git",
     "url": "git+https://github.com/dolbyio-samples/dolbyio-web-file-presentation-service.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Fabien Lavocat",
+  "license": "CC0-1.0",
   "bugs": {
     "url": "https://github.com/dolbyio-samples/dolbyio-web-file-presentation-service/issues"
   },
