@@ -7,8 +7,12 @@ export default class Backend {
     static async getAccessToken() {
         const url = "/access-token";
         const response = await fetch(url);
-        const jwt = await response.json();
+        if (!response.ok) {
+            const text = await response.text();
+            throw new Error(text);
+        }
 
+        const jwt = await response.json();
         return jwt.access_token;
     }
 
@@ -33,8 +37,13 @@ export default class Backend {
         };
 
         // Request the backend for an invitation
-        const invitation = await fetch("/get-invited", options)
-        return invitation.json();
+        const response = await fetch("/get-invited", options);
+        if (!response.ok) {
+            const text = await response.text();
+            throw new Error(text);
+        }
+        
+        return response.json();
     }
 
     /**
@@ -57,6 +66,11 @@ export default class Backend {
 
         // Request the backend to create a conference
         const response = await fetch("/conference", options);
+        if (!response.ok) {
+            const text = await response.text();
+            throw new Error(text);
+        }
+
         return response.json();
     }
 

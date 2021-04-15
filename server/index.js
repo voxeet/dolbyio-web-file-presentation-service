@@ -223,6 +223,7 @@ app.get("/access-token", function (request, response) {
         })
         .catch(() => {
             response.status(500);
+            response.send("An error happened.");
         });
 });
 
@@ -239,6 +240,7 @@ app.post("/conference", function (request, response) {
         })
         .catch(() => {
             response.status(500);
+            response.send("An error happened.");
         });
 });
 
@@ -253,6 +255,7 @@ app.post("/get-invited", async function (request, response) {
         const conferenceId = await getConferenceIdAsync(alias);
         if (!conferenceId) {
             response.status(404);
+            response.send(`The conference ${alias} cannot be found.`);
             return;
         }
 
@@ -267,6 +270,7 @@ app.post("/get-invited", async function (request, response) {
     } catch (error) {
         console.log(error);
         response.status(500);
+        response.send("An error happened.");
     }
 });
 
