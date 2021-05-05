@@ -164,8 +164,7 @@ const getInvitationAsync = async (conferenceId, externalId, isListener) => {
     if (isListener) {
         participants[externalId] = {
             permissions: [
-                "JOIN",
-                "SEND_MESSAGE"
+                "JOIN"
             ]
         };
     } else {

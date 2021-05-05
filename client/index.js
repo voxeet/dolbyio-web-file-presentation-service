@@ -127,6 +127,10 @@ class Index extends Component {
                         loadingMessage: "Joining the conference"
                     });
 
+                    if (isListener) {
+                        return Sdk.listenToConference(invitation.conferenceId, invitation.accessToken);
+                    }
+                    
                     return Sdk.joinConference(invitation.conferenceId, invitation.accessToken);
                 })
                 .then(() => {

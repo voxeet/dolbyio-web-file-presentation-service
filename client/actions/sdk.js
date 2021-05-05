@@ -76,6 +76,31 @@ export default class Sdk {
     }
 
     /**
+     * Joins the specified conference as a listener.
+     * @param {string} conferenceId Conference ID.
+     * @param {string} conferenceAccessToken Conference Access Token provided by the backend.
+     * @return {Promise<void>} A Promise for the completion of the function.
+     */
+    static listenToConference(conferenceId, conferenceAccessToken) {
+        // Get the conference object
+        return VoxeetSDK.conference.fetch(conferenceId)
+            .then((conference) => {
+                // See: https://dolby.io/developers/interactivity-apis/reference/client-sdk/reference-javascript/model/listenoptions
+                const joinOptions = {
+                    conferenceAccessToken: conferenceAccessToken,
+                    constraints: {
+                        audio: false,
+                        video: false
+                    },
+                    maxVideoForwarding: 4
+                };
+
+                // Join the conference
+                return VoxeetSDK.conference.listen(conference, joinOptions);
+            });
+    }
+
+    /**
      * Starts sharing the video to the conference participants.
      * @return {Promise<void>} A Promise for the completion of the function.
      */
