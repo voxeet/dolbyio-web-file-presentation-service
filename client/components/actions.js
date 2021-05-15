@@ -133,7 +133,7 @@ class Actions extends Component {
     }
 
     unmute() {
-        Sdk.mute();
+        Sdk.unmute();
 
         this.setState({
             canMute: true,
