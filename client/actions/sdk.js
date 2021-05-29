@@ -21,14 +21,19 @@ export default class Sdk {
      * Opens a session.
      * @return {Promise<void>} A Promise for the completion of the function.
      */
-    static openSession(name, externalId) {
+    static async openSession(name, externalId) {
         const participant = {
             name: name,
             externalId: externalId,
             avatarUrl: "https://gravatar.com/avatar/" + Math.floor(Math.random() * 1000000) + "?s=200&d=identicon",
         };
 
-        return VoxeetSDK.session.open(participant);
+        // Close the session if it is already opened
+        if (VoxeetSDK.session.participant != undefined) {
+            await VoxeetSDK.session.close();
+        }
+
+        await VoxeetSDK.session.open(participant);
     }
 
     /**
