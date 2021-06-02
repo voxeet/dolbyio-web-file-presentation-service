@@ -1,6 +1,9 @@
 var express = require("express");
 const https = require("https");
 
+const { Command } = require('commander');
+const program = new Command();
+
 var app = express();
 
 // Parse POST requests as JSON payload
@@ -274,9 +277,22 @@ app.post("/get-invited", async function (request, response) {
 });
 
 
-// Starts an HTTP server on port 8081
-var server = app.listen(8081, function () {
-    var host = server.address().address
-    var port = server.address().port
-    console.log("Dolby.io app listening at http://%s:%s", host, port)
+// Extract the port number from the command argument
+program.option('-p, --port <portNumber>', 'Port number to start the HTTP server on.');
+program.parse(process.argv);
+
+let portNumber = 8081; // Default port number
+const options = program.opts();
+if (options.port) {
+    const p = parseInt(options.port, 10);
+    if (!isNaN(p)) {
+        portNumber = p;
+    }
+}
+
+// Starts an HTTP server
+var server = app.listen(portNumber, function () {
+    const host = server.address().address;
+    const port = server.address().port;
+    console.log("Dolby.io sample app listening at http://%s:%s", host, port);
 });

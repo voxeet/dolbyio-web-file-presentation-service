@@ -5,7 +5,7 @@ export default class Backend {
      * @return {Promise<string>} The session access token provided by the backend.
      */
     static async getAccessToken() {
-        const url = "/access-token";
+        const url = "access-token";
         const response = await fetch(url);
         if (!response.ok) {
             const text = await response.text();
@@ -37,7 +37,7 @@ export default class Backend {
         };
 
         // Request the backend for an invitation
-        const response = await fetch("/get-invited", options);
+        const response = await fetch("get-invited", options);
         if (!response.ok) {
             const text = await response.text();
             throw new Error(text);
@@ -65,7 +65,7 @@ export default class Backend {
         };
 
         // Request the backend to create a conference
-        const response = await fetch("/conference", options);
+        const response = await fetch("conference", options);
         if (!response.ok) {
             const text = await response.text();
             throw new Error(text);
