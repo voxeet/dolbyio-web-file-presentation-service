@@ -1,7 +1,7 @@
 var express = require("express");
 const https = require("https");
 
-const { Command } = require('commander');
+const { Command } = require("commander");
 const program = new Command();
 
 var app = express();
@@ -278,7 +278,7 @@ app.post("/get-invited", async function (request, response) {
 
 
 // Extract the port number from the command argument
-program.option('-p, --port <portNumber>', 'Port number to start the HTTP server on.');
+program.option("-p, --port <portNumber>", "Port number to start the HTTP server on.");
 program.parse(process.argv);
 
 let portNumber = 8081; // Default port number
