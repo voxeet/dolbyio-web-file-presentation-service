@@ -53,7 +53,7 @@ class Conference extends Component {
 
     onFilePresentationStarted(filePresentation) {
         // Only the owner of the presentation can see all the slides
-        const isPresentationOwner = filePresentation.owner.id == VoxeetSDK.session.participant.id;
+        const isPresentationOwner = filePresentation.owner.id === VoxeetSDK.session.participant.id;
 
         this.setState({
             filePresentationStarted: true,

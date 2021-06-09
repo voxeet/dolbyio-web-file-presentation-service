@@ -58,7 +58,7 @@ class Presentation extends Component {
             const url = await Sdk.getSlideImageUrl(filePresentation.position);
 
             const current = VoxeetSDK.filePresentation.current;
-            const isPresentationOwner = current.owner.id == VoxeetSDK.session.participant.id;
+            const isPresentationOwner = current.owner.id === VoxeetSDK.session.participant.id;
             const canGoBack = isPresentationOwner && current.position > 0;
             const canGoForward = isPresentationOwner && current.position < current.imageCount - 1;
 

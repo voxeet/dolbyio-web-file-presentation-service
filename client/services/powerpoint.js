@@ -13,7 +13,7 @@ const getPresentation = async (file) => {
         for (let index = 0; index < overrides.length; index++) {
             const override = overrides[index];
             const contentType = override.getAttribute('ContentType');
-            if (contentType == 'application/vnd.openxmlformats-officedocument.presentationml.notesSlide+xml') {
+            if (contentType === 'application/vnd.openxmlformats-officedocument.presentationml.notesSlide+xml') {
                 const partName = override.getAttribute('PartName').substr(1); // Remove the first /
                 notesSlides.push(partName);
             }

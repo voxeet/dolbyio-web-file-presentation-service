@@ -200,7 +200,7 @@ const getConferenceIdAsync = async function (alias) {
     const conferences = jsonResponse.conferences;
     for (let index = 0; index < conferences.length; index++) {
         const conference = conferences[index];
-        if (conference.alias.toLowerCase() == alias.toLowerCase()) {
+        if (conference.alias.toLowerCase() === alias.toLowerCase()) {
             return conference.confId;
         }
     }

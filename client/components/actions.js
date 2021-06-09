@@ -58,7 +58,6 @@ class Actions extends Component {
         VoxeetSDK.conference.participants.forEach((participant) => {
             console.log('id', participant.id, 'status', participant.status, 'type', participant.type);
             console.log('name', participant.info.name, 'externalId', participant.info.externalId);
-            console.table(participant.metadata);
 
             if (participant.status === 'Connected' || participant.status === 'Inactive') {
                 if (participant.type === 'user' || participant.type === 'speaker') {
