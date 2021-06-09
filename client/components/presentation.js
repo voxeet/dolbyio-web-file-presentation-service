@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 import VoxeetSDK from "@voxeet/voxeet-web-sdk";
 
-import Sdk from "../actions/sdk";
+import Sdk from "../services/sdk";
 
 import "../styles/presentation.less";
 

@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 import VoxeetSDK from "@voxeet/voxeet-web-sdk";
 
-import Sdk from "../actions/sdk";
+import Sdk from "../services/sdk";
 import Loading from "./loading";
 import Presentation from "./presentation";
 import Slides from "./slides";

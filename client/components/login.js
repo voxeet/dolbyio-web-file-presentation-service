@@ -4,8 +4,8 @@ import PropTypes from "prop-types";
 import VoxeetSDK from "@voxeet/voxeet-web-sdk";
 
 import Loading from "./loading";
-import PowerPoint from "../actions/powerpoint";
-import Sdk from "../actions/sdk";
+import PowerPoint from "../services/powerpoint";
+import Sdk from "../services/sdk";
 
 import "../styles/login.less";
 

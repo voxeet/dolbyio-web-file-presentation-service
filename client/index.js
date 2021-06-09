@@ -3,8 +3,8 @@ import ReactDOM from "react-dom";
 
 import VoxeetSDK from "@voxeet/voxeet-web-sdk";
 
-import Backend from "./actions/backend";
-import Sdk from "./actions/sdk";
+import Backend from "./services/backend";
+import Sdk from "./services/sdk";
 
 import Loading from "./components/loading";
 import Login from "./components/login";

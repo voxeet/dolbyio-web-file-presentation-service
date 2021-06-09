@@ -2,7 +2,7 @@ import React, { Component } from "react";
 
 import VoxeetSDK from "@voxeet/voxeet-web-sdk";
 
-import Sdk from "../actions/sdk";
+import Sdk from "../services/sdk";
 import Recording from "./recording";
 
 import "../styles/actions.less";
