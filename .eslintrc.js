@@ -12,8 +12,8 @@ module.exports = {
     ],
     plugins: ['@typescript-eslint', 'import'],
     rules: {
-        quotes: ['error', 'double'],
-        indent: ['error', 4],
+        quotes: ['error', 'single'],
+        indent: 'off', // Managed by Prettier
         'max-len': 'off',
         '@typescript-eslint/no-var-requires': 0,
     },

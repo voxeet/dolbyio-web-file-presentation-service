@@ -21,7 +21,7 @@ const openSession = async (name, externalId) => {
     const participant = {
         name: name,
         externalId: externalId,
-        avatarUrl: 'https://gravatar.com/avatar/' + Math.floor(Math.random() * 1000000) + '?s=200&d=identicon',
+        avatarUrl: `https://gravatar.com/avatar/${Math.floor(Math.random() * 1000000)}?s=200&d=identicon`,
     };
 
     // Close the session if it is already opened

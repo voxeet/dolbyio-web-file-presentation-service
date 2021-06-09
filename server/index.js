@@ -115,7 +115,7 @@ const getAccessTokenAsync = (hostname, path) => {
     const headers = {
         'Content-Type': 'application/x-www-form-urlencoded',
         'Cache-Control': 'no-cache',
-        Authorization: 'Basic ' + authz,
+        Authorization: `Basic ${authz}`,
         'Content-Length': body.length,
     };
 
@@ -149,7 +149,7 @@ const createConferenceAsync = async (alias, ownerExternalId) => {
 
     const headers = {
         'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + jwt.access_token,
+        Authorization: `Bearer ${jwt.access_token}`,
         'Content-Length': body.length,
     };
 
@@ -181,7 +181,7 @@ const getInvitationAsync = async (conferenceId, externalId, isListener) => {
 
     const headers = {
         'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + jwt.access_token,
+        Authorization: `Bearer ${jwt.access_token}`,
         'Content-Length': body.length,
     };
 
@@ -192,7 +192,7 @@ const getConferenceIdAsync = async function (alias) {
     const jwt = await getAPIAccessTokenAsync();
 
     const headers = {
-        Authorization: 'Bearer ' + jwt.access_token,
+        Authorization: `Bearer ${jwt.access_token}`,
     };
 
     const jsonResponse = await getAsync('api.voxeet.com', '/v1/monitor/conferences?active=true&max=1000', headers);

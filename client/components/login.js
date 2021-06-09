@@ -14,8 +14,8 @@ class Login extends Component {
         super(props);
 
         this.state = {
-            conferenceName: 'conf-' + Math.round(Math.random() * 10000),
-            username: 'Guest ' + Math.round(Math.random() * 10000),
+            conferenceName: `conf-${Math.round(Math.random() * 10000)}`,
+            username: `Guest ${Math.round(Math.random() * 10000)}`,
             isListener: false,
             file: null,
             canJoinConference: true,

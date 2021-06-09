@@ -60,7 +60,7 @@ class Mixer extends Component {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: 'Bearer ' + accessToken,
+                    Authorization: `Bearer ${accessToken}`,
                 },
                 body: { refresh_token: refreshToken },
             };
@@ -83,7 +83,7 @@ class Mixer extends Component {
 
         const mixer = {
             name: 'Mixer',
-            externalId: 'Mixer_' + layoutType,
+            externalId: `Mixer_${layoutType}`,
             thirdPartyId: thirdPartyId,
         };
 
@@ -123,7 +123,7 @@ class Mixer extends Component {
 
         const mixer = {
             name: 'Mixer',
-            externalId: 'Mixer_' + layoutType,
+            externalId: `Mixer_${layoutType}`,
             thirdPartyId: thirdPartyId,
         };
 
