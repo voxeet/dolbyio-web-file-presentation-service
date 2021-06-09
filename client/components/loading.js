@@ -1,11 +1,9 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
-import "../styles/loading.less";
-
+import '../styles/loading.less';
 
 class Loading extends Component {
-
     constructor(props) {
         super(props);
     }
@@ -23,11 +21,11 @@ class Loading extends Component {
 }
 
 Loading.propTypes = {
-    message: PropTypes.string
+    message: PropTypes.string,
 };
 
 Loading.defaultProps = {
-    message: "Loading..."
+    message: 'Loading...',
 };
 
 export default Loading;

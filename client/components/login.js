@@ -1,29 +1,27 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
-import VoxeetSDK from "@voxeet/voxeet-web-sdk";
+import VoxeetSDK from '@voxeet/voxeet-web-sdk';
 
-import Loading from "./loading";
-import PowerPoint from "../services/powerpoint";
-import Sdk from "../services/sdk";
+import Loading from './loading';
+import PowerPoint from '../services/powerpoint';
+import Sdk from '../services/sdk';
 
-import "../styles/login.less";
-
+import '../styles/login.less';
 
 class Login extends Component {
-
     constructor(props) {
         super(props);
 
         this.state = {
-            conferenceName: "conf-" + Math.round(Math.random() * 10000),
-            username: "Guest " + Math.round(Math.random() * 10000),
+            conferenceName: 'conf-' + Math.round(Math.random() * 10000),
+            username: 'Guest ' + Math.round(Math.random() * 10000),
             isListener: false,
             file: null,
             canJoinConference: true,
             canStartPresentation: false,
             isLoading: false,
-            loadingMessage: ""
+            loadingMessage: '',
         };
 
         this.onFilePresentationConversionProgress = this.onFilePresentationConversionProgress.bind(this);
@@ -39,34 +37,33 @@ class Login extends Component {
     }
 
     componentDidMount() {
-        VoxeetSDK.filePresentation.on("conversionProgress", this.onFilePresentationConversionProgress);
-        VoxeetSDK.filePresentation.on("converted", this.onFilePresentationConverted);
+        VoxeetSDK.filePresentation.on('conversionProgress', this.onFilePresentationConversionProgress);
+        VoxeetSDK.filePresentation.on('converted', this.onFilePresentationConverted);
     }
 
     componentWillUnmount() {
-        VoxeetSDK.filePresentation.removeListener("conversionProgress", this.onFilePresentationConversionProgress);
-        VoxeetSDK.filePresentation.removeListener("converted", this.onFilePresentationConverted);
+        VoxeetSDK.filePresentation.removeListener('conversionProgress', this.onFilePresentationConversionProgress);
+        VoxeetSDK.filePresentation.removeListener('converted', this.onFilePresentationConverted);
     }
 
     onFilePresentationConversionProgress(fileConversionProgress) {
         this.setState({
             isLoading: true,
-            loadingMessage: `Converting the presentation - ${fileConversionProgress.progress.toFixed(0)}%`
+            loadingMessage: `Converting the presentation - ${fileConversionProgress.progress.toFixed(0)}%`,
         });
 
         //console.log(fileConversionProgress);
     }
 
     onFilePresentationConverted(fileConverted) {
-        console.log("fileConverted", fileConverted);
+        console.log('fileConverted', fileConverted);
 
-        PowerPoint
-            .getPresentation(this.state.file)
-            .then(presentation => this.props.handleOnSessionOpened(
-                this.state.conferenceName, this.state.username, this.state.isListener, fileConverted, presentation))
-            .catch(e => console.log(e));
+        PowerPoint.getPresentation(this.state.file)
+            .then((presentation) =>
+                this.props.handleOnSessionOpened(this.state.conferenceName, this.state.username, this.state.isListener, fileConverted, presentation)
+            )
+            .catch((e) => console.log(e));
     }
-
 
     handleChangeConferenceName(e) {
         const canJoinConference = e.target.value.length > 0 && this.state.username.length > 0;
@@ -74,7 +71,7 @@ class Login extends Component {
         this.setState({
             conferenceName: e.target.value,
             canJoinConference: canJoinConference,
-            canStartPresentation: canJoinConference && this.state.file != null
+            canStartPresentation: canJoinConference && this.state.file != null,
         });
     }
 
@@ -84,40 +81,39 @@ class Login extends Component {
         this.setState({
             username: e.target.value,
             canJoinConference: canJoinConference,
-            canStartPresentation: canJoinConference && this.state.file != null
+            canStartPresentation: canJoinConference && this.state.file != null,
         });
     }
 
     handleChangePresentationFile(e) {
         const file = e.target.files[0];
-        console.log("Selected PowerPoint file", file);
+        console.log('Selected PowerPoint file', file);
 
         const canJoinConference = e.target.value.length > 0 && this.state.conferenceName.length > 0;
 
         this.setState({
             file: file,
-            canStartPresentation: canJoinConference && file != null
+            canStartPresentation: canJoinConference && file != null,
         });
     }
 
     handleChangeAsListener(e) {
         this.setState({
-            isListener: e.target.checked
+            isListener: e.target.checked,
         });
     }
-
 
     joinPresentation() {
         this.setState({
             isLoading: true,
-            loadingMessage: "Opening a session"
+            loadingMessage: 'Opening a session',
         });
 
         Sdk.openSession(this.state.username, this.state.username)
             .then(() => {
                 this.props.handleOnSessionOpened(this.state.conferenceName, this.state.username, this.state.isListener);
             })
-            .catch(e => {
+            .catch((e) => {
                 this.setState({ isLoading: false });
                 console.log(e);
             });
@@ -126,29 +122,29 @@ class Login extends Component {
     startPresentation() {
         this.setState({
             isLoading: true,
-            loadingMessage: "Opening a session"
+            loadingMessage: 'Opening a session',
         });
 
         Sdk.openSession(this.state.username, this.state.username)
             .then(() => {
                 this.setState({
                     isLoading: true,
-                    loadingMessage: "Uploading the presentation"
+                    loadingMessage: 'Uploading the presentation',
                 });
 
                 Sdk.convertFile(this.state.file)
                     .then(() => {
                         this.setState({
                             isLoading: true,
-                            loadingMessage: "Converting the presentation"
+                            loadingMessage: 'Converting the presentation',
                         });
                     })
-                    .catch(e => {
+                    .catch((e) => {
                         this.setState({ isLoading: false });
                         console.log(e);
                     });
             })
-            .catch(e => {
+            .catch((e) => {
                 this.setState({ isLoading: false });
                 console.log(e);
             });
@@ -176,7 +172,8 @@ class Login extends Component {
                                             className="form-control"
                                             id="input-conference-name"
                                             value={this.state.conferenceName}
-                                            onChange={this.handleChangeConferenceName} />
+                                            onChange={this.handleChangeConferenceName}
+                                        />
                                     </div>
 
                                     <div className="form-group">
@@ -186,7 +183,8 @@ class Login extends Component {
                                             className="form-control"
                                             id="input-user-name"
                                             value={this.state.username}
-                                            onChange={this.handleChangeUserName} />
+                                            onChange={this.handleChangeUserName}
+                                        />
                                     </div>
 
                                     <div className="form-group form-check">
@@ -195,28 +193,35 @@ class Login extends Component {
                                             className="form-check-input"
                                             id="input-as-listener"
                                             checked={this.state.isListener}
-                                            onChange={this.handleChangeAsListener} />
-                                        <label className="form-check-label" htmlFor="input-as-listener">Join as listener</label>
+                                            onChange={this.handleChangeAsListener}
+                                        />
+                                        <label className="form-check-label" htmlFor="input-as-listener">
+                                            Join as listener
+                                        </label>
                                     </div>
-                                    
+
                                     <button
                                         type="button"
                                         className="btn btn-lg btn-block btn-primary"
                                         onClick={this.joinPresentation}
-                                        disabled={!this.state.canJoinConference}>
+                                        disabled={!this.state.canJoinConference}
+                                    >
                                         Join Presentation
                                     </button>
 
                                     <div className="form-group custom-file">
                                         <input type="file" className="custom-file-input" id="input-file" onChange={this.handleChangePresentationFile} />
-                                        <label className="custom-file-label" htmlFor="input-file">Choose PowerPoint file</label>
+                                        <label className="custom-file-label" htmlFor="input-file">
+                                            Choose PowerPoint file
+                                        </label>
                                     </div>
-                                    
+
                                     <button
                                         type="button"
                                         className="btn btn-lg btn-block btn-primary"
                                         onClick={this.startPresentation}
-                                        disabled={!this.state.canStartPresentation}>
+                                        disabled={!this.state.canStartPresentation}
+                                    >
                                         Start Presentation
                                     </button>
                                 </form>
@@ -230,11 +235,11 @@ class Login extends Component {
 }
 
 Login.propTypes = {
-    handleOnSessionOpened: PropTypes.func
+    handleOnSessionOpened: PropTypes.func,
 };
 
 Login.defaultProps = {
-    handleOnSessionOpened: null
+    handleOnSessionOpened: null,
 };
 
 export default Login;

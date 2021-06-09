@@ -1,15 +1,13 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
-import VoxeetSDK from "@voxeet/voxeet-web-sdk";
+import VoxeetSDK from '@voxeet/voxeet-web-sdk';
 
-import Sdk from "../services/sdk";
+import Sdk from '../services/sdk';
 
-import "../styles/presentation.less";
-
+import '../styles/presentation.less';
 
 class Presentation extends Component {
-
     constructor(props) {
         super(props);
 
@@ -22,8 +20,8 @@ class Presentation extends Component {
             notes: null,
             isPresentationOwner: false,
             presentationHasNotes: this.props.presentation && Object.keys(this.props.presentation).length > 0,
-            displayNotes: this.props.displayNotes
-        }
+            displayNotes: this.props.displayNotes,
+        };
 
         this.previousSlide = this.previousSlide.bind(this);
         this.nextSlide = this.nextSlide.bind(this);
@@ -31,14 +29,14 @@ class Presentation extends Component {
     }
 
     componentDidMount() {
-        VoxeetSDK.filePresentation.on("updated", this.updateSlide);
+        VoxeetSDK.filePresentation.on('updated', this.updateSlide);
 
         // Load the current slide
         this.updateSlide(VoxeetSDK.filePresentation.current);
     }
 
     componentWillUnmount() {
-        VoxeetSDK.filePresentation.removeListener("updated", this.updateSlide);
+        VoxeetSDK.filePresentation.removeListener('updated', this.updateSlide);
     }
 
     async previousSlide() {
@@ -57,7 +55,7 @@ class Presentation extends Component {
 
     updateSlide(filePresentation) {
         Sdk.getSlideImageUrl(filePresentation.position)
-            .then(url => {
+            .then((url) => {
                 const current = VoxeetSDK.filePresentation.current;
                 const isPresentationOwner = current.owner.id == VoxeetSDK.session.participant.id;
                 const canGoBack = isPresentationOwner && current.position > 0;
@@ -82,7 +80,7 @@ class Presentation extends Component {
                     slidePosition: current.position + 1, // Index is 0
                     slideCount: current.imageCount,
                     isPresentationOwner: isPresentationOwner,
-                    notes: <ul>{notes}</ul>
+                    notes: <ul>{notes}</ul>,
                 });
             })
             .catch((e) => console.log(e));
@@ -106,20 +104,20 @@ class Presentation extends Component {
                         {this.state.isPresentationOwner && (
                             <div className="row">
                                 <div className="presentationActions">
-                                    <a href="#" onClick={this.previousSlide} className={this.state.canGoBack ? "" : "disabled"} title="Previous Slide">
+                                    <a href="#" onClick={this.previousSlide} className={this.state.canGoBack ? '' : 'disabled'} title="Previous Slide">
                                         <i className="fas fa-chevron-left"></i>
                                     </a>
                                     {this.state.slidePosition} of {this.state.slideCount}
-                                    <a href="#" onClick={this.nextSlide} className={this.state.canGoForward ? "" : "disabled"} title="Next slide">
+                                    <a href="#" onClick={this.nextSlide} className={this.state.canGoForward ? '' : 'disabled'} title="Next slide">
                                         <i className="fas fa-chevron-right"></i>
                                     </a>
                                     {this.state.presentationHasNotes && this.state.displayNotes && (
-                                        <a href="#" onClick={() => this.setState({displayNotes: false})} title="Hide the notes">
+                                        <a href="#" onClick={() => this.setState({ displayNotes: false })} title="Hide the notes">
                                             <i className="fas fa-sticky-note"></i>
                                         </a>
                                     )}
                                     {this.state.presentationHasNotes && !this.state.displayNotes && (
-                                        <a href="#" onClick={() => this.setState({displayNotes: true})} title="Display the notes">
+                                        <a href="#" onClick={() => this.setState({ displayNotes: true })} title="Display the notes">
                                             <i className="far fa-sticky-note"></i>
                                         </a>
                                     )}
@@ -135,12 +133,12 @@ class Presentation extends Component {
 
 Presentation.propTypes = {
     presentation: PropTypes.object,
-    displayNotes: PropTypes.bool
+    displayNotes: PropTypes.bool,
 };
 
 Presentation.defaultProps = {
     presentation: null,
-    displayNotes: false
+    displayNotes: false,
 };
 
 export default Presentation;

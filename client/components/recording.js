@@ -1,19 +1,17 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 
-import VoxeetSDK from "@voxeet/voxeet-web-sdk";
+import VoxeetSDK from '@voxeet/voxeet-web-sdk';
 
-import Sdk from "../services/sdk";
-
+import Sdk from '../services/sdk';
 
 class Recording extends Component {
-
     constructor(props) {
         super(props);
 
         this.state = {
             canStartRecording: false,
             canStopRecording: false,
-            isRecording: false
+            isRecording: false,
         };
 
         this.refreshStatus = this.refreshStatus.bind(this);
@@ -24,33 +22,32 @@ class Recording extends Component {
     }
 
     componentDidMount() {
-        VoxeetSDK.conference.on("participantAdded", this.refreshStatus);
-        VoxeetSDK.conference.on("participantUpdated", this.refreshStatus);
+        VoxeetSDK.conference.on('participantAdded', this.refreshStatus);
+        VoxeetSDK.conference.on('participantUpdated', this.refreshStatus);
 
-        document.addEventListener("recordingStarted", this.onRecordingStarted, false);
-        document.addEventListener("recordingStopped", this.onRecordingStopped, false);
+        document.addEventListener('recordingStarted', this.onRecordingStarted, false);
+        document.addEventListener('recordingStopped', this.onRecordingStopped, false);
 
         this.refreshStatus();
     }
 
     componentWillUnmount() {
-        VoxeetSDK.conference.removeListener("participantAdded", this.refreshStatus);
-        VoxeetSDK.conference.removeListener("participantUpdated", this.refreshStatus);
+        VoxeetSDK.conference.removeListener('participantAdded', this.refreshStatus);
+        VoxeetSDK.conference.removeListener('participantUpdated', this.refreshStatus);
 
-        VoxeetSDK.command.removeListener("recordingStarted", this.onRecordingStarted);
-        VoxeetSDK.command.removeListener("recordingStopped", this.onRecordingStopped);
+        VoxeetSDK.command.removeListener('recordingStarted', this.onRecordingStarted);
+        VoxeetSDK.command.removeListener('recordingStopped', this.onRecordingStopped);
     }
 
     refreshStatus() {
         var isRecording = VoxeetSDK.recording.current != null;
 
-        const canRecord = VoxeetSDK.conference.current != null
-            && VoxeetSDK.conference.current.permissions.has("RECORD");
+        const canRecord = VoxeetSDK.conference.current != null && VoxeetSDK.conference.current.permissions.has('RECORD');
 
         this.setState({
             isRecording: isRecording,
             canStartRecording: canRecord && !isRecording,
-            canStopRecording: canRecord && isRecording
+            canStopRecording: canRecord && isRecording,
         });
     }
 
@@ -59,10 +56,10 @@ class Recording extends Component {
             .then(() => {
                 this.setState({
                     canStartRecording: false,
-                    canStopRecording: true
+                    canStopRecording: true,
                 });
             })
-            .catch(e => console.log(e));
+            .catch((e) => console.log(e));
     }
 
     stopRecording() {
@@ -70,21 +67,21 @@ class Recording extends Component {
             .then(() => {
                 this.setState({
                     canStartRecording: true,
-                    canStopRecording: false
+                    canStopRecording: false,
                 });
             })
-            .catch(e => console.log(e));
+            .catch((e) => console.log(e));
     }
 
     onRecordingStarted() {
         this.setState({
-            isRecording: true
+            isRecording: true,
         });
     }
 
     onRecordingStopped() {
         this.setState({
-            isRecording: false
+            isRecording: false,
         });
     }
 
@@ -102,7 +99,9 @@ class Recording extends Component {
                     </button>
                 )}
                 {this.state.isRecording && (
-                    <span className="recording"><i className="fas fa-circle"></i> Recording is on</span>
+                    <span className="recording">
+                        <i className="fas fa-circle"></i> Recording is on
+                    </span>
                 )}
             </React.Fragment>
         );

@@ -1,18 +1,17 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 
-import VoxeetSDK from "@voxeet/voxeet-web-sdk";
+import VoxeetSDK from '@voxeet/voxeet-web-sdk';
 
-import "../styles/chat.less";
+import '../styles/chat.less';
 
 export default class Chat extends Component {
-
     constructor(props) {
         super(props);
 
         this.messages = [];
         this.state = {
-            message: "",
-            messages: this.messages
+            message: '',
+            messages: this.messages,
         };
 
         this.handleChangeMessage = this.handleChangeMessage.bind(this);
@@ -21,11 +20,11 @@ export default class Chat extends Component {
     }
 
     componentDidMount() {
-        VoxeetSDK.command.on("received", this.onMessage);
+        VoxeetSDK.command.on('received', this.onMessage);
     }
 
     componentWillUnmount() {
-        VoxeetSDK.command.removeListener("received", this.onMessage);
+        VoxeetSDK.command.removeListener('received', this.onMessage);
     }
 
     handleChangeMessage(e) {
@@ -34,26 +33,25 @@ export default class Chat extends Component {
 
     sendMessage() {
         const msg = JSON.stringify({
-            action: "ChatMessage",
-            value: this.state.message
+            action: 'ChatMessage',
+            value: this.state.message,
         });
 
-        VoxeetSDK
-            .command
+        VoxeetSDK.command
             .send(msg)
             .then(() => {
                 this.onMessage(VoxeetSDK.session.participant, msg);
 
                 this.setState({
-                    message: ""
+                    message: '',
                 });
             })
-            .catch(e => console.log(e));
+            .catch((e) => console.log(e));
     }
 
     onMessage(participant, message) {
         const data = JSON.parse(message);
-        if (data.action != "ChatMessage") return;
+        if (data.action != 'ChatMessage') return;
 
         const key = `msg-${Math.floor(Math.random() * 1000000)}`;
 
@@ -64,19 +62,15 @@ export default class Chat extends Component {
                         <h6 className="mt-0">{participant.info.name}</h6>
                         <p>{data.value}</p>
                     </div>
-                
-                    <img src={participant.info.avatarUrl}
-                        className="ml-3"
-                        alt={participant.info.name} />
+
+                    <img src={participant.info.avatarUrl} className="ml-3" alt={participant.info.name} />
                 </li>
             );
         } else {
             this.messages.push(
                 <li key={key} className="media">
-                    <img src={participant.info.avatarUrl}
-                        className="mr-3"
-                        alt={participant.info.name} />
-    
+                    <img src={participant.info.avatarUrl} className="mr-3" alt={participant.info.name} />
+
                     <div className="media-body">
                         <h6 className="mt-0">{participant.info.name}</h6>
                         <p>{data.value}</p>
@@ -86,12 +80,12 @@ export default class Chat extends Component {
         }
 
         this.setState({
-            messages : this.messages
+            messages: this.messages,
         });
 
         // smooth scroll to the end of the list
-        const element = document.getElementById("chat-messages");
-        element.scrollIntoView({ behavior: "smooth", inline: "end" });
+        const element = document.getElementById('chat-messages');
+        element.scrollIntoView({ behavior: 'smooth', inline: 'end' });
     }
 
     render() {
@@ -111,11 +105,13 @@ export default class Chat extends Component {
                             <div className="row send-message">
                                 <div className="col">
                                     <div className="input-group mb-3">
-                                        <input type="text"
+                                        <input
+                                            type="text"
                                             className="form-control"
                                             placeholder="Send a message"
                                             value={this.state.message}
-                                            onChange={this.handleChangeMessage}  />
+                                            onChange={this.handleChangeMessage}
+                                        />
                                         <div className="input-group-prepend">
                                             <button className="btn btn-outline-secondary" type="button" onClick={this.sendMessage}>
                                                 <i className="fas fa-arrow-circle-right"></i>

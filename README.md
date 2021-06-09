@@ -29,6 +29,7 @@ When you join as a participant, you can only see the current presentation slide 
 ## Where to start
 
 Clone this repo:
+
 ```bash
 git clone https://github.com/dolbyio-samples/dolbyio-web-file-presentation-service
 ```
@@ -44,8 +45,8 @@ If you haven't done so already, create an account on [dolby.io](https://dolby.io
 In the file `server/index.js`, locate the following lines and set your key and secret.
 
 ```javascript
-const CONSUMER_KEY = "CONSUMER_KEY";
-const CONSUMER_SECRET = "CONSUMER_SECRET";
+const CONSUMER_KEY = 'CONSUMER_KEY';
+const CONSUMER_SECRET = 'CONSUMER_SECRET';
 ```
 
 Compile the React.JS application with the command:
@@ -71,21 +72,23 @@ https://dolbyio-samples.github.io/dolbyio-web-file-presentation-service/index.ht
 ## Features
 
 Here is the list of what you can do in this application:
-- Upload a PowerPoint presentation
-- Join as participant, guest or listener
-- Navigate through the slides
-- Extract the notes from the slides
-- Display or not the notes dynamically
-- 3 different video layouts (Round, Vertical, Horizontal)
-- Record the conference
-- Use [Enhanced Conference Access Control](https://dolby.io/developers/interactivity-apis/guides/enhanced-conference-access-control) with the permissions set on the server side
-- Mixer layout
+
+-   Upload a PowerPoint presentation
+-   Join as participant, guest or listener
+-   Navigate through the slides
+-   Extract the notes from the slides
+-   Display or not the notes dynamically
+-   3 different video layouts (Round, Vertical, Horizontal)
+-   Record the conference
+-   Use [Enhanced Conference Access Control](https://dolby.io/developers/interactivity-apis/guides/enhanced-conference-access-control) with the permissions set on the server side
+-   Mixer layout
 
 ## Open Source Projects
 
 This sample application is using the following Open Source projects:
-- [FontAwesome](https://fontawesome.com)
-- [Bootstrap](https://getbootstrap.com)
-- [Google Fonts](https://fonts.google.com)
-- [JQuery](https://jquery.com)
-- [JSZip](https://stuk.github.io/jszip/)
+
+-   [FontAwesome](https://fontawesome.com)
+-   [Bootstrap](https://getbootstrap.com)
+-   [Google Fonts](https://fonts.google.com)
+-   [JQuery](https://jquery.com)
+-   [JSZip](https://stuk.github.io/jszip/)

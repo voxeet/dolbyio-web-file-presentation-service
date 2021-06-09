@@ -1,0 +1,3 @@
+# Ignore distribution folder
+dist
+dist_mixer

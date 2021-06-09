@@ -1,37 +1,33 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 
-import VoxeetSDK from "@voxeet/voxeet-web-sdk";
+import VoxeetSDK from '@voxeet/voxeet-web-sdk';
 
-import Sdk from "../services/sdk";
+import Sdk from '../services/sdk';
 
-import "../styles/slides.less";
-
+import '../styles/slides.less';
 
 class Slides extends Component {
-
     constructor(props) {
         super(props);
 
         this.thumbnails = [];
         this.state = {
-            thumbnails : this.thumbnails
-        }
+            thumbnails: this.thumbnails,
+        };
 
         this.changeSlide = this.changeSlide.bind(this);
         this.changeHighlight = this.changeHighlight.bind(this);
     }
 
     componentDidMount() {
-        VoxeetSDK.filePresentation.on("updated", this.changeHighlight);
-        VoxeetSDK.filePresentation.on("started", this.changeHighlight);
+        VoxeetSDK.filePresentation.on('updated', this.changeHighlight);
+        VoxeetSDK.filePresentation.on('started', this.changeHighlight);
 
         for (let index = 0; index < VoxeetSDK.filePresentation.current.imageCount; index++) {
             Sdk.getSlideThumbnailUrl(index)
-                .then(url => {
+                .then((url) => {
                     const key = `thumbnail-${index}`;
-                    const cssClassName = VoxeetSDK.filePresentation.current.position == index
-                        ? "list-group-item active"
-                        : "list-group-item";
+                    const cssClassName = VoxeetSDK.filePresentation.current.position == index ? 'list-group-item active' : 'list-group-item';
 
                     this.thumbnails.push(
                         <a key={key} id={key} href="#" className={cssClassName} onClick={() => this.changeSlide(index)}>
@@ -41,7 +37,7 @@ class Slides extends Component {
                         </a>
                     );
                     this.setState({
-                        thumbnails : this.thumbnails
+                        thumbnails: this.thumbnails,
                     });
                 })
                 .catch((e) => console.log(e));
@@ -49,8 +45,8 @@ class Slides extends Component {
     }
 
     componentWillUnmount() {
-        VoxeetSDK.filePresentation.removeListener("updated", this.changeHighlight);
-        VoxeetSDK.filePresentation.removeListener("started", this.changeHighlight);
+        VoxeetSDK.filePresentation.removeListener('updated', this.changeHighlight);
+        VoxeetSDK.filePresentation.removeListener('started', this.changeHighlight);
     }
 
     async changeSlide(position) {
@@ -59,17 +55,17 @@ class Slides extends Component {
 
     changeHighlight(filePresentation) {
         // Remove the active tag on all slides
-        const elements = document.getElementsByClassName("list-group-item");
+        const elements = document.getElementsByClassName('list-group-item');
         for (let index = 0; index < elements.length; index++) {
-            elements[index].classList.remove("active");
+            elements[index].classList.remove('active');
         }
 
         // Add the active class for the current slide
         const element = document.getElementById(`thumbnail-${filePresentation.position}`);
-        element.classList.add("active");
+        element.classList.add('active');
 
         // smooth scroll of the thumbnail to the center of the list
-        element.scrollIntoView({ behavior: "smooth", inline: "center" });
+        element.scrollIntoView({ behavior: 'smooth', inline: 'center' });
 
         // Log a message in the console
         const slideCount = VoxeetSDK.filePresentation.current?.imageCount ?? 0;
@@ -79,9 +75,7 @@ class Slides extends Component {
     render() {
         return (
             <div className="thumbnails row">
-                <div className="col list-group list-group-horizontal">
-                    {this.thumbnails}
-                </div>
+                <div className="col list-group list-group-horizontal">{this.thumbnails}</div>
             </div>
         );
     }

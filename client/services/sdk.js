@@ -1,28 +1,27 @@
-import VoxeetSDK from "@voxeet/voxeet-web-sdk";
+import VoxeetSDK from '@voxeet/voxeet-web-sdk';
 
-import Backend from "./backend";
+import Backend from './backend';
 
-    
 /**
  * Initializes the Voxeet SDK.
  * @return {Promise<void>} A Promise for the completion of the function.
  */
-export const initializeSDK = async () => {
+const initializeSDK = async () => {
     const accessToken = await Backend.getAccessToken();
 
     VoxeetSDK.initializeToken(accessToken, Backend.getAccessToken);
-    console.log("VoxeetSDK Initialized");
-}
+    console.log('VoxeetSDK Initialized');
+};
 
 /**
  * Opens a session.
  * @return {Promise<void>} A Promise for the completion of the function.
  */
- export const openSession = async (name, externalId) => {
+const openSession = async (name, externalId) => {
     const participant = {
         name: name,
         externalId: externalId,
-        avatarUrl: "https://gravatar.com/avatar/" + Math.floor(Math.random() * 1000000) + "?s=200&d=identicon",
+        avatarUrl: 'https://gravatar.com/avatar/' + Math.floor(Math.random() * 1000000) + '?s=200&d=identicon',
     };
 
     // Close the session if it is already opened
@@ -31,26 +30,26 @@ export const initializeSDK = async () => {
     }
 
     await VoxeetSDK.session.open(participant);
-}
+};
 
 /**
  * Close the current session.
  * @return {Promise<void>} A Promise for the completion of the function.
  */
-export const closeSession = async () => {
+const closeSession = async () => {
     await VoxeetSDK.session.close();
-}
+};
 
 /**
  * Requests the conversion of the presentation file.
  * @param {*} file Presentation file to convert.
  */
-export const convertFile = async (file) => {
-    const result = await VoxeetSDK.filePresentation.convert(file)
+const convertFile = async (file) => {
+    const result = await VoxeetSDK.filePresentation.convert(file);
     if (result.status != 200) {
-        throw Error("There was an error while uploading the file.");
+        throw Error('There was an error while uploading the file.');
     }
-}
+};
 
 /**
  * Joins the specified conference.
@@ -58,23 +57,23 @@ export const convertFile = async (file) => {
  * @param {string} conferenceAccessToken Conference Access Token provided by the backend.
  * @return {Promise<void>} A Promise for the completion of the function.
  */
-export const joinConference = async (conferenceId, conferenceAccessToken) => {
+const joinConference = async (conferenceId, conferenceAccessToken) => {
     // Get the conference object
     const conference = await VoxeetSDK.conference.fetch(conferenceId);
-    
+
     // See: https://dolby.io/developers/interactivity-apis/client-sdk/reference-javascript/model/joinoptions
     const joinOptions = {
         conferenceAccessToken: conferenceAccessToken,
         constraints: {
             audio: true,
-            video: true
+            video: true,
         },
-        maxVideoForwarding: 4
+        maxVideoForwarding: 4,
     };
 
     // Join the conference
     await VoxeetSDK.conference.join(conference, joinOptions);
-}
+};
 
 /**
  * Joins the specified conference as a listener.
@@ -82,171 +81,153 @@ export const joinConference = async (conferenceId, conferenceAccessToken) => {
  * @param {string} conferenceAccessToken Conference Access Token provided by the backend.
  * @return {Promise<void>} A Promise for the completion of the function.
  */
-export const listenToConference = async (conferenceId, conferenceAccessToken) => {
+const listenToConference = async (conferenceId, conferenceAccessToken) => {
     // Get the conference object
-    const conference = await VoxeetSDK.conference.fetch(conferenceId)
+    const conference = await VoxeetSDK.conference.fetch(conferenceId);
 
     // See: https://dolby.io/developers/interactivity-apis/reference/client-sdk/reference-javascript/model/listenoptions
     const joinOptions = {
         conferenceAccessToken: conferenceAccessToken,
         constraints: {
             audio: false,
-            video: false
+            video: false,
         },
-        maxVideoForwarding: 4
+        maxVideoForwarding: 4,
     };
 
     // Join the conference
     await VoxeetSDK.conference.listen(conference, joinOptions);
-}
+};
 
 /**
  * Starts sharing the video to the conference participants.
  * @return {Promise<void>} A Promise for the completion of the function.
  */
-export const startVideo = async () => {
-    await VoxeetSDK
-        .conference
-        .startVideo(VoxeetSDK.session.participant);
-}
+const startVideo = async () => {
+    await VoxeetSDK.conference.startVideo(VoxeetSDK.session.participant);
+};
 
 /**
  * Stops sharing the video to the conference participants.
  * @return {Promise<void>} A Promise for the completion of the function.
  */
-export const stopVideo = async () => {
-    await VoxeetSDK
-        .conference
-        .stopVideo(VoxeetSDK.session.participant);
-}
+const stopVideo = async () => {
+    await VoxeetSDK.conference.stopVideo(VoxeetSDK.session.participant);
+};
 
 /**
  * Mutes the local participant.
  */
-export const mute = () => {
+const mute = () => {
     VoxeetSDK.conference.mute(VoxeetSDK.session.participant, true);
-}
+};
 
 /**
  * Unmutes the local participant.
  */
-export const unmute = () => {
+const unmute = () => {
     VoxeetSDK.conference.mute(VoxeetSDK.session.participant, false);
-}
+};
 
 /**
  * Leaves the conference.
  */
-export const leaveConference = async () => {
+const leaveConference = async () => {
     try {
-        await VoxeetSDK
-            .conference
-            .leave();
+        await VoxeetSDK.conference.leave();
     } catch (error) {
         console.error(error);
     }
-}
+};
 
 /**
  * Starts recording the conference.
  * @return {Promise<void>} A Promise for the completion of the function.
  */
-export const startRecording = async () => {
-    console.log("Starting the recording...");
+const startRecording = async () => {
+    console.log('Starting the recording...');
 
     await VoxeetSDK.recording.start();
-    
+
     const msg = JSON.stringify({
-        action: "RecordingState",
-        value: true
+        action: 'RecordingState',
+        value: true,
     });
 
     try {
-        await VoxeetSDK
-            .command
-            .send(msg);
+        await VoxeetSDK.command.send(msg);
     } catch (error) {
         console.error(error);
     }
-    
-    const event = new Event("recordingStarted");
+
+    const event = new Event('recordingStarted');
     document.dispatchEvent(event);
-}
+};
 
 /**
  * Stops recording the conference.
  * @return {Promise<void>} A Promise for the completion of the function.
  */
-export const stopRecording = async () => {
-    console.log("Stopping the recording...");
+const stopRecording = async () => {
+    console.log('Stopping the recording...');
 
     await VoxeetSDK.recording.stop();
-    
+
     const msg = JSON.stringify({
-        action: "RecordingState",
-        value: false
+        action: 'RecordingState',
+        value: false,
     });
 
     try {
-        await VoxeetSDK
-            .command
-            .send(msg);
+        await VoxeetSDK.command.send(msg);
     } catch (error) {
         console.error(error);
     }
-    
-    const event = new Event("recordingStopped");
+
+    const event = new Event('recordingStopped');
     document.dispatchEvent(event);
-}
+};
 
 /**
  * Starts a presentation.
  * @param {*} fileConverted File converted.
  * @return {Promise<void>} A Promise for the completion of the function.
  */
-export const startPresentation = async (fileConverted) => {
-    await VoxeetSDK
-        .filePresentation
-        .start(fileConverted);
-}
+const startPresentation = async (fileConverted) => {
+    await VoxeetSDK.filePresentation.start(fileConverted);
+};
 
 /**
  * Change the position of the slide in the presentation.
  * @param {number} position New position of the presentation.
  */
-export const changeSlidePosition = async (position) => {
+const changeSlidePosition = async (position) => {
     console.log(`Change the slide position to ${position}.`);
 
     try {
-        await VoxeetSDK
-            .filePresentation
-            .update(position);
+        await VoxeetSDK.filePresentation.update(position);
     } catch (error) {
         console.error(error);
     }
-}
+};
 
 /**
  * Gets the URL of the image for a slide.
  * @param {number} position Position of the slide to request the image.
  * @return {Promise<string>} URL of the image for the requested slide.
  */
-export const getSlideImageUrl = async (position) => {
-    return await VoxeetSDK
-        .filePresentation
-        .image(position);
-}
+const getSlideImageUrl = async (position) => {
+    return await VoxeetSDK.filePresentation.image(position);
+};
 
 /**
  * Gets the URL of the thumbnail for a slide.
  * @param {number} position Position of the slide to request the thumbnail.
  * @return {Promise<string>} URL of the thumbnail for the requested slide.
  */
-export const getSlideThumbnailUrl = async (position) => {
-    return await VoxeetSDK
-        .filePresentation
-        .thumbnail(position);
-}
+const getSlideThumbnailUrl = async (position) => {
+    return await VoxeetSDK.filePresentation.thumbnail(position);
+};
 
 export default {
     initializeSDK,
@@ -265,5 +246,5 @@ export default {
     startPresentation,
     changeSlidePosition,
     getSlideImageUrl,
-    getSlideThumbnailUrl
-}
+    getSlideThumbnailUrl,
+};

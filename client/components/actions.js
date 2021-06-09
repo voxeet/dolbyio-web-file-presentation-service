@@ -1,27 +1,25 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 
-import VoxeetSDK from "@voxeet/voxeet-web-sdk";
+import VoxeetSDK from '@voxeet/voxeet-web-sdk';
 
-import Sdk from "../services/sdk";
-import Recording from "./recording";
+import Sdk from '../services/sdk';
+import Recording from './recording';
 
-import "../styles/actions.less";
-
+import '../styles/actions.less';
 
 class Actions extends Component {
-
     constructor(props) {
         super(props);
 
         this.state = {
-            conferenceName: "",
+            conferenceName: '',
             conferenceJoined: false,
             nbUsers: 0,
             nbListeners: 0,
             canStartVideo: false,
             canStopVideo: true,
             canMute: true,
-            canUnmute: false
+            canUnmute: false,
         };
 
         this.onConferenceJoined = this.onConferenceJoined.bind(this);
@@ -34,22 +32,22 @@ class Actions extends Component {
     }
 
     componentDidMount() {
-        VoxeetSDK.conference.on("joined", this.onConferenceJoined);
-        VoxeetSDK.conference.on("participantAdded", this.refreshStatus);
-        VoxeetSDK.conference.on("participantUpdated", this.refreshStatus);
+        VoxeetSDK.conference.on('joined', this.onConferenceJoined);
+        VoxeetSDK.conference.on('participantAdded', this.refreshStatus);
+        VoxeetSDK.conference.on('participantUpdated', this.refreshStatus);
 
         this.refreshStatus();
     }
 
     componentWillUnmount() {
-        VoxeetSDK.conference.removeListener("joined", this.onConferenceJoined);
-        VoxeetSDK.conference.removeListener("participantAdded", this.refreshStatus);
-        VoxeetSDK.conference.removeListener("participantUpdated", this.refreshStatus);
+        VoxeetSDK.conference.removeListener('joined', this.onConferenceJoined);
+        VoxeetSDK.conference.removeListener('participantAdded', this.refreshStatus);
+        VoxeetSDK.conference.removeListener('participantUpdated', this.refreshStatus);
     }
 
     onConferenceJoined() {
         this.setState({
-            conferenceJoined: true
+            conferenceJoined: true,
         });
     }
 
@@ -57,15 +55,15 @@ class Actions extends Component {
         var users = 0;
         var listeners = 0;
 
-        VoxeetSDK.conference.participants.forEach(participant => {
-            console.log("id", participant.id, "status", participant.status, "type", participant.type);
-            console.log("name", participant.info.name, "externalId", participant.info.externalId);
+        VoxeetSDK.conference.participants.forEach((participant) => {
+            console.log('id', participant.id, 'status', participant.status, 'type', participant.type);
+            console.log('name', participant.info.name, 'externalId', participant.info.externalId);
             console.table(participant.metadata);
 
-            if (participant.status === "Connected" || participant.status === "Inactive") {
-                if (participant.type === "user" || participant.type === "speaker") {
+            if (participant.status === 'Connected' || participant.status === 'Inactive') {
+                if (participant.type === 'user' || participant.type === 'speaker') {
                     users++;
-                } else if (participant.type === "listener") {
+                } else if (participant.type === 'listener') {
                     listeners++;
                 }
             }
@@ -75,19 +73,11 @@ class Actions extends Component {
 
         const conferenceJoined = VoxeetSDK.conference.current != null;
 
-        const canStartVideo = this.state.canStartVideo
-            && conferenceJoined
-            && VoxeetSDK.conference.current.permissions.has("SEND_VIDEO");
-        const canStopVideo = this.state.canStopVideo
-            && conferenceJoined
-            && VoxeetSDK.conference.current.permissions.has("SEND_VIDEO");
+        const canStartVideo = this.state.canStartVideo && conferenceJoined && VoxeetSDK.conference.current.permissions.has('SEND_VIDEO');
+        const canStopVideo = this.state.canStopVideo && conferenceJoined && VoxeetSDK.conference.current.permissions.has('SEND_VIDEO');
 
-        const canMute = this.state.canMute
-            && conferenceJoined
-            && VoxeetSDK.conference.current.permissions.has("SEND_AUDIO");
-        const canUnmute = this.state.canUnmute
-            && conferenceJoined
-            && VoxeetSDK.conference.current.permissions.has("SEND_AUDIO");
+        const canMute = this.state.canMute && conferenceJoined && VoxeetSDK.conference.current.permissions.has('SEND_AUDIO');
+        const canUnmute = this.state.canUnmute && conferenceJoined && VoxeetSDK.conference.current.permissions.has('SEND_AUDIO');
 
         this.setState({
             conferenceName: conferenceName,
@@ -97,7 +87,7 @@ class Actions extends Component {
             canStopVideo: canStopVideo,
             canMute: canMute,
             canUnmute: canUnmute,
-            conferenceJoined: conferenceJoined
+            conferenceJoined: conferenceJoined,
         });
     }
 
@@ -106,7 +96,7 @@ class Actions extends Component {
             .then(() => {
                 this.setState({
                     canStartVideo: false,
-                    canStopVideo: true
+                    canStopVideo: true,
                 });
             })
             .catch((e) => console.log(e));
@@ -117,7 +107,7 @@ class Actions extends Component {
             .then(() => {
                 this.setState({
                     canStartVideo: true,
-                    canStopVideo: false
+                    canStopVideo: false,
                 });
             })
             .catch((e) => console.log(e));
@@ -128,7 +118,7 @@ class Actions extends Component {
 
         this.setState({
             canMute: false,
-            canUnmute: true
+            canUnmute: true,
         });
     }
 
@@ -137,7 +127,7 @@ class Actions extends Component {
 
         this.setState({
             canMute: true,
-            canUnmute: false
+            canUnmute: false,
         });
     }
 
@@ -147,7 +137,7 @@ class Actions extends Component {
 
     render() {
         if (!this.state.conferenceJoined) {
-            return "";
+            return '';
         }
 
         return (
@@ -158,7 +148,10 @@ class Actions extends Component {
                             <Recording />
                             <span className="separator" />
 
-                            <span>{this.state.nbUsers} user{this.state.nbUsers > 1 ? "s" : ""} / {this.state.nbListeners} listener{this.state.nbListeners > 1 ? "s" : ""}</span>
+                            <span>
+                                {this.state.nbUsers} user{this.state.nbUsers > 1 ? 's' : ''} / {this.state.nbListeners} listener
+                                {this.state.nbListeners > 1 ? 's' : ''}
+                            </span>
                         </div>
                         <div className="col-center">
                             <span>{this.state.conferenceName}</span>

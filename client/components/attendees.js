@@ -1,22 +1,20 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
-import VoxeetSDK from "@voxeet/voxeet-web-sdk";
+import VoxeetSDK from '@voxeet/voxeet-web-sdk';
 
-import { AttendeeVideo, Layouts } from "./attendeeVideo";
+import { AttendeeVideo, Layouts } from './attendeeVideo';
 
-import "../styles/attendees.less";
-
+import '../styles/attendees.less';
 
 class Attendees extends Component {
-
     constructor(props) {
         super(props);
 
         this.videoNodes = [];
         this.state = {
-            videoNodes : this.videoNodes
-        }
+            videoNodes: this.videoNodes,
+        };
 
         this.onStreamAdded = this.onStreamAdded.bind(this);
         this.onStreamUpdated = this.onStreamUpdated.bind(this);
@@ -24,12 +22,12 @@ class Attendees extends Component {
     }
 
     componentDidMount() {
-        VoxeetSDK.conference.on("streamAdded", this.onStreamAdded);
-        VoxeetSDK.conference.on("streamUpdated", this.onStreamUpdated);
-        VoxeetSDK.conference.on("streamRemoved", this.onStreamRemoved);
+        VoxeetSDK.conference.on('streamAdded', this.onStreamAdded);
+        VoxeetSDK.conference.on('streamUpdated', this.onStreamUpdated);
+        VoxeetSDK.conference.on('streamRemoved', this.onStreamRemoved);
 
         // Load the streams for all active participants after this component is loaded
-        VoxeetSDK.conference.participants.forEach(participant => {
+        VoxeetSDK.conference.participants.forEach((participant) => {
             if (participant.streams) {
                 for (let index = 0; index < participant.streams.length; index++) {
                     const stream = participant.streams[index];
@@ -43,13 +41,13 @@ class Attendees extends Component {
     }
 
     componentWillUnmount() {
-        VoxeetSDK.conference.removeListener("streamAdded", this.onStreamAdded);
-        VoxeetSDK.conference.removeListener("streamUpdated", this.onStreamUpdated);
-        VoxeetSDK.conference.removeListener("streamRemoved", this.onStreamRemoved);
+        VoxeetSDK.conference.removeListener('streamAdded', this.onStreamAdded);
+        VoxeetSDK.conference.removeListener('streamUpdated', this.onStreamUpdated);
+        VoxeetSDK.conference.removeListener('streamRemoved', this.onStreamRemoved);
     }
 
     onStreamAdded(participant, stream) {
-        if (stream.type === "ScreenShare") return;
+        if (stream.type === 'ScreenShare') return;
 
         console.log(`${Date.now()} - streamAdded from ${participant.info.name} (${participant.id})`);
 
@@ -60,7 +58,7 @@ class Attendees extends Component {
     }
 
     onStreamUpdated(participant, stream) {
-        if (stream.type === "ScreenShare") return;
+        if (stream.type === 'ScreenShare') return;
 
         console.log(`${Date.now()} - streamUpdated from ${participant.info.name} (${participant.id})`);
 
@@ -73,7 +71,7 @@ class Attendees extends Component {
     }
 
     onStreamRemoved(participant, stream) {
-        if (stream.type === "ScreenShare") return;
+        if (stream.type === 'ScreenShare') return;
 
         console.log(`${Date.now()} - streamRemoved from ${participant.info.name} (${participant.id})`);
 
@@ -88,16 +86,19 @@ class Attendees extends Component {
             }
         }
 
-        let videoNode = <AttendeeVideo
-            key={`video-${participant.id}`}
-            participantId={participant.id}
-            participantName={participant.info.name}
-            stream={stream}
-            layout={this.props.videoLayout} />
+        let videoNode = (
+            <AttendeeVideo
+                key={`video-${participant.id}`}
+                participantId={participant.id}
+                participantName={participant.info.name}
+                stream={stream}
+                layout={this.props.videoLayout}
+            />
+        );
 
         this.videoNodes.push(videoNode);
         this.setState({
-            videoNodes : this.videoNodes
+            videoNodes: this.videoNodes,
         });
     }
 
@@ -114,26 +115,22 @@ class Attendees extends Component {
 
         this.videoNodes = tmpVideoNodes;
         this.setState({
-            videoNodes : this.videoNodes
+            videoNodes: this.videoNodes,
         });
     }
 
     render() {
         const cssClasses = `attendees ${this.props.videoLayout} row`;
-        return (
-            <div className={cssClasses}>
-                {this.state.videoNodes}
-            </div>
-        );
+        return <div className={cssClasses}>{this.state.videoNodes}</div>;
     }
 }
 
 Attendees.propTypes = {
-    videoLayout: PropTypes.string
+    videoLayout: PropTypes.string,
 };
 
 Attendees.defaultProps = {
-    videoLayout: Layouts.VERTICAL
+    videoLayout: Layouts.VERTICAL,
 };
 
 export default Attendees;
