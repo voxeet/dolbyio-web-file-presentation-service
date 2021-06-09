@@ -55,14 +55,15 @@ class Login extends Component {
         //console.log(fileConversionProgress);
     }
 
-    onFilePresentationConverted(fileConverted) {
+    async onFilePresentationConverted(fileConverted) {
         console.log('fileConverted', fileConverted);
 
-        PowerPoint.getPresentation(this.state.file)
-            .then((presentation) =>
-                this.props.handleOnSessionOpened(this.state.conferenceName, this.state.username, this.state.isListener, fileConverted, presentation)
-            )
-            .catch((e) => console.log(e));
+        try {
+            const presentation = await PowerPoint.getPresentation(this.state.file);
+            this.props.handleOnSessionOpened(this.state.conferenceName, this.state.username, this.state.isListener, fileConverted, presentation);
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     handleChangeConferenceName(e) {
@@ -103,51 +104,45 @@ class Login extends Component {
         });
     }
 
-    joinPresentation() {
+    async joinPresentation() {
         this.setState({
             isLoading: true,
             loadingMessage: 'Opening a session',
         });
 
-        Sdk.openSession(this.state.username, this.state.username)
-            .then(() => {
-                this.props.handleOnSessionOpened(this.state.conferenceName, this.state.username, this.state.isListener);
-            })
-            .catch((e) => {
-                this.setState({ isLoading: false });
-                console.log(e);
-            });
+        try {
+            await Sdk.openSession(this.state.username, this.state.username);
+            this.props.handleOnSessionOpened(this.state.conferenceName, this.state.username, this.state.isListener);
+        } catch (error) {
+            this.setState({ isLoading: false });
+            console.error(error);
+        }
     }
 
-    startPresentation() {
+    async startPresentation() {
         this.setState({
             isLoading: true,
             loadingMessage: 'Opening a session',
         });
 
-        Sdk.openSession(this.state.username, this.state.username)
-            .then(() => {
-                this.setState({
-                    isLoading: true,
-                    loadingMessage: 'Uploading the presentation',
-                });
+        try {
+            await Sdk.openSession(this.state.username, this.state.username);
 
-                Sdk.convertFile(this.state.file)
-                    .then(() => {
-                        this.setState({
-                            isLoading: true,
-                            loadingMessage: 'Converting the presentation',
-                        });
-                    })
-                    .catch((e) => {
-                        this.setState({ isLoading: false });
-                        console.log(e);
-                    });
-            })
-            .catch((e) => {
-                this.setState({ isLoading: false });
-                console.log(e);
+            this.setState({
+                isLoading: true,
+                loadingMessage: 'Uploading the presentation',
             });
+
+            await Sdk.convertFile(this.state.file);
+
+            this.setState({
+                isLoading: true,
+                loadingMessage: 'Converting the presentation',
+            });
+        } catch (error) {
+            this.setState({ isLoading: false });
+            console.error(error);
+        }
     }
 
     render() {

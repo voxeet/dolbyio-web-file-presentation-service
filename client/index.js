@@ -29,13 +29,16 @@ class Index extends Component {
         this.onSessionOpened = this.onSessionOpened.bind(this);
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         VoxeetSDK.conference.on('ended', this.onConferenceEndedOrLeft);
         VoxeetSDK.conference.on('left', this.onConferenceEndedOrLeft);
 
-        Sdk.initializeSDK()
-            .then(() => this.setState({ isLoading: false }))
-            .catch((e) => console.log(e));
+        try {
+            await Sdk.initializeSDK();
+            this.setState({ isLoading: false });
+        } catch (error) {
+            console.error(error);
+        }
 
         // Remove the bottom left link from Google Chrome
         // From: https://stackoverflow.com/a/28206011
@@ -57,92 +60,85 @@ class Index extends Component {
         VoxeetSDK.conference.removeListener('left', this.onConferenceEndedOrLeft);
     }
 
-    onConferenceEndedOrLeft() {
+    async onConferenceEndedOrLeft() {
         this.setState({
             isLoading: true,
             loadingMessage: 'Leaving the conference',
         });
 
-        Sdk.closeSession()
-            .then(() => {
-                this.setState({
-                    isLoading: false,
-                    isLoggedIn: false,
-                    isHost: false,
-                    fileConverted: null,
-                });
-            })
-            .catch((e) => {
-                this.setState({ isLoading: false });
-                console.log(e);
+        try {
+            await Sdk.closeSession();
+
+            this.setState({
+                isLoading: false,
+                isLoggedIn: false,
+                isHost: false,
+                fileConverted: null,
             });
+        } catch (error) {
+            this.setState({ isLoading: false });
+            console.error(error);
+        }
     }
 
-    onSessionOpened(conferenceAlias, username, isListener, fileConverted, presentation) {
+    async onSessionOpened(conferenceAlias, username, isListener, fileConverted, presentation) {
         console.log('Conference alias', conferenceAlias);
         console.log('Username', username);
         const externalId = VoxeetSDK.session.participant.info.externalId;
 
-        if (fileConverted) {
-            console.log('Converted file', fileConverted);
+        try {
+            if (fileConverted) {
+                console.log('Converted file', fileConverted);
 
-            this.setState({
-                isLoading: true,
-                loadingMessage: 'Creating the conference',
-            });
-
-            Backend.createConference(conferenceAlias, externalId)
-                .then((conference) => {
-                    this.setState({
-                        isLoading: true,
-                        loadingMessage: 'Joining the conference',
-                    });
-
-                    return Sdk.joinConference(conference.conferenceId, conference.ownerToken);
-                })
-                .then(() => {
-                    this.setState({
-                        isLoading: false,
-                        isLoggedIn: true,
-                        isHost: true,
-                        fileConverted: fileConverted,
-                        presentation: presentation,
-                    });
-                })
-                .catch((e) => {
-                    this.setState({ isLoading: false });
-                    console.log(e);
+                this.setState({
+                    isLoading: true,
+                    loadingMessage: 'Creating the conference',
                 });
-        } else {
-            this.setState({
-                isLoading: true,
-                loadingMessage: 'Request access to the conference',
-            });
 
-            Backend.getInvited(conferenceAlias, isListener, externalId)
-                .then((invitation) => {
-                    this.setState({
-                        isLoading: true,
-                        loadingMessage: 'Joining the conference',
-                    });
+                const conference = await Backend.createConference(conferenceAlias, externalId);
 
-                    if (isListener) {
-                        return Sdk.listenToConference(invitation.conferenceId, invitation.accessToken);
-                    }
-
-                    return Sdk.joinConference(invitation.conferenceId, invitation.accessToken);
-                })
-                .then(() => {
-                    this.setState({
-                        isLoading: false,
-                        isLoggedIn: true,
-                        isHost: false,
-                    });
-                })
-                .catch((e) => {
-                    this.setState({ isLoading: false });
-                    console.log(e);
+                this.setState({
+                    isLoading: true,
+                    loadingMessage: 'Joining the conference',
                 });
+
+                await Sdk.joinConference(conference.conferenceId, conference.ownerToken);
+
+                this.setState({
+                    isLoading: false,
+                    isLoggedIn: true,
+                    isHost: true,
+                    fileConverted: fileConverted,
+                    presentation: presentation,
+                });
+            } else {
+                this.setState({
+                    isLoading: true,
+                    loadingMessage: 'Request access to the conference',
+                });
+
+                const invitation = Backend.getInvited(conferenceAlias, isListener, externalId);
+
+                this.setState({
+                    isLoading: true,
+                    loadingMessage: 'Joining the conference',
+                });
+
+                if (isListener) {
+                    await Sdk.listenToConference(invitation.conferenceId, invitation.accessToken);
+                } else {
+                    await Sdk.joinConference(invitation.conferenceId, invitation.accessToken);
+                }
+
+                this.setState({
+                    isLoading: false,
+                    isLoggedIn: true,
+                    isHost: false,
+                });
+            }
+        } catch (error) {
+            this.setState({ isLoading: false });
+            console.error(error);
         }
     }
 

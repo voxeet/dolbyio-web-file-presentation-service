@@ -26,7 +26,7 @@ class Conference extends Component {
         this.onFilePresentationStarted = this.onFilePresentationStarted.bind(this);
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         VoxeetSDK.filePresentation.on('started', this.onFilePresentationStarted);
 
         if (this.props.isHost) {
@@ -35,14 +35,13 @@ class Conference extends Component {
                 loadingMessage: 'Starting the presentation',
             });
 
-            Sdk.startPresentation(this.props.fileConverted)
-                .then(() => {
-                    this.setState({ isLoading: false });
-                })
-                .catch((e) => {
-                    this.setState({ isLoading: false });
-                    console.log(e);
-                });
+            try {
+                await Sdk.startPresentation(this.props.fileConverted);
+                this.setState({ isLoading: false });
+            } catch (error) {
+                this.setState({ isLoading: false });
+                console.error(error);
+            }
         } else if (VoxeetSDK.filePresentation.current != null) {
             this.onFilePresentationStarted(VoxeetSDK.filePresentation.current);
         }

@@ -91,26 +91,30 @@ class Actions extends Component {
         });
     }
 
-    startVideo() {
-        Sdk.startVideo()
-            .then(() => {
-                this.setState({
-                    canStartVideo: false,
-                    canStopVideo: true,
-                });
-            })
-            .catch((e) => console.log(e));
+    async startVideo() {
+        try {
+            await Sdk.startVideo();
+
+            this.setState({
+                canStartVideo: false,
+                canStopVideo: true,
+            });
+        } catch (error) {
+            console.error(error);
+        }
     }
 
-    stopVideo() {
-        Sdk.stopVideo()
-            .then(() => {
-                this.setState({
-                    canStartVideo: true,
-                    canStopVideo: false,
-                });
-            })
-            .catch((e) => console.log(e));
+    async stopVideo() {
+        try {
+            await Sdk.stopVideo();
+
+            this.setState({
+                canStartVideo: true,
+                canStopVideo: false,
+            });
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     mute() {

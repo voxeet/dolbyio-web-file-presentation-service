@@ -19,28 +19,30 @@ class Slides extends Component {
         this.changeHighlight = this.changeHighlight.bind(this);
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         VoxeetSDK.filePresentation.on('updated', this.changeHighlight);
         VoxeetSDK.filePresentation.on('started', this.changeHighlight);
 
         for (let index = 0; index < VoxeetSDK.filePresentation.current.imageCount; index++) {
-            Sdk.getSlideThumbnailUrl(index)
-                .then((url) => {
-                    const key = `thumbnail-${index}`;
-                    const cssClassName = VoxeetSDK.filePresentation.current.position == index ? 'list-group-item active' : 'list-group-item';
+            try {
+                const url = await Sdk.getSlideThumbnailUrl(index);
+                const key = `thumbnail-${index}`;
+                const cssClassName = VoxeetSDK.filePresentation.current.position == index ? 'list-group-item active' : 'list-group-item';
 
-                    this.thumbnails.push(
-                        <a key={key} id={key} href="#" className={cssClassName} onClick={() => this.changeSlide(index)}>
-                            <div className="active-bolder">
-                                <img src={url} />
-                            </div>
-                        </a>
-                    );
-                    this.setState({
-                        thumbnails: this.thumbnails,
-                    });
-                })
-                .catch((e) => console.log(e));
+                this.thumbnails.push(
+                    <a key={key} id={key} href="#" className={cssClassName} onClick={async () => await this.changeSlide(index)}>
+                        <div className="active-bolder">
+                            <img src={url} />
+                        </div>
+                    </a>
+                );
+
+                this.setState({
+                    thumbnails: this.thumbnails,
+                });
+            } catch (error) {
+                console.error(error);
+            }
         }
     }
 

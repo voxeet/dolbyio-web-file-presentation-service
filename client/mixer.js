@@ -55,21 +55,24 @@ class Mixer extends Component {
         const refreshUrl = document.getElementById('refreshUrl').value;
 
         // Reference: https://dolby.io/developers/interactivity-apis/client-sdk/reference-javascript/voxeetsdk#static-initializetoken
-        VoxeetSDK.initializeToken(accessToken, () =>
-            fetch(refreshUrl, {
+        VoxeetSDK.initializeToken(accessToken, async () => {
+            const fetchOptions = {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: 'Bearer ' + accessToken,
                 },
                 body: { refresh_token: refreshToken },
-            })
-                .then((data) => data.json())
-                .then((json) => json.access_token)
-        );
+            };
+
+            const data = await fetch(refreshUrl, fetchOptions);
+            const json = await data.json();
+
+            return json.access_token;
+        });
     }
 
-    joinConference() {
+    async joinConference() {
         this.initializeVoxeetSDK();
 
         // Load the settings injected by the mixer
@@ -96,16 +99,20 @@ class Mixer extends Component {
             userParams: {},
         };
 
-        // Open a session for the mixer
-        VoxeetSDK.session
-            .open(mixer)
-            .then(() => VoxeetSDK.conference.fetch(conferenceId))
+        try {
+            // Open a session for the mixer
+            await VoxeetSDK.session.open(mixer);
+
+            const conference = await VoxeetSDK.conference.fetch(conferenceId);
+
             // Join the conference
-            .then((conference) => VoxeetSDK.conference.join(conference, joinOptions))
-            .catch((err) => console.log(err));
+            await VoxeetSDK.conference.join(conference, joinOptions);
+        } catch (error) {
+            console.error(error);
+        }
     }
 
-    replayConference() {
+    async replayConference() {
         this.initializeVoxeetSDK();
 
         // Load the settings injected by the mixer
@@ -125,17 +132,19 @@ class Mixer extends Component {
             offset: 0,
         };
 
-        // Open a session for the mixer
-        VoxeetSDK.session
-            .open(mixer)
-            .then(() => VoxeetSDK.conference.fetch(conferenceId))
+        try {
+            // Open a session for the mixer
+            await VoxeetSDK.session.open(mixer);
+
+            const conference = await VoxeetSDK.conference.fetch(conferenceId);
+
             // Replay the conference from the beginning
-            .then((conference) =>
-                VoxeetSDK.conference.replay(conference, replayOptions, {
-                    enabled: true,
-                })
-            )
-            .catch((err) => console.log(err));
+            await VoxeetSDK.conference.replay(conference, replayOptions, {
+                enabled: true,
+            });
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     onConferenceEnded() {

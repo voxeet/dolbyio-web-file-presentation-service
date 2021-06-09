@@ -28,11 +28,11 @@ class Presentation extends Component {
         this.updateSlide = this.updateSlide.bind(this);
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         VoxeetSDK.filePresentation.on('updated', this.updateSlide);
 
         // Load the current slide
-        this.updateSlide(VoxeetSDK.filePresentation.current);
+        await this.updateSlide(VoxeetSDK.filePresentation.current);
     }
 
     componentWillUnmount() {
@@ -53,37 +53,39 @@ class Presentation extends Component {
         }
     }
 
-    updateSlide(filePresentation) {
-        Sdk.getSlideImageUrl(filePresentation.position)
-            .then((url) => {
-                const current = VoxeetSDK.filePresentation.current;
-                const isPresentationOwner = current.owner.id == VoxeetSDK.session.participant.id;
-                const canGoBack = isPresentationOwner && current.position > 0;
-                const canGoForward = isPresentationOwner && current.position < current.imageCount - 1;
+    async updateSlide(filePresentation) {
+        try {
+            const url = await Sdk.getSlideImageUrl(filePresentation.position);
 
-                const notes = [];
-                if (isPresentationOwner && this.state.presentationHasNotes) {
-                    if (Object.prototype.hasOwnProperty.call(this.props.presentation, current.position)) {
-                        const slideNotes = this.props.presentation[current.position];
-                        for (let index = 0; index < slideNotes.length; index++) {
-                            const note = slideNotes[index];
-                            const key = `notes-${index}`;
-                            notes.push(<li key={key}>{note}</li>);
-                        }
+            const current = VoxeetSDK.filePresentation.current;
+            const isPresentationOwner = current.owner.id == VoxeetSDK.session.participant.id;
+            const canGoBack = isPresentationOwner && current.position > 0;
+            const canGoForward = isPresentationOwner && current.position < current.imageCount - 1;
+
+            const notes = [];
+            if (isPresentationOwner && this.state.presentationHasNotes) {
+                if (Object.prototype.hasOwnProperty.call(this.props.presentation, current.position)) {
+                    const slideNotes = this.props.presentation[current.position];
+                    for (let index = 0; index < slideNotes.length; index++) {
+                        const note = slideNotes[index];
+                        const key = `notes-${index}`;
+                        notes.push(<li key={key}>{note}</li>);
                     }
                 }
+            }
 
-                this.setState({
-                    slideUrl: url,
-                    canGoBack: canGoBack,
-                    canGoForward: canGoForward,
-                    slidePosition: current.position + 1, // Index is 0
-                    slideCount: current.imageCount,
-                    isPresentationOwner: isPresentationOwner,
-                    notes: <ul>{notes}</ul>,
-                });
-            })
-            .catch((e) => console.log(e));
+            this.setState({
+                slideUrl: url,
+                canGoBack: canGoBack,
+                canGoForward: canGoForward,
+                slidePosition: current.position + 1, // Index is 0
+                slideCount: current.imageCount,
+                isPresentationOwner: isPresentationOwner,
+                notes: <ul>{notes}</ul>,
+            });
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     render() {

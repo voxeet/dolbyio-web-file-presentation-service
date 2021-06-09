@@ -51,26 +51,30 @@ class Recording extends Component {
         });
     }
 
-    startRecording() {
-        Sdk.startRecording()
-            .then(() => {
-                this.setState({
-                    canStartRecording: false,
-                    canStopRecording: true,
-                });
-            })
-            .catch((e) => console.log(e));
+    async startRecording() {
+        try {
+            await Sdk.startRecording();
+
+            this.setState({
+                canStartRecording: false,
+                canStopRecording: true,
+            });
+        } catch (error) {
+            console.error(error);
+        }
     }
 
-    stopRecording() {
-        Sdk.stopRecording()
-            .then(() => {
-                this.setState({
-                    canStartRecording: true,
-                    canStopRecording: false,
-                });
-            })
-            .catch((e) => console.log(e));
+    async stopRecording() {
+        try {
+            await Sdk.stopRecording();
+
+            this.setState({
+                canStartRecording: true,
+                canStopRecording: false,
+            });
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     onRecordingStarted() {
