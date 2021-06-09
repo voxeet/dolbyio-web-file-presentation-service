@@ -141,8 +141,8 @@ class Actions extends Component {
         });
     }
 
-    leave() {
-        Sdk.leaveConference();
+    async leave() {
+        await Sdk.leaveConference();
     }
 
     render() {

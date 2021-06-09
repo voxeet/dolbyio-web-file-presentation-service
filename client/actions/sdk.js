@@ -2,245 +2,268 @@ import VoxeetSDK from "@voxeet/voxeet-web-sdk";
 
 import Backend from "./backend";
 
-
-export default class Sdk {
     
-    /**
-     * Initializes the Voxeet SDK.
-     * @return {Promise<void>} A Promise for the completion of the function.
-     */
-    static initializeSDK() {
-        return Backend.getAccessToken()
-            .then((accessToken) => {
-                VoxeetSDK.initializeToken(accessToken, Backend.getAccessToken);
-                console.log("VoxeetSDK Initialized");
-            });
+/**
+ * Initializes the Voxeet SDK.
+ * @return {Promise<void>} A Promise for the completion of the function.
+ */
+export const initializeSDK = async () => {
+    const accessToken = await Backend.getAccessToken();
+
+    VoxeetSDK.initializeToken(accessToken, Backend.getAccessToken);
+    console.log("VoxeetSDK Initialized");
+}
+
+/**
+ * Opens a session.
+ * @return {Promise<void>} A Promise for the completion of the function.
+ */
+ export const openSession = async (name, externalId) => {
+    const participant = {
+        name: name,
+        externalId: externalId,
+        avatarUrl: "https://gravatar.com/avatar/" + Math.floor(Math.random() * 1000000) + "?s=200&d=identicon",
+    };
+
+    // Close the session if it is already opened
+    if (VoxeetSDK.session.participant) {
+        await VoxeetSDK.session.close();
     }
 
-    /**
-     * Opens a session.
-     * @return {Promise<void>} A Promise for the completion of the function.
-     */
-    static async openSession(name, externalId) {
-        const participant = {
-            name: name,
-            externalId: externalId,
-            avatarUrl: "https://gravatar.com/avatar/" + Math.floor(Math.random() * 1000000) + "?s=200&d=identicon",
-        };
+    await VoxeetSDK.session.open(participant);
+}
 
-        // Close the session if it is already opened
-        if (VoxeetSDK.session.participant != undefined) {
-            await VoxeetSDK.session.close();
-        }
+/**
+ * Close the current session.
+ * @return {Promise<void>} A Promise for the completion of the function.
+ */
+export const closeSession = async () => {
+    await VoxeetSDK.session.close();
+}
 
-        await VoxeetSDK.session.open(participant);
+/**
+ * Requests the conversion of the presentation file.
+ * @param {*} file Presentation file to convert.
+ */
+export const convertFile = async (file) => {
+    const result = await VoxeetSDK.filePresentation.convert(file)
+    if (result.status != 200) {
+        throw Error("There was an error while uploading the file.");
     }
+}
 
-    /**
-     * Close the current session.
-     * @return {Promise<void>} A Promise for the completion of the function.
-     */
-    static closeSession() {
-        return VoxeetSDK.session.close();
-    }
+/**
+ * Joins the specified conference.
+ * @param {string} conferenceId Conference ID.
+ * @param {string} conferenceAccessToken Conference Access Token provided by the backend.
+ * @return {Promise<void>} A Promise for the completion of the function.
+ */
+export const joinConference = async (conferenceId, conferenceAccessToken) => {
+    // Get the conference object
+    const conference = await VoxeetSDK.conference.fetch(conferenceId);
+    
+    // See: https://dolby.io/developers/interactivity-apis/client-sdk/reference-javascript/model/joinoptions
+    const joinOptions = {
+        conferenceAccessToken: conferenceAccessToken,
+        constraints: {
+            audio: true,
+            video: true
+        },
+        maxVideoForwarding: 4
+    };
 
-    /**
-     * Requests the conversion of the presentation file.
-     * @param {*} file Presentation file to convert.
-     */
-    static async convertFile(file) {
-        const result = await VoxeetSDK.filePresentation.convert(file)
-        if (result.status != 200) {
-            throw Error("There was an error while uploading the file.");
-        }
-    }
+    // Join the conference
+    await VoxeetSDK.conference.join(conference, joinOptions);
+}
 
-    /**
-     * Joins the specified conference.
-     * @param {string} conferenceId Conference ID.
-     * @param {string} conferenceAccessToken Conference Access Token provided by the backend.
-     * @return {Promise<void>} A Promise for the completion of the function.
-     */
-    static joinConference(conferenceId, conferenceAccessToken) {
-        // Get the conference object
-        return VoxeetSDK.conference.fetch(conferenceId)
-            .then((conference) => {
-                // See: https://dolby.io/developers/interactivity-apis/client-sdk/reference-javascript/model/joinoptions
-                const joinOptions = {
-                    conferenceAccessToken: conferenceAccessToken,
-                    constraints: {
-                        audio: true,
-                        video: true
-                    },
-                    maxVideoForwarding: 4
-                };
+/**
+ * Joins the specified conference as a listener.
+ * @param {string} conferenceId Conference ID.
+ * @param {string} conferenceAccessToken Conference Access Token provided by the backend.
+ * @return {Promise<void>} A Promise for the completion of the function.
+ */
+export const listenToConference = async (conferenceId, conferenceAccessToken) => {
+    // Get the conference object
+    const conference = await VoxeetSDK.conference.fetch(conferenceId)
 
-                // Join the conference
-                return VoxeetSDK.conference.join(conference, joinOptions);
-            });
-    }
+    // See: https://dolby.io/developers/interactivity-apis/reference/client-sdk/reference-javascript/model/listenoptions
+    const joinOptions = {
+        conferenceAccessToken: conferenceAccessToken,
+        constraints: {
+            audio: false,
+            video: false
+        },
+        maxVideoForwarding: 4
+    };
 
-    /**
-     * Joins the specified conference as a listener.
-     * @param {string} conferenceId Conference ID.
-     * @param {string} conferenceAccessToken Conference Access Token provided by the backend.
-     * @return {Promise<void>} A Promise for the completion of the function.
-     */
-    static listenToConference(conferenceId, conferenceAccessToken) {
-        // Get the conference object
-        return VoxeetSDK.conference.fetch(conferenceId)
-            .then((conference) => {
-                // See: https://dolby.io/developers/interactivity-apis/reference/client-sdk/reference-javascript/model/listenoptions
-                const joinOptions = {
-                    conferenceAccessToken: conferenceAccessToken,
-                    constraints: {
-                        audio: false,
-                        video: false
-                    },
-                    maxVideoForwarding: 4
-                };
+    // Join the conference
+    await VoxeetSDK.conference.listen(conference, joinOptions);
+}
 
-                // Join the conference
-                return VoxeetSDK.conference.listen(conference, joinOptions);
-            });
-    }
+/**
+ * Starts sharing the video to the conference participants.
+ * @return {Promise<void>} A Promise for the completion of the function.
+ */
+export const startVideo = async () => {
+    await VoxeetSDK
+        .conference
+        .startVideo(VoxeetSDK.session.participant);
+}
 
-    /**
-     * Starts sharing the video to the conference participants.
-     * @return {Promise<void>} A Promise for the completion of the function.
-     */
-    static startVideo() {
-        return VoxeetSDK
+/**
+ * Stops sharing the video to the conference participants.
+ * @return {Promise<void>} A Promise for the completion of the function.
+ */
+export const stopVideo = async () => {
+    await VoxeetSDK
+        .conference
+        .stopVideo(VoxeetSDK.session.participant);
+}
+
+/**
+ * Mutes the local participant.
+ */
+export const mute = () => {
+    VoxeetSDK.conference.mute(VoxeetSDK.session.participant, true);
+}
+
+/**
+ * Unmutes the local participant.
+ */
+export const unmute = () => {
+    VoxeetSDK.conference.mute(VoxeetSDK.session.participant, false);
+}
+
+/**
+ * Leaves the conference.
+ */
+export const leaveConference = async () => {
+    try {
+        await VoxeetSDK
             .conference
-            .startVideo(VoxeetSDK.session.participant);
+            .leave();
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+/**
+ * Starts recording the conference.
+ * @return {Promise<void>} A Promise for the completion of the function.
+ */
+export const startRecording = async () => {
+    console.log("Starting the recording...");
+
+    await VoxeetSDK.recording.start();
+    
+    const msg = JSON.stringify({
+        action: "RecordingState",
+        value: true
+    });
+
+    try {
+        await VoxeetSDK
+            .command
+            .send(msg);
+    } catch (error) {
+        console.error(error);
     }
     
-    /**
-     * Stops sharing the video to the conference participants.
-     * @return {Promise<void>} A Promise for the completion of the function.
-     */
-    static stopVideo() {
-        return VoxeetSDK
-            .conference
-            .stopVideo(VoxeetSDK.session.participant);
+    const event = new Event("recordingStarted");
+    document.dispatchEvent(event);
+}
+
+/**
+ * Stops recording the conference.
+ * @return {Promise<void>} A Promise for the completion of the function.
+ */
+export const stopRecording = async () => {
+    console.log("Stopping the recording...");
+
+    await VoxeetSDK.recording.stop();
+    
+    const msg = JSON.stringify({
+        action: "RecordingState",
+        value: false
+    });
+
+    try {
+        await VoxeetSDK
+            .command
+            .send(msg);
+    } catch (error) {
+        console.error(error);
     }
+    
+    const event = new Event("recordingStopped");
+    document.dispatchEvent(event);
+}
 
-    /**
-     * Mutes the local participant.
-     */
-    static mute() {
-        VoxeetSDK.conference.mute(VoxeetSDK.session.participant, true);
-    }
+/**
+ * Starts a presentation.
+ * @param {*} fileConverted File converted.
+ * @return {Promise<void>} A Promise for the completion of the function.
+ */
+export const startPresentation = async (fileConverted) => {
+    await VoxeetSDK
+        .filePresentation
+        .start(fileConverted);
+}
 
-    /**
-     * Unmutes the local participant.
-     */
-    static unmute() {
-        VoxeetSDK.conference.mute(VoxeetSDK.session.participant, false);
-    }
+/**
+ * Change the position of the slide in the presentation.
+ * @param {number} position New position of the presentation.
+ */
+export const changeSlidePosition = async (position) => {
+    console.log(`Change the slide position to ${position}.`);
 
-    /**
-     * Leaves the conference.
-     */
-    static leaveConference() {
-        VoxeetSDK
-            .conference
-            .leave()
-            .catch(e => console.log(e));
-    }
-
-    /**
-     * Starts recording the conference.
-     * @return {Promise<void>} A Promise for the completion of the function.
-     */
-    static startRecording() {
-        console.log("Starting the recording...");
-
-        return VoxeetSDK.recording.start()
-            .then(() => {
-                const msg = JSON.stringify({
-                    action: "RecordingState",
-                    value: true
-                });
-        
-                VoxeetSDK
-                    .command
-                    .send(msg)
-                    .catch(e => console.log(e));
-        
-                const event = new Event("recordingStarted");
-                document.dispatchEvent(event);
-            });
-    }
-
-    /**
-     * Stops recording the conference.
-     * @return {Promise<void>} A Promise for the completion of the function.
-     */
-    static stopRecording() {
-        console.log("Stopping the recording...");
-
-        return VoxeetSDK.recording.stop()
-            .then(() => {
-                const msg = JSON.stringify({
-                    action: "RecordingState",
-                    value: false
-                });
-        
-                VoxeetSDK
-                    .command
-                    .send(msg)
-                    .catch(e => console.log(e));
-        
-                const event = new Event("recordingStopped");
-                document.dispatchEvent(event);
-            });
-    }
-
-    /**
-     * Starts a presentation.
-     * @param {*} fileConverted File converted.
-     * @return {Promise<void>} A Promise for the completion of the function.
-     */
-    static startPresentation(fileConverted) {
-        return VoxeetSDK
+    try {
+        await VoxeetSDK
             .filePresentation
-            .start(fileConverted);
+            .update(position);
+    } catch (error) {
+        console.error(error);
     }
+}
 
-    /**
-     * Change the position of the slide in the presentation.
-     * @param {number} position New position of the presentation.
-     */
-    static changeSlidePosition(position) {
-        console.log(`Change the slide position to ${position}.`);
+/**
+ * Gets the URL of the image for a slide.
+ * @param {number} position Position of the slide to request the image.
+ * @return {Promise<string>} URL of the image for the requested slide.
+ */
+export const getSlideImageUrl = async (position) => {
+    return await VoxeetSDK
+        .filePresentation
+        .image(position);
+}
 
-        VoxeetSDK
-            .filePresentation
-            .update(position)
-            .catch((e) => console.log(e));
-    }
+/**
+ * Gets the URL of the thumbnail for a slide.
+ * @param {number} position Position of the slide to request the thumbnail.
+ * @return {Promise<string>} URL of the thumbnail for the requested slide.
+ */
+export const getSlideThumbnailUrl = async (position) => {
+    return await VoxeetSDK
+        .filePresentation
+        .thumbnail(position);
+}
 
-    /**
-     * Gets the URL of the image for a slide.
-     * @param {number} position Position of the slide to request the image.
-     * @return {Promise<string>} URL of the image for the requested slide.
-     */
-    static getSlideImageUrl(position) {
-        return VoxeetSDK
-            .filePresentation
-            .image(position);
-    }
-
-    /**
-     * Gets the URL of the thumbnail for a slide.
-     * @param {number} position Position of the slide to request the thumbnail.
-     * @return {Promise<string>} URL of the thumbnail for the requested slide.
-     */
-    static getSlideThumbnailUrl(position) {
-        return VoxeetSDK
-            .filePresentation
-            .thumbnail(position);
-    }
-
+export default {
+    initializeSDK,
+    openSession,
+    closeSession,
+    convertFile,
+    joinConference,
+    listenToConference,
+    startVideo,
+    stopVideo,
+    mute,
+    unmute,
+    leaveConference,
+    startRecording,
+    stopRecording,
+    startPresentation,
+    changeSlidePosition,
+    getSlideImageUrl,
+    getSlideThumbnailUrl
 }

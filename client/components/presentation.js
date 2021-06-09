@@ -41,17 +41,17 @@ class Presentation extends Component {
         VoxeetSDK.filePresentation.removeListener("updated", this.updateSlide);
     }
 
-    previousSlide() {
+    async previousSlide() {
         let currentPosition = VoxeetSDK.filePresentation.current.position;
         if (currentPosition > 0) {
-            Sdk.changeSlidePosition(currentPosition - 1);
+            await Sdk.changeSlidePosition(currentPosition - 1);
         }
     }
 
-    nextSlide() {
+    async nextSlide() {
         let currentPosition = VoxeetSDK.filePresentation.current.position;
         if (currentPosition < VoxeetSDK.filePresentation.current.imageCount - 1) {
-            Sdk.changeSlidePosition(currentPosition + 1);
+            await Sdk.changeSlidePosition(currentPosition + 1);
         }
     }
 

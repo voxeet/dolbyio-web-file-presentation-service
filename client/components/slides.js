@@ -53,8 +53,8 @@ class Slides extends Component {
         VoxeetSDK.filePresentation.removeListener("started", this.changeHighlight);
     }
 
-    changeSlide(position) {
-        Sdk.changeSlidePosition(position);
+    async changeSlide(position) {
+        await Sdk.changeSlidePosition(position);
     }
 
     changeHighlight(filePresentation) {
