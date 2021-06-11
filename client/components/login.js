@@ -26,14 +26,6 @@ class Login extends Component {
 
         this.onFilePresentationConversionProgress = this.onFilePresentationConversionProgress.bind(this);
         this.onFilePresentationConverted = this.onFilePresentationConverted.bind(this);
-
-        this.handleChangeConferenceName = this.handleChangeConferenceName.bind(this);
-        this.handleChangeUserName = this.handleChangeUserName.bind(this);
-        this.handleChangeAsListener = this.handleChangeAsListener.bind(this);
-        this.handleChangePresentationFile = this.handleChangePresentationFile.bind(this);
-
-        this.joinPresentation = this.joinPresentation.bind(this);
-        this.startPresentation = this.startPresentation.bind(this);
     }
 
     componentDidMount() {
@@ -167,7 +159,7 @@ class Login extends Component {
                                             className="form-control"
                                             id="input-conference-name"
                                             value={this.state.conferenceName}
-                                            onChange={this.handleChangeConferenceName}
+                                            onChange={this.handleChangeConferenceName.bind(this)}
                                         />
                                     </div>
 
@@ -178,7 +170,7 @@ class Login extends Component {
                                             className="form-control"
                                             id="input-user-name"
                                             value={this.state.username}
-                                            onChange={this.handleChangeUserName}
+                                            onChange={this.handleChangeUserName.bind(this)}
                                         />
                                     </div>
 
@@ -188,7 +180,7 @@ class Login extends Component {
                                             className="form-check-input"
                                             id="input-as-listener"
                                             checked={this.state.isListener}
-                                            onChange={this.handleChangeAsListener}
+                                            onChange={this.handleChangeAsListener.bind(this)}
                                         />
                                         <label className="form-check-label" htmlFor="input-as-listener">
                                             Join as listener
@@ -198,14 +190,19 @@ class Login extends Component {
                                     <button
                                         type="button"
                                         className="btn btn-lg btn-block btn-primary"
-                                        onClick={this.joinPresentation}
+                                        onClick={this.joinPresentation.bind(this)}
                                         disabled={!this.state.canJoinConference}
                                     >
                                         Join Presentation
                                     </button>
 
                                     <div className="form-group custom-file">
-                                        <input type="file" className="custom-file-input" id="input-file" onChange={this.handleChangePresentationFile} />
+                                        <input
+                                            type="file"
+                                            className="custom-file-input"
+                                            id="input-file"
+                                            onChange={this.handleChangePresentationFile.bind(this)}
+                                        />
                                         <label className="custom-file-label" htmlFor="input-file">
                                             Choose PowerPoint file
                                         </label>
@@ -214,7 +211,7 @@ class Login extends Component {
                                     <button
                                         type="button"
                                         className="btn btn-lg btn-block btn-primary"
-                                        onClick={this.startPresentation}
+                                        onClick={this.startPresentation.bind(this)}
                                         disabled={!this.state.canStartPresentation}
                                     >
                                         Start Presentation

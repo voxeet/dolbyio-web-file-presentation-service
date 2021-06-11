@@ -14,6 +14,40 @@ const initializeSDK = async () => {
 };
 
 /**
+ * Initializes the Voxeet SDK with an Access Token.
+ * @param {string} accessToken Original access token.
+ * @param {string} refreshToken Refresh token used to get a new access token.
+ * @param {string} refreshUrl URL where to get a new access token.
+ */
+const initializeSDKWithToken = (accessToken, refreshToken, refreshUrl) => {
+    // Reference: https://dolby.io/developers/interactivity-apis/client-sdk/reference-javascript/voxeetsdk#static-initializetoken
+    VoxeetSDK.initializeToken(accessToken, () => refreshAccessToken(accessToken, refreshToken, refreshUrl));
+};
+
+/**
+ * Refreshes the access token.
+ * @param {string} accessToken Original access token.
+ * @param {string} refreshToken Refresh token used to get a new access token.
+ * @param {string} refreshUrl URL where to get a new access token.
+ * @returns a new access token.
+ */
+const refreshAccessToken = async (accessToken, refreshToken, refreshUrl) => {
+    const fetchOptions = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${accessToken}`,
+        },
+        body: { refresh_token: refreshToken },
+    };
+
+    const data = await fetch(refreshUrl, fetchOptions);
+    const json = await data.json();
+
+    return json.access_token;
+};
+
+/**
  * Opens a session.
  * @return {Promise<void>} A Promise for the completion of the function.
  */
@@ -231,6 +265,7 @@ const getSlideThumbnailUrl = async (position) => {
 
 export default {
     initializeSDK,
+    initializeSDKWithToken,
     openSession,
     closeSession,
     convertFile,
