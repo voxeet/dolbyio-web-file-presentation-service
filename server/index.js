@@ -17,7 +17,7 @@ app.use(express.static('dist'));
 
 const CONSUMER_KEY = process.env.CONSUMER_KEY ?? '';
 const CONSUMER_SECRET = process.env.CONSUMER_SECRET ?? '';
-const LIVE_RECORDING = process.env.LIVE_RECORDING === "true";
+const LIVE_RECORDING = process.env.LIVE_RECORDING === 'true';
 
 /**
  * Sends a POST request
