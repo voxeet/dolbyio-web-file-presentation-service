@@ -1,6 +1,6 @@
 # Dolby.io - File Presentation Service
 
-This GitHub repo is a sample application that uses the [File Presentation Service](https://dolby.io/developers/interactivity-apis/reference/client-sdk/reference-javascript/filepresentationservice). It is using [React.JS](https://reactjs.org) as front end technology and [Node.JS](https://nodejs.org) as backend server.
+This GitHub repo is a sample application that uses the [File Presentation Service](https://docs.dolby.io/interactivity/docs/js-client-sdk-filepresentationservice). It is using [React.JS](https://reactjs.org) as front end technology and [Node.JS](https://nodejs.org) as backend server.
 
 ## Introduction
 
@@ -42,11 +42,12 @@ npm install
 
 If you haven't done so already, create an account on [dolby.io](https://dolby.io/signup), it is free so do it today! Go to your dashboard and for the first application, get your `Consumer Key` and `Consumer Secret`.
 
-In the file `server/index.js`, locate the following lines and set your key and secret.
+Create a `.env` file at the root of this folder and insert your consumer key and secret like that:
 
-```javascript
-const CONSUMER_KEY = 'CONSUMER_KEY';
-const CONSUMER_SECRET = 'CONSUMER_SECRET';
+```
+CONSUMER_KEY=<Your consumer key>
+CONSUMER_SECRET=<Your consumer secret>
+LIVE_RECORDING=false
 ```
 
 Compile the React.JS application with the command:
@@ -80,7 +81,7 @@ Here is the list of what you can do in this application:
 -   Display or not the notes dynamically
 -   3 different video layouts (Round, Vertical, Horizontal)
 -   Record the conference
--   Use [Enhanced Conference Access Control](https://dolby.io/developers/interactivity-apis/guides/enhanced-conference-access-control) with the permissions set on the server side
+-   Use [Enhanced Conference Access Control](https://docs.dolby.io/interactivity/docs/guides-enhanced-conference-access-control) with the permissions set on the server side
 -   Mixer layout
 
 ## Open Source Projects

@@ -1,8 +1,11 @@
 var express = require('express');
 const https = require('https');
+const dotenv = require('dotenv');
 
 const { Command } = require('commander');
 const program = new Command();
+
+dotenv.config();
 
 var app = express();
 
@@ -12,12 +15,9 @@ app.use(express.json());
 // Serve static files
 app.use(express.static('dist'));
 
-// Enter your Consumer Key and Secret from the dolby.io dashboard
-const CONSUMER_KEY = 'CONSUMER_KEY';
-const CONSUMER_SECRET = 'CONSUMER_SECRET';
-
-// Other settings
-const LIVE_RECORDING = true;
+const CONSUMER_KEY = process.env.CONSUMER_KEY ?? '';
+const CONSUMER_SECRET = process.env.CONSUMER_SECRET ?? '';
+const LIVE_RECORDING = process.env.LIVE_RECORDING === "true";
 
 /**
  * Sends a POST request
