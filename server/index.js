@@ -19,6 +19,10 @@ const CONSUMER_KEY = process.env.CONSUMER_KEY ?? '';
 const CONSUMER_SECRET = process.env.CONSUMER_SECRET ?? '';
 const LIVE_RECORDING = process.env.LIVE_RECORDING === 'true';
 
+if (CONSUMER_KEY.length <= 0 || CONSUMER_SECRET.length <= 0) {
+    throw new Error('The Consumer Key and/or Secret are missing!');
+}
+
 /**
  * Sends a POST request
  * @param {string} hostname
