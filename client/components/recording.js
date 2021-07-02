@@ -35,8 +35,8 @@ class Recording extends Component {
         VoxeetSDK.conference.removeListener('participantAdded', this.refreshStatus);
         VoxeetSDK.conference.removeListener('participantUpdated', this.refreshStatus);
 
-        VoxeetSDK.command.removeListener('recordingStarted', this.onRecordingStarted);
-        VoxeetSDK.command.removeListener('recordingStopped', this.onRecordingStopped);
+        document.removeEventListener('recordingStarted', this.onRecordingStarted);
+        document.removeEventListener('recordingStopped', this.onRecordingStopped);
     }
 
     refreshStatus() {
