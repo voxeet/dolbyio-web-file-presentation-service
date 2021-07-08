@@ -3,7 +3,7 @@ name: Generate Docker Image
 on:
   push:
     branches:
-      - docker
+      - main
 
 jobs:
   generate-docker-image:

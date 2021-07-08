@@ -85,6 +85,8 @@ docker run --rm -it -p 80:8081/tcp --env "CONSUMER_KEY=<value>" --env "CONSUMER_
 
 Now you should be able to access the application from this page: http://localhost
 
+You can also get the latest docker image from this repo at https://github.com/dolbyio-samples/dolbyio-web-file-presentation-service/pkgs/container/dolbyio-web-file-presentation-service
+
 ## Features
 
 Here is the list of what you can do in this application:
