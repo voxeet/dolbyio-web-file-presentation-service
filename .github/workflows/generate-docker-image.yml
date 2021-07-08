@@ -1,0 +1,26 @@
+name: Generate Docker Image
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  generate-docker-image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@main
+        with:
+          persist-credentials: false
+
+      - name: Build Docker image
+        run: docker build -t fps .
+        
+      - name: Login to GitHub Packages
+        run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u USERNAME --password-stdin
+
+      - name: Deploy the tagged Docker image to GitHub Packages
+        run: |
+          docker tag fps "ghcr.io/dolbyio-samples/dolbyio-web-file-presentation-service:latest"
+          docker push "ghcr.io/dolbyio-samples/dolbyio-web-file-presentation-service:latest"

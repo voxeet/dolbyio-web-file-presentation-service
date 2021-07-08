@@ -70,6 +70,23 @@ This project automatically builds a custom Mixer Layout Application that you can
 https://dolbyio-samples.github.io/dolbyio-web-file-presentation-service/index.html
 ```
 
+## Docker Image
+
+You can build your own Docker image with this project using the command:
+
+```bash
+docker build -t fps .
+```
+
+To run the container, you must provide the two environment variables `CONSUMER_KEY` and `CONSUMER_SECRET`. And you can map the port 8081 of the container to your local port 80.
+```bash
+docker run --rm -it -p 80:8081/tcp --env "CONSUMER_KEY=<value>" --env "CONSUMER_SECRET=<value>" fps:latest
+```
+
+Now you should be able to access the application from this page: http://localhost
+
+You can also get the latest docker image from this repo at https://github.com/dolbyio-samples/dolbyio-web-file-presentation-service/pkgs/container/dolbyio-web-file-presentation-service
+
 ## Features
 
 Here is the list of what you can do in this application:
@@ -83,6 +100,7 @@ Here is the list of what you can do in this application:
 -   Record the conference
 -   Use [Enhanced Conference Access Control](https://docs.dolby.io/interactivity/docs/guides-enhanced-conference-access-control) with the permissions set on the server side
 -   Mixer layout
+-   Docker image to run the application easily
 
 ## Open Source Projects
 
