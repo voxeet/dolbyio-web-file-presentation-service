@@ -16,6 +16,9 @@ jobs:
 
       - name: Build Docker image
         run: docker build -t fps .
+        
+      - name: Login to GitHub Packages
+        run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u USERNAME --password-stdin
 
       - name: Deploy the tagged Docker image to GitHub Packages
         run: |
