@@ -19,5 +19,5 @@ jobs:
 
       - name: Deploy the tagged Docker image to GitHub Packages
         run: |
-          docker tag brew "ghcr.io/dolbyio-samples/dolbyio-web-file-presentation-service:latest"
+          docker tag fps "ghcr.io/dolbyio-samples/dolbyio-web-file-presentation-service:latest"
           docker push "ghcr.io/dolbyio-samples/dolbyio-web-file-presentation-service:latest"
