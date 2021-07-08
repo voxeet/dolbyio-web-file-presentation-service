@@ -1,0 +1,23 @@
+name: Generate Docker Image
+
+on:
+  push:
+    branches:
+      - docker
+
+jobs:
+  generate-docker-image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@main
+        with:
+          persist-credentials: false
+
+      - name: Build Docker image
+        run: docker build -t fps .
+
+      - name: Deploy the tagged Docker image to GitHub Packages
+        run: |
+          docker tag brew "ghcr.io/dolbyio-samples/dolbyio-web-file-presentation-service:latest"
+          docker push "ghcr.io/dolbyio-samples/dolbyio-web-file-presentation-service:latest"

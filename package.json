@@ -8,7 +8,8 @@
         "build": "NODE_ENV=development webpack --config webpack.config.js --config webpack.mixer.config.js --progress",
         "prod": "NODE_ENV=production webpack --config webpack.config.js --config webpack.mixer.config.js --progress",
         "start": "node ./server/index.js --port 8081",
-        "watch": "npm-watch build"
+        "watch": "npm-watch build",
+        "docker": "npm run prod"
     },
     "watch": {
         "build": {
@@ -29,7 +30,7 @@
     },
     "homepage": "https://github.com/dolbyio-samples/dolbyio-web-file-presentation-service#readme",
     "dependencies": {
-        "@voxeet/voxeet-web-sdk": "^3.1.6",
+        "@voxeet/voxeet-web-sdk": "^3.2.0",
         "browserslist": ">=4.16.5",
         "commander": "^7.2.0",
         "css-loader": "^5.1.3",
