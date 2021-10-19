@@ -30,7 +30,7 @@ class Slides extends Component {
                 const cssClassName = VoxeetSDK.filePresentation.current.position === index ? 'list-group-item active' : 'list-group-item';
 
                 this.thumbnails.push(
-                    <a key={key} id={key} href="#" className={cssClassName} onClick={async () => await this.changeSlide(index)}>
+                    <a key={key} id={key} href="#" className={cssClassName} onClick={async (event) => await this.changeSlide(event, index)}>
                         <div className="active-bolder">
                             <img src={url} />
                         </div>
@@ -51,7 +51,10 @@ class Slides extends Component {
         VoxeetSDK.filePresentation.removeListener('started', this.changeHighlight);
     }
 
-    async changeSlide(position) {
+    async changeSlide(event, position) {
+        event.preventDefault();
+        event.stopPropagation();
+        
         await Sdk.changeSlidePosition(position);
     }
 
