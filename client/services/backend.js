@@ -1,9 +1,12 @@
+import isElectron from 'is-electron';
+
 /**
  * Requests a session access token from the backend.
  * @return {Promise<string>} The session access token provided by the backend.
  */
 const getAccessToken = async () => {
-    const url = 'access-token';
+    const url = getEndpointUrl('access-token');
+    console.log(url);
     const response = await fetch(url);
     if (!response.ok) {
         const text = await response.text();
@@ -35,7 +38,8 @@ const getInvited = async (conferenceAlias, isListener, externalId) => {
     };
 
     // Request the backend for an invitation
-    const response = await fetch('get-invited', options);
+    const url = getEndpointUrl('get-invited');
+    const response = await fetch(url, options);
     if (!response.ok) {
         const text = await response.text();
         throw new Error(text);
@@ -63,13 +67,34 @@ const createConference = async (conferenceAlias, externalId) => {
     };
 
     // Request the backend to create a conference
-    const response = await fetch('conference', options);
+    const url = getEndpointUrl('conference');
+    const response = await fetch(url, options);
     if (!response.ok) {
         const text = await response.text();
         throw new Error(text);
     }
 
     return response.json();
+};
+
+/**
+ * Gets the full endpoint URL.
+ * @param endpoint API name to generate the URL with.
+ * @returns the full endpoint URL.
+ */
+const getEndpointUrl = (endpoint) => {
+    if (isElectron()) {
+        // All requests are intercepted by electron
+        return `backend://${endpoint}/`;
+    }
+
+    let currentURL = window.location.href;
+    
+    if (currentURL.endsWith('/')) {
+        currentURL = currentURL.slice(0, currentURL.length - 1);
+    }
+
+    return `${currentURL}/${endpoint}/`;
 };
 
 export default { getAccessToken, getInvited, createConference };

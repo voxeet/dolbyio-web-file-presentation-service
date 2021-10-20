@@ -26,6 +26,7 @@ class Presentation extends Component {
         this.previousSlide = this.previousSlide.bind(this);
         this.nextSlide = this.nextSlide.bind(this);
         this.updateSlide = this.updateSlide.bind(this);
+        this.toggleNotes = this.toggleNotes.bind(this);
     }
 
     async componentDidMount() {
@@ -39,14 +40,20 @@ class Presentation extends Component {
         VoxeetSDK.filePresentation.removeListener('updated', this.updateSlide);
     }
 
-    async previousSlide() {
+    async previousSlide(event) {
+        event.preventDefault();
+        event.stopPropagation();
+
         let currentPosition = VoxeetSDK.filePresentation.current.position;
         if (currentPosition > 0) {
             await Sdk.changeSlidePosition(currentPosition - 1);
         }
     }
 
-    async nextSlide() {
+    async nextSlide(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        
         let currentPosition = VoxeetSDK.filePresentation.current.position;
         if (currentPosition < VoxeetSDK.filePresentation.current.imageCount - 1) {
             await Sdk.changeSlidePosition(currentPosition + 1);
@@ -88,6 +95,13 @@ class Presentation extends Component {
         }
     }
 
+    toggleNotes(event, displayNotes) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        this.setState({ displayNotes });
+    }
+
     render() {
         return (
             <div className="presentation row flex-grow-1">
@@ -114,12 +128,12 @@ class Presentation extends Component {
                                         <i className="fas fa-chevron-right"></i>
                                     </a>
                                     {this.state.presentationHasNotes && this.state.displayNotes && (
-                                        <a href="#" onClick={() => this.setState({ displayNotes: false })} title="Hide the notes">
+                                        <a href="#" onClick={(event) => this.toggleNotes(event, false)} title="Hide the notes">
                                             <i className="fas fa-sticky-note"></i>
                                         </a>
                                     )}
                                     {this.state.presentationHasNotes && !this.state.displayNotes && (
-                                        <a href="#" onClick={() => this.setState({ displayNotes: true })} title="Display the notes">
+                                        <a href="#" onClick={(event) => this.toggleNotes(event, true)} title="Display the notes">
                                             <i className="far fa-sticky-note"></i>
                                         </a>
                                     )}
