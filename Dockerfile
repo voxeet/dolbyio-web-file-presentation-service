@@ -6,9 +6,7 @@ WORKDIR /usr/src/www
 
 COPY package*.json ./
 
-# --force will ignore the dependency @dolbyio/native-desktop-sdk
-# that cannot be downloaded from this docker image
-RUN npm install --force
+RUN npm_config_platform='darwin' npm_config_arch='x64' npm install
 
 COPY . .
 
