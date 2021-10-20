@@ -7,9 +7,10 @@
         "lint": "eslint --ext .js .",
         "build": "NODE_ENV=development webpack --config webpack.config.js --config webpack.mixer.config.js --config webpack.desktop.config.js --progress",
         "prod": "NODE_ENV=production webpack --config webpack.config.js --config webpack.mixer.config.js --config webpack.desktop.config.js --progress",
+        "github-pages": "NODE_ENV=production webpack --config webpack.mixer.config.js --progress",
         "start": "node ./server/index.js --port 8081",
         "watch": "npm-watch build",
-        "docker": "npm run prod",
+        "docker": "NODE_ENV=production webpack --config webpack.config.js --progress",
         "desktop": "nds desktop.js"
     },
     "watch": {
