@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import isElectron from 'is-electron';
 
 import VoxeetSDK from '@voxeet/voxeet-web-sdk';
 
@@ -20,15 +21,11 @@ class Actions extends Component {
             canStopVideo: true,
             canMute: true,
             canUnmute: false,
+            backgroundBlur: false,
         };
 
         this.onConferenceJoined = this.onConferenceJoined.bind(this);
         this.refreshStatus = this.refreshStatus.bind(this);
-        this.startVideo = this.startVideo.bind(this);
-        this.stopVideo = this.stopVideo.bind(this);
-        this.mute = this.mute.bind(this);
-        this.unmute = this.unmute.bind(this);
-        this.leave = this.leave.bind(this);
     }
 
     componentDidMount() {
@@ -88,6 +85,30 @@ class Actions extends Component {
             canUnmute: canUnmute,
             conferenceJoined: conferenceJoined,
         });
+    }
+
+    async startBackgroundBlur() {
+        try {
+            await Sdk.setVideoFilter('bokeh');
+
+            this.setState({
+                backgroundBlur: true,
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async stopBackgroundBlur() {
+        try {
+            await Sdk.setVideoFilter('none');
+
+            this.setState({
+                backgroundBlur: false,
+            });
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     async startVideo() {
@@ -161,27 +182,37 @@ class Actions extends Component {
                         </div>
                         <div className="col-right">
                             <span className="separator" />
+                            {(isElectron() && (this.state.canStartVideo || this.state.canStopVideo) && !this.state.backgroundBlur) && (
+                                <button type="button" className="btn btn-action btn-xl" onClick={this.startBackgroundBlur.bind(this)} title="Start the background blur">
+                                    <i className="fas fa-low-vision"></i>
+                                </button>
+                            )}
+                            {(isElectron() && (this.state.canStartVideo || this.state.canStopVideo) && this.state.backgroundBlur) && (
+                                <button type="button" className="btn btn-action btn-xl" onClick={this.stopBackgroundBlur.bind(this)} title="Stop the background blur">
+                                    <i className="fas fa-eye"></i>
+                                </button>
+                            )}
                             {this.state.canStartVideo && (
-                                <button type="button" className="btn btn-action btn-xl" onClick={this.startVideo} title="Start the video">
+                                <button type="button" className="btn btn-action btn-xl" onClick={this.startVideo.bind(this)} title="Start the video">
                                     <i className="fas fa-video-slash"></i>
                                 </button>
                             )}
                             {this.state.canStopVideo && (
-                                <button type="button" className="btn btn-action btn-xl" onClick={this.stopVideo} title="Stop the video">
+                                <button type="button" className="btn btn-action btn-xl" onClick={this.stopVideo.bind(this)} title="Stop the video">
                                     <i className="fas fa-video"></i>
                                 </button>
                             )}
                             {this.state.canMute && (
-                                <button type="button" className="btn btn-action btn-xl" onClick={this.mute} title="Mute the microphone">
+                                <button type="button" className="btn btn-action btn-xl" onClick={this.mute.bind(this)} title="Mute the microphone">
                                     <i className="fas fa-microphone"></i>
                                 </button>
                             )}
                             {this.state.canUnmute && (
-                                <button type="button" className="btn btn-action btn-xl" onClick={this.unmute} title="Unmute the microphone">
+                                <button type="button" className="btn btn-action btn-xl" onClick={this.unmute.bind(this)} title="Unmute the microphone">
                                     <i className="fas fa-microphone-slash"></i>
                                 </button>
                             )}
-                            <button type="button" className="btn btn-danger btn-xl" onClick={this.leave} title="Leave the conference">
+                            <button type="button" className="btn btn-danger btn-xl" onClick={this.leave.bind(this)} title="Leave the conference">
                                 Leave
                             </button>
                         </div>

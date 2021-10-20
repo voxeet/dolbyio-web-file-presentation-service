@@ -263,6 +263,15 @@ const getSlideThumbnailUrl = async (position) => {
     return await VoxeetSDK.filePresentation.thumbnail(position);
 };
 
+/**
+ * Set the video filter on the local camera.
+ * @param {string} mode 'none' or 'bokeh'.
+ * @return {Promise<void>} A Promise for the completion of the function.
+ */
+const setVideoFilter = async (mode) => {
+    return await VoxeetSDK.videoFilters.setFilter(mode);
+};
+
 export default {
     initializeSDK,
     initializeSDKWithToken,
@@ -282,4 +291,5 @@ export default {
     changeSlidePosition,
     getSlideImageUrl,
     getSlideThumbnailUrl,
+    setVideoFilter,
 };

@@ -1,5 +1,9 @@
 const { app, BrowserWindow, protocol } = require('electron');
 
+// Indicates the URL of the server so the electron application
+// can request access tokens and create conferences
+const serverUrl = 'http://localhost:8081/';
+
 function createWindow () {
     const win = new BrowserWindow({
         width: 1280,
@@ -20,7 +24,7 @@ app.whenReady().then(() => {
     createWindow();
 
     protocol.interceptHttpProtocol('backend', (request, callback) => {
-        request.url = request.url.replace('backend://', 'http://localhost:8081/');
+        request.url = request.url.replace('backend://', serverUrl);
         callback(request);
     });
 

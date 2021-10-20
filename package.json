@@ -32,7 +32,7 @@
     "homepage": "https://github.com/dolbyio-samples/dolbyio-web-file-presentation-service#readme",
     "dependencies": {
         "@dolbyio/native-desktop-sdk": "^1.0.0-beta.4",
-        "@voxeet/voxeet-web-sdk": "^3.2.0",
+        "@voxeet/voxeet-web-sdk": "3.3.0-beta.5",
         "browserslist": ">=4.16.5",
         "commander": "^7.2.0",
         "css-loader": "^5.1.3",
