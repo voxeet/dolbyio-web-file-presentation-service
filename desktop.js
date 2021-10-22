@@ -8,25 +8,20 @@ function createWindow () {
     const win = new BrowserWindow({
         width: 1280,
         height: 720,
+        webPreferences: { worldSafeExecuteJavaScript: true, contextIsolation: true },
     });
 
     win.loadFile('dist_desktop/index.html');
 
     // Open the dev tools from Chromium
     win.webContents.openDevTools();
-}
 
-protocol.registerSchemesAsPrivileged([
-    { scheme: 'backend', privileges: { standard: true, supportFetchAPI: true } }
-]);
+    // Inject the backend URL
+    win.webContents.executeJavaScript(`backendUrl = "${serverUrl}";`);
+}
 
 app.whenReady().then(() => {
     createWindow();
-
-    protocol.interceptHttpProtocol('backend', (request, callback) => {
-        request.url = request.url.replace('backend://', serverUrl);
-        callback(request);
-    });
 
     app.on('activate', () => {
         if (BrowserWindow.getAllWindows().length === 0) {

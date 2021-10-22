@@ -84,8 +84,7 @@ const createConference = async (conferenceAlias, externalId) => {
  */
 const getEndpointUrl = (endpoint) => {
     if (isElectron()) {
-        // All requests are intercepted by electron
-        return `backend://${endpoint}/`;
+        return backendUrl.endsWith('/') ? backendUrl + endpoint : `${backendUrl}/${endpoint}`;
     }
 
     let currentURL = window.location.href;
