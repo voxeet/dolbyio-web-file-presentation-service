@@ -1,8 +1,4 @@
-const { app, BrowserWindow, protocol } = require('electron');
-
-// Indicates the URL of the server so the electron application
-// can request access tokens and create conferences
-const serverUrl = 'http://localhost:8081/';
+const { app, BrowserWindow } = require('electron');
 
 function createWindow () {
     const win = new BrowserWindow({
@@ -15,9 +11,6 @@ function createWindow () {
 
     // Open the dev tools from Chromium
     win.webContents.openDevTools();
-
-    // Inject the backend URL
-    win.webContents.executeJavaScript(`backendUrl = "${serverUrl}";`);
 }
 
 app.whenReady().then(() => {

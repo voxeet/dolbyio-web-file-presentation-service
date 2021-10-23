@@ -77,6 +77,17 @@ const createConference = async (conferenceAlias, externalId) => {
     return response.json();
 };
 
+// Backend URL used for Electron
+var backendUrl = null;
+
+/**
+ * Sets the backend URL tp use in the electron context.
+ * @param {string} url Backend URL.
+ */
+const setBackendUrl = (url) => {
+    backendUrl = url;
+};
+
 /**
  * Gets the full endpoint URL.
  * @param endpoint API name to generate the URL with.
@@ -96,4 +107,4 @@ const getEndpointUrl = (endpoint) => {
     return `${currentURL}/${endpoint}/`;
 };
 
-export default { getAccessToken, getInvited, createConference };
+export default { setBackendUrl, getAccessToken, getInvited, createConference };
