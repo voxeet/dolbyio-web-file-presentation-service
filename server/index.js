@@ -166,19 +166,10 @@ const getInvitationAsync = async (conferenceId, externalId, isListener) => {
     // "SHARE_VIDEO", "SHARE_FILE", "SEND_MESSAGE", "RECORD", "STREAM",
     // "KICK", "UPDATE_PERMISSIONS"
 
-    const participants = {};
-    if (isListener) {
-        participants[externalId] = {
-            permissions: ['JOIN'],
-        };
-    } else {
-        participants[externalId] = {
-            permissions: ['JOIN', 'SEND_AUDIO', 'SEND_VIDEO', 'SEND_MESSAGE'],
-        };
-    }
-
     const body = JSON.stringify({
-        participants: participants,
+        participants: {
+            [externalId]: isListener ? ['JOIN'] : ['JOIN', 'SEND_AUDIO', 'SEND_VIDEO', 'SEND_MESSAGE'],
+        },
     });
 
     const jwt = await getAPIAccessTokenAsync();
