@@ -25,6 +25,8 @@ class Index extends Component {
             presentation: null,
         };
 
+        Backend.setBackendUrl('http://localhost:8081/');
+
         this.onConferenceEndedOrLeft = this.onConferenceEndedOrLeft.bind(this);
         this.onSessionOpened = this.onSessionOpened.bind(this);
     }
