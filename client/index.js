@@ -117,7 +117,7 @@ class Index extends Component {
                     loadingMessage: 'Request access to the conference',
                 });
 
-                const invitation = Backend.getInvited(conferenceAlias, isListener, externalId);
+                const invitation = await Backend.getInvited(conferenceAlias, isListener, externalId);
 
                 this.setState({
                     isLoading: true,
