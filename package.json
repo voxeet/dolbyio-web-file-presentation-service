@@ -32,6 +32,7 @@
     },
     "homepage": "https://github.com/dolbyio-samples/dolbyio-web-file-presentation-service#readme",
     "dependencies": {
+        "@dolbyio/dolbyio-rest-apis-client": "^2.0.0",
         "@dolbyio/native-desktop-sdk": "^1.0.1",
         "@voxeet/voxeet-web-sdk": "^3.4.1",
         "browserslist": ">=4.16.5",
