@@ -1,6 +1,6 @@
 # Dolby.io - File Presentation Service
 
-This GitHub repo is a sample application that uses the [File Presentation Service](https://docs.dolby.io/interactivity/docs/js-client-sdk-filepresentationservice). It is using [React.JS](https://reactjs.org) as front end technology and [Node.JS](https://nodejs.org) as backend server. This project allows you to leverage the new [Desktop SDK](https://docs.dolby.io/communications-apis/docs/desktop-sdk) to create a native application using the same code base.
+This GitHub repo is a sample application that uses the [File Presentation Service](https://docs.dolby.io/communications-apis/docs/js-client-sdk-filepresentationservice). It is using [React.JS](https://reactjs.org) as front end technology and [Node.JS](https://nodejs.org) as backend server. This project allows you to leverage the new [Desktop SDK](https://docs.dolby.io/communications-apis/docs/desktop-sdk-overview) to create a native application using the same code base.
 
 ## Introduction
 
@@ -40,13 +40,13 @@ In the folder you've created, run the following command to install all the packa
 npm install
 ```
 
-If you haven't done so already, create an account on [dolby.io](https://dolby.io/signup), it is free so do it today! Go to your dashboard and for the first application, get your `Consumer Key` and `Consumer Secret`.
+If you haven't done so already, create an account on [dolby.io](https://dolby.io/signup), it is free so do it today! Go to your dashboard and for the first application, get your `App Key` and `App Secret`.
 
 Create a `.env` file at the root of this folder and insert your consumer key and secret like that:
 
 ```
-CONSUMER_KEY=<Your consumer key>
-CONSUMER_SECRET=<Your consumer secret>
+APP_KEY=<Your app key>
+APP_SECRET=<Your app secret>
 LIVE_RECORDING=false
 ```
 
@@ -74,7 +74,7 @@ Build and run the desktop application with the command:
 npm run desktop
 ```
 
-Using the library [is-electron](https://www.npmjs.com/package/is-electron) we can add extra capabilities into our code that will run only when the application is in the context of electron. For example, we can leverage the [video filters](https://docs.dolby.io/communications-apis/docs/desktop-sdk#video-filters) from the Dolby.io Communications SDK for Desktop to blur the video background and add some privacy into the conference. Have a look at the file `./client/components/actions.js` to see how it is done.
+Using the library [is-electron](https://www.npmjs.com/package/is-electron) we can add extra capabilities into our code that will run only when the application is in the context of electron. For example, we can leverage the [video filters](https://docs.dolby.io/communications-apis/docs/desktop-sdk-overview#video-filters) from the Dolby.io Communications SDK for Desktop to blur the video background and add some privacy into the conference. Have a look at the file `./client/components/actions.js` to see how it is done.
 
 ![](wiki/background-blur.png)
 
@@ -94,9 +94,9 @@ You can build your own Docker image with this project using the command:
 docker build -t fps .
 ```
 
-To run the container, you must provide the two environment variables `CONSUMER_KEY` and `CONSUMER_SECRET`. And you can map the port 8081 of the container to your local port 80.
+To run the container, you must provide the two environment variables `APP_KEY` and `APP_SECRET`. And you can map the port 8081 of the container to your local port 80.
 ```bash
-docker run --rm -it -p 80:8081/tcp --env "CONSUMER_KEY=<value>" --env "CONSUMER_SECRET=<value>" fps:latest
+docker run --rm -it -p 80:8081/tcp --env "APP_KEY=<value>" --env "APP_SECRET=<value>" fps:latest
 ```
 
 Now you should be able to access the application from this page: http://localhost
@@ -114,7 +114,7 @@ Here is the list of what you can do in this application:
 -   Display or not the notes dynamically
 -   3 different video layouts (Round, Vertical, Horizontal)
 -   Record the conference
--   Use [Enhanced Conference Access Control](https://docs.dolby.io/interactivity/docs/guides-enhanced-conference-access-control) with the permissions set on the server side
+-   Use [Enhanced Conference Access Control](https://docs.dolby.io/communications-apis/docs/guides-enhanced-conference-access-control) with the permissions set on the server side
 -   Mixer layout
 -   Docker image to run the application easily
 -   Use the Dolby.io Communications SDK for Desktop to generate a native desktop application
@@ -124,6 +124,7 @@ Here is the list of what you can do in this application:
 
 This sample application is using the following Open Source projects:
 
+-   [@dolbyio/dolbyio-rest-apis-client](https://www.npmjs.com/package/@dolbyio/dolbyio-rest-apis-client)
 -   [FontAwesome](https://fontawesome.com)
 -   [Bootstrap](https://getbootstrap.com)
 -   [Google Fonts](https://fonts.google.com)

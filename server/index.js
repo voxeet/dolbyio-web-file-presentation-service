@@ -17,25 +17,24 @@ app.use(express.json());
 // Serve static files
 app.use(express.static('dist'));
 
-const CONSUMER_KEY = process.env.CONSUMER_KEY ?? '';
-const CONSUMER_SECRET = process.env.CONSUMER_SECRET ?? '';
+const APP_KEY = process.env.APP_KEY ?? '';
+const APP_SECRET = process.env.APP_SECRET ?? '';
 const LIVE_RECORDING = process.env.LIVE_RECORDING === 'true';
 
-if (CONSUMER_KEY.length <= 0 || CONSUMER_SECRET.length <= 0) {
-    throw new Error('The Consumer Key and/or Secret are missing!');
+if (APP_KEY.length <= 0 || APP_SECRET.length <= 0) {
+    throw new Error('The App Key and/or Secret are missing!');
 }
 
 const getClientAccessToken = async () => {
     console.log('Get Client Access Token');
-    return await dolbyio.communications.authentication.getClientAccessToken(CONSUMER_KEY, CONSUMER_SECRET, 600);
+    return await dolbyio.communications.authentication.getClientAccessToken(APP_KEY, APP_SECRET, 600);
 };
 
 const getAPIAccessToken = async () => {
     console.log('Get API Access Token');
-    return await dolbyio.communications.authentication.getApiAccessToken(CONSUMER_KEY, CONSUMER_SECRET, 600);
+    return await dolbyio.authentication.getApiAccessToken(APP_KEY, APP_SECRET, 600);
 };
 
-// See: https://dolby.io/developers/interactivity-apis/reference/rest-apis/conference#operation/postConferenceCreate
 const createConference = async (alias, ownerExternalId) => {
     const jwt = await getAPIAccessToken();
 
@@ -47,7 +46,6 @@ const createConference = async (alias, ownerExternalId) => {
     });
 };
 
-// See: https://dolby.io/developers/interactivity-apis/reference/rest-apis/conference#operation/postConferenceInvite
 const getInvitation = async (conferenceId, externalId, isListener) => {
     // "INVITE", "JOIN", "SEND_AUDIO", "SEND_VIDEO", "SHARE_SCREEN",
     // "SHARE_VIDEO", "SHARE_FILE", "SEND_MESSAGE", "RECORD", "STREAM",
