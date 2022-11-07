@@ -32,24 +32,19 @@
     },
     "homepage": "https://github.com/dolbyio-samples/dolbyio-web-file-presentation-service#readme",
     "dependencies": {
-        "@dolbyio/dolbyio-rest-apis-client": "^3.3.3",
+        "@dolbyio/dolbyio-rest-apis-client": "^3.4.1",
         "@dolbyio/native-desktop-sdk": "^1.0.1",
-        "@voxeet/voxeet-web-sdk": "^3.6.0",
-        "browserslist": "^4.21.3",
+        "@voxeet/voxeet-web-sdk": "^3.7.0",
+        "browserslist": "^4.21.4",
         "commander": "^7.2.0",
         "css-loader": "^5.1.3",
-        "dotenv": "^16.0.2",
-        "express": "^4.18.1",
+        "dotenv": "^16.0.3",
         "is-electron": "^2.2.0",
         "jszip": "^3.10.1",
-        "less": "^4.1.1",
-        "less-loader": "^8.0.0",
-        "npm-watch": "^0.9.0",
         "prop-types": "^15.7.2",
         "react": "^17.0.1",
         "react-dom": "^17.0.1",
-        "style-loader": "^2.0.0",
-        "webpack": "^5.74.0"
+        "style-loader": "^2.0.0"
     },
     "devDependencies": {
         "@babel/core": "^7.13.10",
@@ -62,11 +57,16 @@
         "eslint": "^7.24.0",
         "eslint-config-prettier": "^8.3.0",
         "eslint-plugin-import": "^2.22.1",
+        "express": "^4.18.2",
+        "less": "^4.1.1",
+        "less-loader": "^8.0.0",
         "html-webpack-plugin": "^5.3.1",
+        "npm-watch": "^0.9.0",
         "nth-check": ">=2.0.1",
         "path-parse": ">=1.0.7",
         "prettier": "^2.7.1",
-        "typescript": "^4.8.2",
+        "typescript": "^4.8.4",
+        "webpack": "^5.74.0",
         "webpack-cli": "^4.10.0"
     }
 }
