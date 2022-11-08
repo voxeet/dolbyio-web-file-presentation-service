@@ -1,5 +1,6 @@
 var express = require('express');
 const dotenv = require('dotenv');
+var escape = require('escape-html');
 
 // See: https://www.npmjs.com/package/@dolbyio/dolbyio-rest-apis-client
 const dolbyio = require('@dolbyio/dolbyio-rest-apis-client');
@@ -77,7 +78,7 @@ const getConferenceId = async function (alias) {
 };
 
 app.get('/access-token', function (request, response) {
-    console.log(`[GET] ${request.url}`);
+    console.log('[GET] %s', request.url);
 
     getClientAccessToken()
         .then((accessToken) => {
@@ -91,7 +92,7 @@ app.get('/access-token', function (request, response) {
 });
 
 app.post('/conference', function (request, response) {
-    console.log(`[POST] ${request.url}`, request.body);
+    console.log('[POST] %s', request.url, request.body);
 
     const alias = request.body.alias;
     const ownerExternalId = request.body.ownerExternalId;
@@ -108,7 +109,7 @@ app.post('/conference', function (request, response) {
 });
 
 app.post('/get-invited', async function (request, response) {
-    console.log(`[POST] ${request.url}`, request.body);
+    console.log('[POST] %s', request.url, request.body);
 
     const alias = request.body.alias;
     const externalId = request.body.externalId;
@@ -118,7 +119,7 @@ app.post('/get-invited', async function (request, response) {
         const conferenceId = await getConferenceId(alias);
         if (!conferenceId) {
             response.status(404);
-            response.send(`The conference ${alias} cannot be found.`);
+            response.send(`The conference ${escape(alias)} cannot be found.`);
             return;
         }
 
