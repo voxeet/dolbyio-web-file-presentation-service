@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import cryptoRandomString from 'crypto-random-string';
 
 import VoxeetSDK from '@voxeet/voxeet-web-sdk';
 
@@ -14,8 +15,8 @@ class Login extends Component {
         super(props);
 
         this.state = {
-            conferenceName: `conf-${Math.round(window.crypto.getRandomValues(new Uint32Array(1))[0] / 1000000)}`,
-            username: `Guest ${Math.round(window.crypto.getRandomValues(new Uint32Array(1))[0] / 1000000)}`,
+            conferenceName: `conf-${cryptoRandomString({length: 4, type: 'numeric'})}`,
+            username: `Guest ${cryptoRandomString({length: 4, type: 'numeric'})}`,
             isListener: false,
             file: null,
             canJoinConference: true,
