@@ -138,7 +138,7 @@ const listenToConference = async (conferenceId, conferenceAccessToken) => {
  * @return {Promise<void>} A Promise for the completion of the function.
  */
 const startVideo = async () => {
-    await VoxeetSDK.conference.startVideo(VoxeetSDK.session.participant);
+    await VoxeetSDK.video.local.start();
 };
 
 /**
@@ -146,7 +146,7 @@ const startVideo = async () => {
  * @return {Promise<void>} A Promise for the completion of the function.
  */
 const stopVideo = async () => {
-    await VoxeetSDK.conference.stopVideo(VoxeetSDK.session.participant);
+    await VoxeetSDK.video.local.stop();
 };
 
 /**
@@ -264,12 +264,19 @@ const getSlideThumbnailUrl = async (position) => {
 };
 
 /**
- * Set the video filter on the local camera.
- * @param {string} mode 'none' or 'bokeh'.
+ * Enables the background blur.
  * @return {Promise<void>} A Promise for the completion of the function.
  */
-const setVideoFilter = async (mode) => {
-    return await VoxeetSDK.videoFilters.setFilter(mode);
+const enableBackgroundBlur = async () => {
+    await VoxeetSDK.video.local.setProcessor({type: 'bokeh'});
+};
+
+/**
+ * Set the video filter on the local camera.
+ * @return {Promise<void>} A Promise for the completion of the function.
+ */
+const disableBackgroundBlur = async () => {
+    await VoxeetSDK.video.local.disableProcessing();
 };
 
 export default {
@@ -291,5 +298,6 @@ export default {
     changeSlidePosition,
     getSlideImageUrl,
     getSlideThumbnailUrl,
-    setVideoFilter,
+    enableBackgroundBlur,
+    disableBackgroundBlur,
 };

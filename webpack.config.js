@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
     entry: './client/index.js',
@@ -27,6 +28,15 @@ module.exports = {
             inject: true,
             template: './client/public/index.html',
             js: [],
+        }),
+        new CopyWebpackPlugin({
+            patterns: [
+                { from: './node_modules/@voxeet/voxeet-web-sdk/dist/dvwc_impl.wasm', noErrorOnMissing: true },
+                { from: './node_modules/@voxeet/voxeet-web-sdk/dist/voxeet-dvwc-worker.js', noErrorOnMissing: true },
+                { from: './node_modules/@voxeet/voxeet-web-sdk/dist/voxeet-worklet.js', noErrorOnMissing: true },
+                { from: './node_modules/@voxeet/voxeet-web-sdk/dist/vsl_impl.pkgwvsl', noErrorOnMissing: true },
+                { from: './node_modules/@voxeet/voxeet-web-sdk/dist/vsl_impl.wasm', noErrorOnMissing: true },
+           ]
         }),
     ],
 };

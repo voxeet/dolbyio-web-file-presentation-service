@@ -1,6 +1,6 @@
 # Dolby.io - File Presentation Service
 
-This GitHub repo is a sample application that uses the [File Presentation Service](https://docs.dolby.io/communications-apis/docs/js-client-sdk-filepresentationservice). It is using [React.JS](https://reactjs.org) as front end technology and [Node.JS](https://nodejs.org) as backend server. This project allows you to leverage the new [Desktop SDK](https://docs.dolby.io/communications-apis/docs/desktop-sdk-overview) to create a native application using the same code base.
+This GitHub repo is a sample application that uses the [File Presentation Service](https://docs.dolby.io/communications-apis/docs/js-client-sdk-filepresentationservice). It is using [React.JS](https://reactjs.org) as front end technology and [Node.JS](https://nodejs.org) as backend server.
 
 ## Introduction
 
@@ -64,7 +64,7 @@ npm run start
 
 ## Desktop Application
 
-Dolby.io Communications SDK for Desktop is a new platform that allows creating native desktop applications for video conferencing using only JavaScript. This project is now providing you with a way to build automatically a desktop application using the same code base as the web application.
+This project is now providing you with a way to build automatically a desktop application using the same code base as the web application and the electron framework.
 
 Open the file `./desktop.js` and change the `serverUrl` to match the address of your server. You do not need to change this when testing this application locally.
 
@@ -73,8 +73,6 @@ Build and run the desktop application with the command:
 ```bash
 npm run desktop
 ```
-
-Using the library [is-electron](https://www.npmjs.com/package/is-electron) we can add extra capabilities into our code that will run only when the application is in the context of electron. For example, we can leverage the [video filters](https://docs.dolby.io/communications-apis/docs/desktop-sdk-overview#video-filters) from the Dolby.io Communications SDK for Desktop to blur the video background and add some privacy into the conference. Have a look at the file `./client/components/actions.js` to see how it is done.
 
 ![](wiki/background-blur.png)
 
@@ -115,8 +113,8 @@ Here is the list of what you can do in this application:
 -   Use [Enhanced Conference Access Control](https://docs.dolby.io/communications-apis/docs/guides-enhanced-conference-access-control) with the permissions set on the server side
 -   Mixer layout
 -   Docker image to run the application easily
--   Use the Dolby.io Communications SDK for Desktop to generate a native desktop application
--   Video background blur (Desktop SDK only)
+-   Use Electron to generate a native desktop application
+-   Video background blur
 
 ## Open Source Projects
 

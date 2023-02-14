@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import isElectron from 'is-electron';
 
 import VoxeetSDK from '@voxeet/voxeet-web-sdk';
 
@@ -89,7 +88,7 @@ class Actions extends Component {
 
     async startBackgroundBlur() {
         try {
-            await Sdk.setVideoFilter('bokeh');
+            await Sdk.enableBackgroundBlur();
 
             this.setState({
                 backgroundBlur: true,
@@ -101,7 +100,7 @@ class Actions extends Component {
 
     async stopBackgroundBlur() {
         try {
-            await Sdk.setVideoFilter('none');
+            await Sdk.disableBackgroundBlur();
 
             this.setState({
                 backgroundBlur: false,
@@ -182,12 +181,12 @@ class Actions extends Component {
                         </div>
                         <div className="col-right">
                             <span className="separator" />
-                            {(isElectron() && (this.state.canStartVideo || this.state.canStopVideo) && !this.state.backgroundBlur) && (
+                            {((this.state.canStartVideo || this.state.canStopVideo) && !this.state.backgroundBlur) && (
                                 <button type="button" className="btn btn-action btn-xl" onClick={this.startBackgroundBlur.bind(this)} title="Start the background blur">
                                     <i className="fas fa-low-vision"></i>
                                 </button>
                             )}
-                            {(isElectron() && (this.state.canStartVideo || this.state.canStopVideo) && this.state.backgroundBlur) && (
+                            {((this.state.canStartVideo || this.state.canStopVideo) && this.state.backgroundBlur) && (
                                 <button type="button" className="btn btn-action btn-xl" onClick={this.stopBackgroundBlur.bind(this)} title="Stop the background blur">
                                     <i className="fas fa-eye"></i>
                                 </button>
