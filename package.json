@@ -33,8 +33,8 @@
     "homepage": "https://github.com/dolbyio-samples/dolbyio-web-file-presentation-service#readme",
     "dependencies": {
         "@babel/runtime": "^7.20.1",
-        "@dolbyio/dolbyio-rest-apis-client": "^3.5.0",
-        "@voxeet/voxeet-web-sdk": "^3.9.0-beta.3",
+        "@dolbyio/dolbyio-rest-apis-client": "^3.5.3",
+        "@voxeet/voxeet-web-sdk": "^3.9.0",
         "browserslist": "^4.21.5",
         "commander": "^10.0.0",
         "crypto-random-string": "^5.0.0",
@@ -71,7 +71,7 @@
         "prettier": "^2.8.4",
         "style-loader": "^3.3.1",
         "typescript": "^4.9.5",
-        "webpack": "^5.75.0",
+        "webpack": "^5.76.2",
         "webpack-cli": "^5.0.1"
     }
 }

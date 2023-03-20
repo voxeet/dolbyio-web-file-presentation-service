@@ -12,7 +12,7 @@ export class AttendeeVideo extends Component {
         super(props);
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate() {
         return false;
     }
 
