@@ -1,3 +1,6 @@
+[![Build and Deploy to GitHub Pages](https://github.com/dolbyio-samples/dolbyio-web-file-presentation-service/actions/workflows/deploy-to-gh-pages.yml/badge.svg)](https://github.com/dolbyio-samples/dolbyio-web-file-presentation-service/actions/workflows/deploy-to-gh-pages.yml)
+[![License](https://img.shields.io/github/license/dolbyio-samples/dolbyio-web-file-presentation-service)](LICENSE)
+
 # Dolby.io - File Presentation Service
 
 This GitHub repo is a sample application that uses the [File Presentation Service](https://docs.dolby.io/communications-apis/docs/js-client-sdk-filepresentationservice). It is using [React.JS](https://reactjs.org) as front end technology and [Node.JS](https://nodejs.org) as backend server.
